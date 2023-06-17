@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
 
+    [SerializeField]
+    float movementSpeed = 3f;
+
     void Awake()
     {
         // Assigning values to class properties
@@ -16,9 +19,15 @@ public class PlayerController : MonoBehaviour
         myPlayerControls = new PlayerControls();
 
         // Adding methods to PlayerControls delegates and activating it
-        myPlayerControls.PlayerActions.Move.performed += Movement;
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
         myPlayerControls.Enable();
+    }
+
+    private void FixedUpdate()
+    {
+        // Reading current input value for movement and adding equivalent force (in case of no input - value of zero)
+        Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
+        Movement(movementVector);
     }
 
     /// <summary>
@@ -32,12 +41,13 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Method moving player character by adding force to its rigidbody2D component (currently in development).
-    /// Is added to the "PlayerActions.Shoot.performed" delegate.
+    /// Method moving player character by adding force to its rigidbody2D component.
+    /// Is triggered in "FixedUpdate()" method each frame.
     /// </summary>
     /// <param name="context">Value gathered by input system</param>
-    void Movement(InputAction.CallbackContext context)
+    void Movement(Vector2 movementVector)
     {
-        Debug.Log(context.ReadValue<Vector2>());
+        Debug.Log(movementVector);
+        myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
     }
 }
