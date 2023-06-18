@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="context">Value gathered by input system</param>
     void Movement(Vector2 movementVector)
     {
-        Debug.Log(movementVector);
         myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
     }
 }
