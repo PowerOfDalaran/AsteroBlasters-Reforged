@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
+    Weapon myWeapon;
 
     [SerializeField]
     float movementSpeed = 3f;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
         // Assigning values to class properties
         myRigidbody2D = GetComponent<Rigidbody2D>();
         myPlayerControls = new PlayerControls();
+        myWeapon = GetComponent<Weapon>();
 
         // Adding methods to PlayerControls delegates and activating it
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
@@ -34,13 +36,13 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Method activating the current weapon in order to fire (curently in development).
+    /// Method activating the current weapon in order to fire.
     /// Is added to the "PlayerActions.Move.performed" delegate.
     /// </summary>
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<float>());
+        myWeapon.Shoot();
     }
 
     /// <summary>
