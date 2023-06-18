@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     float movementSpeed = 3f;
+    [SerializeField]
+    float rotationSpeed = 720;
 
     void Awake()
     {
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
         // Adding methods to PlayerControls delegates and activating it
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
+        myPlayerControls.PlayerActions.Move.performed += Rotate;
         myPlayerControls.Enable();
     }
 
@@ -48,5 +51,11 @@ public class PlayerController : MonoBehaviour
     void Movement(Vector2 movementVector)
     {
         myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
+    }
+
+    void Rotate(InputAction.CallbackContext context)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, context.ReadValue<Vector2>());
+        gameObject.transform.rotation = targetRotation;
     }
 }
