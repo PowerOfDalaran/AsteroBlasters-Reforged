@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
 
         // Adding methods to PlayerControls delegates and activating it
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
-        myPlayerControls.PlayerActions.Move.performed += Rotate;
         myPlayerControls.Enable();
     }
 
@@ -31,6 +30,7 @@ public class PlayerController : MonoBehaviour
         // Reading current input value for movement and adding equivalent force (in case of no input - value of zero)
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
         Movement(movementVector);
+        Rotate(movementVector);
     }
 
     /// <summary>
@@ -53,9 +53,16 @@ public class PlayerController : MonoBehaviour
         myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
     }
 
-    void Rotate(InputAction.CallbackContext context)
+    /// <summary>
+    /// Method rotating player character by creating new desired rotation and then using it to calculate rotation.
+    /// Is triggered in "FixedUpdate()" method each frame.
+    /// Not that proud of the result, may look for better rotation system later.
+    /// </summary>
+    /// <param name="movementVector">Value gathered by input system</param>
+    void Rotate(Vector2 movementVector)
     {
-        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, context.ReadValue<Vector2>());
-        gameObject.transform.rotation = targetRotation;
+        Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
+        Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+        gameObject.transform.rotation = newRotation;
     }
 }
