@@ -23,16 +23,25 @@ public class PlayerController : MonoBehaviour
         myWeapon = GetComponent<Weapon>();
 
         // Adding methods to PlayerControls delegates and activating it
-        myPlayerControls.PlayerActions.Shoot.performed += Shoot;
         myPlayerControls.Enable();
+        myPlayerControls.PlayerActions.Shoot.performed += Shoot;
     }
 
     private void FixedUpdate()
     {
-        // Reading current input value for movement and adding equivalent force (in case of no input - value of zero)
+        // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
-        Movement(movementVector);
-        Rotate(movementVector);
+
+        if (!movementVector.Equals(new Vector2(0, 0)))
+        {
+            Movement(movementVector);
+            Rotate(movementVector);
+        }
+
+        if (myPlayerControls.PlayerActions.Shoot.WasPerformedThisFrame())
+        {
+            Debug.Log("performed");
+        }
     }
 
     /// <summary>
