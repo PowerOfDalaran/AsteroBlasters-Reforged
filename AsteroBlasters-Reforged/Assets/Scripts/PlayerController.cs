@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// </summary>
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IHealthSystem
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
@@ -14,13 +14,17 @@ public class PlayerController : MonoBehaviour
     float movementSpeed = 3f;
     [SerializeField]
     float rotationSpeed = 720;
+    public int maxHealth = 3;
+    public int currentHealth;
 
     void Awake()
     {
-        // Assigning values to class properties
+        // Assigning values to properties
         myRigidbody2D = GetComponent<Rigidbody2D>();
         myPlayerControls = new PlayerControls();
         myWeapon = GetComponent<Weapon>();
+
+        currentHealth = maxHealth;
 
         // Adding methods to PlayerControls delegates and activating it
         myPlayerControls.Enable();
@@ -38,9 +42,10 @@ public class PlayerController : MonoBehaviour
             Rotate(movementVector);
         }
 
-        if (myPlayerControls.PlayerActions.Shoot.WasPerformedThisFrame())
+        // Checking if the player is still alive
+        if (currentHealth <= 0)
         {
-            Debug.Log("performed");
+            Die();
         }
     }
 
@@ -75,5 +80,23 @@ public class PlayerController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
         Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
         gameObject.transform.rotation = newRotation;
+    }
+
+    /// <summary>
+    /// Method reponsible for damaging player ship
+    /// </summary>
+    /// <param name="damage">Amount of damage player will take</param>
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("You took " + damage + " damage!");
+    }
+
+    /// <summary>
+    /// Method handling the death mechanics
+    /// </summary>
+    public void Die()
+    {
+        Debug.Log("You died");
     }
 }
