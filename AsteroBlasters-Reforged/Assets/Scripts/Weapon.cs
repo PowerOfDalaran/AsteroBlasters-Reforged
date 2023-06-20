@@ -12,11 +12,19 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     GameObject projectilePrefab;
 
+    [SerializeField]
+    float fireCooldown = 1;
+    float cooldownStatus = 0;
+
     /// <summary>
-    /// Method creating new projectile with certain position and rotation.
+    /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
     /// </summary>
     public void Shoot()
     {
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        if (Time.time > cooldownStatus)
+        {
+            cooldownStatus = Time.time + fireCooldown;
+            Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        }
     }
 }

@@ -9,6 +9,7 @@ public class ProjectileController : MonoBehaviour
 {
     Rigidbody2D myRigidbody2D;
     public float speed = 20f;
+    public int damage = 1;
 
     void Awake()
     {
@@ -21,8 +22,13 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Currently simply destroying the projectile.
-        // More functionality will be added with creation of healthpoints system.
+        IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+
+        if (healthSystem != null)
+        {
+            healthSystem.TakeDamage(damage);
+        }
+
         Destroy(gameObject);
     }
 }
