@@ -42,4 +42,27 @@ public class DummyController : MonoBehaviour, IHealthSystem
             myWeapon.Shoot();
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Checking if collision damage should be applied and applying it
+        if (!collision.gameObject.CompareTag("NoImpactDamage"))
+        {
+            float impactVelocity = collision.relativeVelocity.magnitude;
+            Debug.Log("Impact Damage: " + impactVelocity);
+
+            if (impactVelocity > 8)
+            {
+                Die();
+            }
+            else if (impactVelocity > 6)
+            {
+                TakeDamage(2);
+            }
+            else if (impactVelocity > 5)
+            {
+                TakeDamage(1);
+            }
+        }
+    }
 }

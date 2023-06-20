@@ -48,6 +48,28 @@ public class PlayerController : MonoBehaviour, IHealthSystem
             Die();
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Checking if collision damage should be applied and applying it
+        if (!collision.gameObject.CompareTag("NoImpactDamage"))
+        {
+            float impactVelocity = collision.relativeVelocity.magnitude;
+            Debug.Log("Impact Damage: " + impactVelocity);
+
+            if (impactVelocity > 8) 
+            {
+                Die();
+            }
+            else if (impactVelocity > 6)
+            {
+                TakeDamage(2);
+            }
+            else if (impactVelocity > 5)
+            {
+                TakeDamage(1);
+            }
+        }
+    }
 
     /// <summary>
     /// Method activating the current weapon in order to fire.
@@ -82,19 +104,11 @@ public class PlayerController : MonoBehaviour, IHealthSystem
         gameObject.transform.rotation = newRotation;
     }
 
-    /// <summary>
-    /// Method reponsible for damaging player ship
-    /// </summary>
-    /// <param name="damage">Amount of damage player will take</param>
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         Debug.Log("You took " + damage + " damage!");
     }
-
-    /// <summary>
-    /// Method handling the death mechanics
-    /// </summary>
     public void Die()
     {
         Debug.Log("You died");
