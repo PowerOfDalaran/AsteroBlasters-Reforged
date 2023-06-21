@@ -23,4 +23,8 @@ public class ButtonHandler : MonoBehaviour
     {
         NetworkManager.Singleton.StartClient();
     }
+    public void DestroyObject(GameObject gameObject)
+    {
+        Destroy(gameObject);
+    }
 }

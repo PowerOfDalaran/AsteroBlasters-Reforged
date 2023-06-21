@@ -1,11 +1,16 @@
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// </summary>
-public class PlayerController : MonoBehaviour, IHealthSystem
+public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 {
+    //[SerializeField]
+    //CinemachineVirtualCamera virtualCamera;
+
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
     Weapon myWeapon;
@@ -14,6 +19,7 @@ public class PlayerController : MonoBehaviour, IHealthSystem
     float movementSpeed = 3f;
     [SerializeField]
     float rotationSpeed = 720;
+
     public int maxHealth = 3;
     public int currentHealth;
 
@@ -41,8 +47,24 @@ public class PlayerController : MonoBehaviour, IHealthSystem
         myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
     }
 
+    //public override void OnNetworkSpawn()
+    //{
+    //    if (IsOwner)
+    //    {
+    //        virtualCamera.Priority = 1;
+    //    }
+    //    else
+    //    {
+    //        virtualCamera.Priority = 0;
+    //    }
+    //}
+
     private void FixedUpdate()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
@@ -88,6 +110,10 @@ public class PlayerController : MonoBehaviour, IHealthSystem
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         myWeapon.Shoot();
     }
 
