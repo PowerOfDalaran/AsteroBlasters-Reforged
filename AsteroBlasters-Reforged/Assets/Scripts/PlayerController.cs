@@ -1,10 +1,11 @@
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// </summary>
-public class PlayerController : MonoBehaviour, IHealthSystem
+public class PlayerController : NetworkBehaviour, IHealthSystem
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
@@ -43,6 +44,10 @@ public class PlayerController : MonoBehaviour, IHealthSystem
 
     private void FixedUpdate()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
@@ -88,6 +93,10 @@ public class PlayerController : MonoBehaviour, IHealthSystem
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         myWeapon.Shoot();
     }
 

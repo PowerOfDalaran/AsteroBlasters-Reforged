@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
@@ -12,5 +13,14 @@ public class ButtonHandler : MonoBehaviour
     public void LoadScene(int sceneIndex)
     {
         LevelManager.instance.LoadScene(sceneIndex);
+    }
+
+    public void HostGame()
+    {
+        NetworkManager.Singleton.StartHost();
+    }
+    public void JoinGame()
+    {
+        NetworkManager.Singleton.StartClient();
     }
 }
