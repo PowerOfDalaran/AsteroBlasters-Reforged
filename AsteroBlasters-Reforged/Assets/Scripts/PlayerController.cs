@@ -25,10 +25,20 @@ public class PlayerController : MonoBehaviour, IHealthSystem
         myWeapon = GetComponent<Weapon>();
 
         currentHealth = maxHealth;
+    }
 
+    void OnEnable()
+    {
         // Adding methods to PlayerControls delegates and activating it
         myPlayerControls.Enable();
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
+    }
+    
+    void OnDisable()
+    {
+        // Removing methods from PlayerControls delegates and deactivating it
+        myPlayerControls.Disable();
+        myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
     }
 
     private void FixedUpdate()
