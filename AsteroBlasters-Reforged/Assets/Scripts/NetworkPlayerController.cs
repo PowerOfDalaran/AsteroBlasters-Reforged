@@ -8,7 +8,9 @@ using Cinemachine;
 /// </summary>
 public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 {
+    // Fucking cinemachine
     //[SerializeField]
+    //GameObject cameraPacketPrefab;
     //CinemachineVirtualCamera virtualCamera;
 
     Rigidbody2D myRigidbody2D;
@@ -47,10 +49,15 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
     }
 
+    // fucking cinemachine, not able to even assign itself to the property, you dumb bitch
     //public override void OnNetworkSpawn()
     //{
+    //    Instantiate(cameraPacketPrefab);
+    //    virtualCamera = cameraPacketPrefab.GetComponentInChildren<CinemachineVirtualCamera>();
+
     //    if (IsOwner)
     //    {
+    //        Debug.Log(virtualCamera.Follow = own.transform);
     //        virtualCamera.Priority = 1;
     //    }
     //    else
