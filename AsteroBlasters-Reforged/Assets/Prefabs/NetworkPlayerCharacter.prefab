@@ -162,7 +162,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraPacketPrefab: {fileID: 9051754652006106780, guid: 65dddf100cb6779439e506bb284c5137, type: 3}
   movementSpeed: 3
   rotationSpeed: 6
   maxHealth: 3

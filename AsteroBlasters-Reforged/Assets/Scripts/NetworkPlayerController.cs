@@ -2,17 +2,13 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// </summary>
 public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 {
-    // Fucking cinemachine
-    //[SerializeField]
-    //GameObject cameraPacketPrefab;
-    //CinemachineVirtualCamera virtualCamera;
-
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
     Weapon myWeapon;
@@ -49,29 +45,15 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
     }
 
-    // fucking cinemachine, not able to even assign itself to the property, you dumb bitch
-    //public override void OnNetworkSpawn()
-    //{
-    //    Instantiate(cameraPacketPrefab);
-    //    virtualCamera = cameraPacketPrefab.GetComponentInChildren<CinemachineVirtualCamera>();
-
-    //    if (IsOwner)
-    //    {
-    //        Debug.Log(virtualCamera.Follow = own.transform);
-    //        virtualCamera.Priority = 1;
-    //    }
-    //    else
-    //    {
-    //        virtualCamera.Priority = 0;
-    //    }
-    //}
-
     private void FixedUpdate()
     {
         if (!IsOwner)
         {
             return;
         }
+        CameraController.instance.FollowPlayer(transform);
+
+
         // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
