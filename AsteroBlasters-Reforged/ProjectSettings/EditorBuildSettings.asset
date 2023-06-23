@@ -15,6 +15,15 @@ EditorBuildSettings:
     path: Assets/Scenes/TestScene.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
   - enabled: 1
+    path: Assets/Scenes/JoinCreateGameMenu.unity
+    guid: cce9c91dc2d9d5444b63f6934377fae3
+  - enabled: 1
+    path: Assets/Scenes/JoinScene.unity
+    guid: 1126d429b419c0a4890ca909beba6674
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelectScene.unity
+    guid: 96a1bdc837d3eef428df987e67ae1d7e
+  - enabled: 1
     path: Assets/Scenes/TestMultiplayerScene.unity
     guid: 825c796d9695eea48bd4df98f0aadaae
   m_configObjects:
