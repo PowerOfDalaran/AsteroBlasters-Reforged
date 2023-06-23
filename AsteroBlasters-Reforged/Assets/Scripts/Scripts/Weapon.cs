@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -24,7 +22,8 @@ public class Weapon : MonoBehaviour
         if (Time.time > cooldownStatus)
         {
             cooldownStatus = Time.time + fireCooldown;
-            Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            newProjectile.GetComponent<ProjectileController>().Launch();
         }
     }
 }
