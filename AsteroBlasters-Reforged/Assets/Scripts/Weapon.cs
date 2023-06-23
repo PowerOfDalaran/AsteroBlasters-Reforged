@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// Class responsible for firing projectiles from certain position.
 /// </summary>
-public class Weapon : MonoBehaviour
+public class Weapon : NetworkBehaviour
 {
     [SerializeField]
     Transform firePoint;
@@ -20,12 +18,16 @@ public class Weapon : MonoBehaviour
     /// <summary>
     /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
     /// </summary>
-    public void Shoot()
+    [ServerRpc]
+    public void ShootServerRpc()
     {
         if (Time.time > cooldownStatus)
         {
             cooldownStatus = Time.time + fireCooldown;
             GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+
+            newProjectile.GetComponent<NetworkObject>().Spawn();
+            newProjectile.GetComponent<ProjectileController>().Launch();
         }
     }
 }

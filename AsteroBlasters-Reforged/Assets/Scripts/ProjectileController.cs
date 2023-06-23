@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
 /// Class managing the projectile's functionalities.
 /// </summary>
-public class ProjectileController : MonoBehaviour
+public class ProjectileController : NetworkBehaviour
 {
     Rigidbody2D myRigidbody2D;
     public float speed = 20f;
@@ -13,9 +14,6 @@ public class ProjectileController : MonoBehaviour
     {
         // Assigning values to class properties
         myRigidbody2D = GetComponent<Rigidbody2D>();
-
-        // Firing the projectile forward
-        myRigidbody2D.velocity = transform.up * speed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -28,5 +26,11 @@ public class ProjectileController : MonoBehaviour
         }
 
         Destroy(gameObject);
+        gameObject.GetComponent<NetworkObject>().Despawn();
+    }
+
+    public void Launch()
+    {
+        myRigidbody2D.velocity = transform.up * speed;
     }
 }

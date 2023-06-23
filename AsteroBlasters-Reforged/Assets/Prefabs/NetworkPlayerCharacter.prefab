@@ -43,11 +43,11 @@ GameObject:
   - component: {fileID: 6271181028565025285}
   - component: {fileID: 6465402477068905526}
   - component: {fileID: 1315415824852888141}
-  - component: {fileID: 6737507525500998678}
   - component: {fileID: 5530364461489902994}
   - component: {fileID: 6556808845268215628}
   - component: {fileID: 2762045370066855179}
   - component: {fileID: 4137979427181763076}
+  - component: {fileID: -8620222053388310823}
   m_Layer: 0
   m_Name: NetworkPlayerCharacter
   m_TagString: Untagged
@@ -166,21 +166,6 @@ MonoBehaviour:
   rotationSpeed: 6
   maxHealth: 3
   currentHealth: 0
---- !u!114 &6737507525500998678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7635609446129040680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3699371f41590864d99cb900bfbbd114, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 50959481216350918}
-  projectilePrefab: {fileID: 4715944071043663114, guid: f70b2cdcc0855394ba6131ebd3d792df, type: 3}
-  fireCooldown: 1
 --- !u!58 &5530364461489902994
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -277,3 +262,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8620222053388310823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7635609446129040680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3699371f41590864d99cb900bfbbd114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 50959481216350918}
+  projectilePrefab: {fileID: 4715944071043663114, guid: f70b2cdcc0855394ba6131ebd3d792df, type: 3}
+  fireCooldown: 1

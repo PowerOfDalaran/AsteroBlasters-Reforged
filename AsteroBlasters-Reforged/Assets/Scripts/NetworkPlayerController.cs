@@ -103,7 +103,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         {
             return;
         }
-        myWeapon.Shoot();
+        myWeapon.ShootServerRpc();
     }
 
     /// <summary>

@@ -39,7 +39,7 @@ public class DummyController : MonoBehaviour, IHealthSystem
 
         if (myWeapon != null)
         {
-            myWeapon.Shoot();
+            myWeapon.ShootServerRpc();
         }
     }
 

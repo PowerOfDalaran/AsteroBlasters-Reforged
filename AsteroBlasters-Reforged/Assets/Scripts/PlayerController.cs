@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour, IHealthSystem
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
-        myWeapon.Shoot();
+        myWeapon.ShootServerRpc();
     }
 
     /// <summary>
