@@ -25,6 +25,7 @@ public class DummyController : MonoBehaviour, IHealthSystem
 
     void Awake()
     {
+        // Assigning values to properties
         myWeapon = gameObject.GetComponent<Weapon>();
         currentHealth = maxHealth;
     }
@@ -39,7 +40,7 @@ public class DummyController : MonoBehaviour, IHealthSystem
 
         if (myWeapon != null)
         {
-            myWeapon.ShootServerRpc();
+            myWeapon.Shoot();
         }
     }
 

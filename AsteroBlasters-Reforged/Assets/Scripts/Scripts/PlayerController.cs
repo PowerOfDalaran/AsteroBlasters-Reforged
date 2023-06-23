@@ -1,13 +1,10 @@
 using UnityEngine;
-using Unity.Netcode;
 using UnityEngine.InputSystem;
-using Cinemachine;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// </summary>
-public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
+public class PlayerController : MonoBehaviour, IHealthSystem
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
@@ -17,7 +14,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     float movementSpeed = 3f;
     [SerializeField]
     float rotationSpeed = 720;
-
     public int maxHealth = 3;
     public int currentHealth;
 
@@ -47,13 +43,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
-        {
-            return;
-        }
-        CameraController.instance.FollowPlayer(transform);
-
-
         // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
@@ -99,11 +88,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
-        if (!IsOwner)
-        {
-            return;
-        }
-        myWeapon.ShootServerRpc();
+        myWeapon.Shoot();
     }
 
     /// <summary>

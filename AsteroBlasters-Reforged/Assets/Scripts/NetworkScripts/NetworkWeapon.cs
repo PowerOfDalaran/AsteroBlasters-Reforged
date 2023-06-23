@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// Class responsible for firing projectiles from certain position.
+/// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
 /// </summary>
-public class Weapon : NetworkBehaviour
+public class NetworkWeapon : NetworkBehaviour
 {
     [SerializeField]
     Transform firePoint;
@@ -16,7 +17,7 @@ public class Weapon : NetworkBehaviour
     float cooldownStatus = 0;
 
     /// <summary>
-    /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
+    /// Method, which using ServerRpc, creates new projectile, spawn and launch it, if fire cooldown has passed.
     /// </summary>
     [ServerRpc]
     public void ShootServerRpc()
@@ -27,7 +28,7 @@ public class Weapon : NetworkBehaviour
             GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 
             newProjectile.GetComponent<NetworkObject>().Spawn();
-            newProjectile.GetComponent<ProjectileController>().Launch();
+            newProjectile.GetComponent<NetworkProjectileController>().Launch();
         }
     }
 }

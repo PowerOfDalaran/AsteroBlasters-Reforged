@@ -1,19 +1,22 @@
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
+/// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
 /// </summary>
-public class PlayerController : MonoBehaviour, IHealthSystem
+public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
-    Weapon myWeapon;
+    NetworkWeapon myWeapon;
 
     [SerializeField]
     float movementSpeed = 3f;
     [SerializeField]
     float rotationSpeed = 720;
+
     public int maxHealth = 3;
     public int currentHealth;
 
@@ -22,7 +25,7 @@ public class PlayerController : MonoBehaviour, IHealthSystem
         // Assigning values to properties
         myRigidbody2D = GetComponent<Rigidbody2D>();
         myPlayerControls = new PlayerControls();
-        myWeapon = GetComponent<Weapon>();
+        myWeapon = GetComponent<NetworkWeapon>();
 
         currentHealth = maxHealth;
     }
@@ -43,6 +46,14 @@ public class PlayerController : MonoBehaviour, IHealthSystem
 
     private void FixedUpdate()
     {
+        // Deciding whether the rest of method should be activated
+        if (!IsOwner)
+        {
+            return;
+        }
+        CameraController.instance.FollowPlayer(transform);
+
+
         // Reading current input value for movement and if it's different than zero activate movement and rotation
         Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
@@ -88,6 +99,11 @@ public class PlayerController : MonoBehaviour, IHealthSystem
     /// <param name="context">Value gathered by input system</param>
     void Shoot(InputAction.CallbackContext context)
     {
+        // Deciding whether the rest of method should be activated
+        if (!IsOwner)
+        {
+            return;
+        }
         myWeapon.ShootServerRpc();
     }
 

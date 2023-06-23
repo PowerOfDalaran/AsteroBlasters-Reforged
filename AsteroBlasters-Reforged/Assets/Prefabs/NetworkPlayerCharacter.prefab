@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 6556808845268215628}
   - component: {fileID: 2762045370066855179}
   - component: {fileID: 4137979427181763076}
-  - component: {fileID: -8620222053388310823}
+  - component: {fileID: 1933275940663373252}
   m_Layer: 0
   m_Name: NetworkPlayerCharacter
   m_TagString: Untagged
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-8620222053388310823
+--- !u!114 &1933275940663373252
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7635609446129040680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3699371f41590864d99cb900bfbbd114, type: 3}
+  m_Script: {fileID: 11500000, guid: 59c4f9f50a2fcd44580c62a8e8fa082c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 50959481216350918}

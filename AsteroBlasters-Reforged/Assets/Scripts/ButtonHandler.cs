@@ -15,14 +15,26 @@ public class ButtonHandler : MonoBehaviour
         LevelManager.instance.LoadScene(sceneIndex);
     }
 
+    /// <summary>
+    /// Method calling the NetworkManager to create new session as host
+    /// </summary>
     public void HostGame()
     {
         NetworkManager.Singleton.StartHost();
     }
+
+    /// <summary>
+    /// Method calling the NetworkManager to create new session as client
+    /// </summary>
     public void JoinGame()
     {
         NetworkManager.Singleton.StartClient();
     }
+
+    /// <summary>
+    /// Method destroying chosen game object
+    /// </summary>
+    /// <param name="gameObject">Gameobject that you want to destroy</param>
     public void DestroyObject(GameObject gameObject)
     {
         Destroy(gameObject);

@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// Class managing the projectile's functionalities.
+/// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
 /// </summary>
-public class ProjectileController : NetworkBehaviour
+public class NetworkProjectileController : NetworkBehaviour
 {
     Rigidbody2D myRigidbody2D;
     public float speed = 20f;
@@ -18,6 +19,7 @@ public class ProjectileController : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Checking if colliding object implement health system, if yes, dealing damage to it
         IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
 
         if (healthSystem != null)
@@ -25,10 +27,14 @@ public class ProjectileController : NetworkBehaviour
             healthSystem.TakeDamage(damage);
         }
 
+        // Destroying the game object and despawning it from server
         Destroy(gameObject);
         gameObject.GetComponent<NetworkObject>().Despawn();
     }
 
+    /// <summary>
+    /// Method granting the prefab velocity, to launch it in current direction
+    /// </summary>
     public void Launch()
     {
         myRigidbody2D.velocity = transform.up * speed;

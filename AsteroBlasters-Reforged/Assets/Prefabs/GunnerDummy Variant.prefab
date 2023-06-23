@@ -121,4 +121,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 1005517350818758787}
-  projectilePrefab: {fileID: 4715944071043663114, guid: f70b2cdcc0855394ba6131ebd3d792df, type: 3}
+  projectilePrefab: {fileID: 4715944071043663114, guid: 40494e8c8ec46d4488736c98e4e480ba, type: 3}
+  fireCooldown: 1
