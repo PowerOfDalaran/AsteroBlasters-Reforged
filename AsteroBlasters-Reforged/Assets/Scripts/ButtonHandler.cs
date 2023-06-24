@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,5 +43,9 @@ public class ButtonHandler : MonoBehaviour
     public void DestroyObject(GameObject gameObject)
     {
         Destroy(gameObject);
+    }
+    public void SetPlayereRady()
+    {
+        Debug.Log("player is ready!");
     }
 }

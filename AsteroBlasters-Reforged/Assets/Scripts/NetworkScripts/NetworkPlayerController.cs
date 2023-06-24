@@ -20,6 +20,8 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     public int maxHealth = 3;
     public int currentHealth;
 
+    private NetworkList<PlayerData> playerDataNetworkList;
+
     void Awake()
     {
         // Assigning values to properties
@@ -28,6 +30,9 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         myWeapon = GetComponent<NetworkWeapon>();
 
         currentHealth = maxHealth;
+
+        playerDataNetworkList = new NetworkList<PlayerData>();
+
     }
 
     void OnEnable()
