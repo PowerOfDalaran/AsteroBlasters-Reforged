@@ -26,7 +26,7 @@ public class LevelManager : MonoBehaviour
 
     /// <summary>
     /// Method changing scene to one with given build index.
-    /// Needs further upgrades - use the <c>progress</c> parameter to create progress bar?
+    /// Base method, which doesn't use any animator.
     /// </summary>
     /// <param name="sceneId">Build index of the scene to be loaded</param>
     public async void LoadScene(int sceneId)
@@ -45,9 +45,10 @@ public class LevelManager : MonoBehaviour
 
     /// <summary>
     /// Method changing scene to one with given build index.
-    /// Needs further upgrades - use the <c>progress</c> parameter to create progress bar?
+    /// Activates animation, which covers the screen.
     /// </summary>
     /// <param name="sceneId">Build index of the scene to be loaded</param>
+    /// <param name="transition">Animator of loading screen (UI element)</param>
     public async void LoadScene(int sceneId, Animator transition)
     {
 
