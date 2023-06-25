@@ -8,8 +8,18 @@ using UnityEngine.UI;
 /// </summary>
 public class ButtonHandler : MonoBehaviour
 {
+    GameObject LoadingScreen;
     [SerializeField]
-    Animator transition;
+    Slider maxPlayersSlider;
+    [SerializeField]
+    InputField lobbyNameInputField;
+    [SerializeField]
+    InputField lobbyCodeInputField;
+
+    public void Awake()
+    {
+        LoadingScreen = GameObject.FindGameObjectWithTag("LoadingScreen");
+    }
 
     /// <summary>
     /// Method calling an instance of <c>LevelManager</c> to change scene.
@@ -17,7 +27,18 @@ public class ButtonHandler : MonoBehaviour
     /// <param name="sceneIndex">Build index of the scene to be loaded</param>
     public void LoadScene(int sceneIndex)
     {
+        Animator transition = LoadingScreen.GetComponent<Animator>();
         LevelManager.instance.LoadScene(sceneIndex, transition);
+    }
+
+    public void CreateLobby()
+    {
+       LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int) maxPlayersSlider.value);
+    }
+
+    public void JoinLobby()
+    {
+        LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
     }
 
     /// <summary>
@@ -44,6 +65,7 @@ public class ButtonHandler : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
     public void SetPlayereRady()
     {
         Debug.Log("player is ready!");
