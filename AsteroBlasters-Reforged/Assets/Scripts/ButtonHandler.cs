@@ -32,11 +32,17 @@ public class ButtonHandler : MonoBehaviour
         LevelManager.instance.LoadScene(sceneIndex, transition);
     }
 
+    /// <summary>
+    /// Method calling the <c>LobbyManager</c> class to create new lobby with given parameters.
+    /// </summary>
     public void CreateLobby()
     {
        LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int) maxPlayersSlider.value);
     }
 
+    /// <summary>
+    /// Method calling the <c>LobbyManager</c> class to join lobby with given code.
+    /// </summary>
     public void JoinLobby()
     {
         LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);

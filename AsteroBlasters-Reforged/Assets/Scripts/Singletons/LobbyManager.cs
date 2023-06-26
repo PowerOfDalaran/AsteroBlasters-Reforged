@@ -4,6 +4,9 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
+/// <summary>
+/// Class responsible for managing connection with unity lobby service.
+/// </summary>
 public class LobbyManager : MonoBehaviour
 {
     public static LobbyManager instance;
@@ -25,21 +28,21 @@ public class LobbyManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        // Starting and connecting to lobby services
         await UnityServices.InitializeAsync();
-
-
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
     private void FixedUpdate()
     {
         LobbyHeartbeat();
-        if (hostedLobby != null)
-        {
-            Debug.Log(hostedLobby.Players.Count);
-        }
     }
 
+    /// <summary>
+    /// Method creating lobby with given name and maximum number of players.
+    /// </summary>
+    /// <param name="lobbyName">Name of new lobby</param>
+    /// <param name="maxPlayers">Maximum number of players, which can join the lobby</param>
     public async void CreateLobby(string lobbyName, int maxPlayers)
     {
         try
@@ -54,6 +57,9 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method pinging the hosted lobby, in order to not let it close itself.
+    /// </summary>
     async void LobbyHeartbeat()
     {
         if (hostedLobby != null)
@@ -68,6 +74,10 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method joining the lobby with certain code.
+    /// </summary>
+    /// <param name="lobbyCode">Code of lobby you want to join</param>
     public async void JoinLobbyByCode(string lobbyCode)
     {
         try
