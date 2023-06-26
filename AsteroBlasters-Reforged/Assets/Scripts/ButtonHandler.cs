@@ -15,6 +15,8 @@ public class ButtonHandler : MonoBehaviour
     [SerializeField]
     InputField lobbyNameInputField;
     [SerializeField]
+    InputField playerNameInputField;
+    [SerializeField]
     InputField lobbyCodeInputField;
 
     public void Awake()
@@ -46,6 +48,14 @@ public class ButtonHandler : MonoBehaviour
     public void JoinLobby()
     {
         LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
+    }
+
+    /// <summary>
+    /// Method calling the <c>LobbyManager</c> to set the name of current player.
+    /// </summary>
+    public void SelectPlayerName()
+    {
+        LobbyManager.instance.playerName = playerNameInputField.text;
     }
 
     /// <summary>

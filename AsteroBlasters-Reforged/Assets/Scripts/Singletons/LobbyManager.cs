@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -14,6 +15,7 @@ public class LobbyManager : MonoBehaviour
     Lobby joinedLobby;
     float heartbeatTimer;
     float maxHeartbeatTimer = 15f;
+    public string playerName;
 
     private async void Awake()
     {
@@ -47,9 +49,24 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            hostedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers);
+            // Creating "options" for lobby, which carry extra data - in this case - player name
+            CreateLobbyOptions lobbyOptions = new CreateLobbyOptions
+            {
+                Player = new Player
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName)}
+                    }
+                }
+            };
+
+            hostedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, lobbyOptions);
             joinedLobby = hostedLobby;
+
+            // Just debug logs to test things out
             Debug.Log(hostedLobby.Name + "; " + hostedLobby.Players.Count + "/" + hostedLobby.MaxPlayers + "; " + hostedLobby.LobbyCode);
+            Debug.Log(hostedLobby.Players[0].Data["PlayerName"].Value + " is a creator of the lobby.");
         }
         catch (LobbyServiceException exception)
         {
@@ -70,7 +87,6 @@ public class LobbyManager : MonoBehaviour
                 heartbeatTimer = maxHeartbeatTimer;
                 await LobbyService.Instance.SendHeartbeatPingAsync(hostedLobby.Id);
             }
-
         }
     }
 
@@ -82,8 +98,23 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            joinedLobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode);
-            Debug.Log("Lobby joined!\r\n" + joinedLobby.Name);
+            // Creating "options" for lobby, which carry extra data - in this case - player name
+            JoinLobbyByCodeOptions lobbyOptions = new JoinLobbyByCodeOptions
+            {
+                Player = new Player
+                {
+                    Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName)}
+                    }
+                }
+            };
+
+            joinedLobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode, lobbyOptions);
+            
+            // Just debug logs to test things out
+            Debug.Log("Lobby joined! Lobby name: " + joinedLobby.Name);
+            Debug.Log(joinedLobby.Players[^1].Data["PlayerName"].Value + " just joined a lobby!");
         }
         catch (LobbyServiceException exception)
         {
