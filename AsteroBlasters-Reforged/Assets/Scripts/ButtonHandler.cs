@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class ButtonHandler : MonoBehaviour
 {
     GameObject LoadingScreen;
+
     [SerializeField]
     Slider maxPlayersSlider;
     [SerializeField]
