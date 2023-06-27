@@ -33,7 +33,6 @@ public class ButtonHandler : MonoBehaviour
         Animator transition = LoadingScreen.GetComponent<Animator>();
         LevelManager.instance.LoadScene(sceneIndex, transition);
     }
-
     /// <summary>
     /// Method calling the <c>LobbyManager</c> class to create new lobby with given parameters.
     /// </summary>
@@ -57,32 +56,6 @@ public class ButtonHandler : MonoBehaviour
     {
         LobbyManager.instance.playerName = playerNameInputField.text;
     }
-
-    /// <summary>
-    /// Method calling the NetworkManager to create new session as host
-    /// </summary>
-    public void HostGame()
-    {
-        NetworkManager.Singleton.StartHost();
-        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
-    }
-
-    private void NetworkManager_OnClientConnectedCallback(ulong clientId)
-    {
-        CharacterSelect.instance.playerDataNetworkList.Add(new PlayerData
-        {
-            clientId = clientId,
-        });
-    }
-
-    /// <summary>
-    /// Method calling the NetworkManager to create new session as client
-    /// </summary>
-    public void JoinGame()
-    {
-        NetworkManager.Singleton.StartClient();
-    }
-
     /// <summary>
     /// Method destroying chosen game object
     /// </summary>
@@ -90,10 +63,5 @@ public class ButtonHandler : MonoBehaviour
     public void DestroyObject(GameObject gameObject)
     {
         Destroy(gameObject);
-    }
-
-    public void SetPlayereRady()
-    {
-        Debug.Log("player is ready!");
     }
 }

@@ -63,10 +63,7 @@ public class LobbyManager : MonoBehaviour
 
             hostedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, lobbyOptions);
             joinedLobby = hostedLobby;
-
-            // Just debug logs to test things out
-            Debug.Log(hostedLobby.Name + "; " + hostedLobby.Players.Count + "/" + hostedLobby.MaxPlayers + "; " + hostedLobby.LobbyCode);
-            Debug.Log(hostedLobby.Players[0].Data["PlayerName"].Value + " is a creator of the lobby.");
+            MultiplayerGameManager.instance.StartAsHost();
         }
         catch (LobbyServiceException exception)
         {
@@ -111,14 +108,20 @@ public class LobbyManager : MonoBehaviour
             };
 
             joinedLobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode, lobbyOptions);
-            
-            // Just debug logs to test things out
-            Debug.Log("Lobby joined! Lobby name: " + joinedLobby.Name);
-            Debug.Log(joinedLobby.Players[^1].Data["PlayerName"].Value + " just joined a lobby!");
+            MultiplayerGameManager.instance.StartAsClient();
         }
         catch (LobbyServiceException exception)
         {
             Debug.Log(exception);
         }
+    }
+
+    /// <summary>
+    /// Method returning the lobby, in which player currently is
+    /// </summary>
+    /// <returns>The lobby object</returns>
+    public Lobby GetLobby()
+    {
+        return joinedLobby;
     }
 }
