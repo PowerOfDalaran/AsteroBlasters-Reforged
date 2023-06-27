@@ -64,6 +64,15 @@ public class ButtonHandler : MonoBehaviour
     public void HostGame()
     {
         NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+    }
+
+    private void NetworkManager_OnClientConnectedCallback(ulong clientId)
+    {
+        CharacterSelect.instance.playerDataNetworkList.Add(new PlayerData
+        {
+            clientId = clientId,
+        });
     }
 
     /// <summary>
