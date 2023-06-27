@@ -27,6 +27,9 @@ public class LobbyManager : MonoBehaviour
 
         await UnityServices.InitializeAsync();
 
+        //player id
+        //Debug.Log("signeed in" + AuthenticationService.Instance.PlayerId);
+
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
@@ -34,10 +37,10 @@ public class LobbyManager : MonoBehaviour
     private void FixedUpdate()
     {
         LobbyHeartbeat();
-        if (hostedLobby != null)
-        {
-            Debug.Log(hostedLobby.Players.Count);
-        }
+        //if (hostedLobby != null)
+        //{
+        //    Debug.Log(hostedLobby.Players.Count);
+        //}
     }
 
     public async void CreateLobby(string lobbyName, int maxPlayers)
