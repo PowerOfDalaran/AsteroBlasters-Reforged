@@ -69,6 +69,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         {
             Debug.Log(currentHealth);
             currentHealth = maxHealth;
+            TakeDamage(-3);
             Die();
         }
     }
