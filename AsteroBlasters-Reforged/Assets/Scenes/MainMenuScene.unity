@@ -464,7 +464,7 @@ GameObject:
   - component: {fileID: 697155655}
   - component: {fileID: 697155658}
   m_Layer: 5
-  m_Name: TestSceneButton
+  m_Name: GameSceneButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -538,13 +538,13 @@ MonoBehaviour:
       - m_Target: {fileID: 697155658}
         m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
         m_MethodName: LoadScene
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: GameScene
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &697155656
@@ -599,6 +599,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxPlayersSlider: {fileID: 0}
   lobbyNameInputField: {fileID: 0}
+  playerNameInputField: {fileID: 0}
   lobbyCodeInputField: {fileID: 0}
 --- !u!1 &892656761
 GameObject:
@@ -964,7 +965,7 @@ GameObject:
   - component: {fileID: 2039415367}
   - component: {fileID: 2039415366}
   m_Layer: 5
-  m_Name: TestMultiplayerSceneButton
+  m_Name: NetworkMenuSceneButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1005,6 +1006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxPlayersSlider: {fileID: 0}
   lobbyNameInputField: {fileID: 0}
+  playerNameInputField: {fileID: 0}
   lobbyCodeInputField: {fileID: 0}
 --- !u!114 &2039415367
 MonoBehaviour:
@@ -1053,13 +1055,13 @@ MonoBehaviour:
       - m_Target: {fileID: 2039415366}
         m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
         m_MethodName: LoadScene
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: NetworkMenuScene
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2039415368

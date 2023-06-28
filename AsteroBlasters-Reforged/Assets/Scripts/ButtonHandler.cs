@@ -26,12 +26,24 @@ public class ButtonHandler : MonoBehaviour
 
     /// <summary>
     /// Method calling an instance of <c>LevelManager</c> to change scene.
+    /// This method is supposed to handle all scene changing before connecting to the host.
     /// </summary>
-    /// <param name="sceneIndex">Build index of the scene to be loaded</param>
-    public void LoadScene(int sceneIndex)
+    /// <param name="sceneName">Name of the scene to be loaded</param>
+    public void LoadScene(string sceneName)
     {
         Animator transition = LoadingScreen.GetComponent<Animator>();
-        LevelManager.instance.LoadScene(sceneIndex, transition);
+        LevelManager.instance.LoadScene(sceneName, transition);
+    }
+
+    /// <summary>
+    /// Method calling an instance of <c>LevelManager</c> to change scene.
+    /// This method is supposed to handle all scene changing after connecting to the host.
+    /// </summary>
+    /// <param name="sceneName">Name of the scene to be loaded</param>
+    public void NetworkLoadScene(string sceneName)
+    {
+        Animator transition = LoadingScreen.GetComponent<Animator>();
+        LevelManager.instance.NetworkLoadScene(sceneName, transition);
     }
     /// <summary>
     /// Method calling the <c>LobbyManager</c> class to create new lobby with given parameters.
