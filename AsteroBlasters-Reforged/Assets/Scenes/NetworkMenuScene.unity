@@ -642,6 +642,18 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 421771517}
         m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: ShutDownNetworkManager
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 421771517}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
         m_MethodName: DestroyObject
         m_Mode: 2
         m_Arguments:
@@ -2826,6 +2838,18 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1248469516}
         m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: ShutDownNetworkManager
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1248469516}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
         m_MethodName: DestroyObject
         m_Mode: 2
         m_Arguments:
@@ -3352,6 +3376,106 @@ PrefabInstance:
     - target: {fileID: 2502335740953342166, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
       propertyPath: m_Name
       value: MultiplayerGameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[0].b
+      value: 0.99010324
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[0].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[0].r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[1].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[1].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[1].r
+      value: 0.3223859
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[2].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[2].g
+      value: 0.0489275
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[2].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[3].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[3].b
+      value: 0.55888844
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[3].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[3].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[4].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[4].b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[4].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[4].r
+      value: 0.7993579
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[5].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[5].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[5].g
+      value: 0.93442965
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerColorList.Array.data[5].r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8683400759235561226, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
       propertyPath: m_RootOrder

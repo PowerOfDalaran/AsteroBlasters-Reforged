@@ -8,11 +8,22 @@ using UnityEngine;
 public class CharacterSelectPlayer : MonoBehaviour
 {
     [SerializeField] private int playerIndex;
+    SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         MultiplayerGameManager.instance.OnPlayerDataNetworkListChanged += CharacterSelect_OnPlayerDataNetworkListChanged;
         UpdatePlayer();
+    }
+
+    private void Awake()
+    {
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+    }
+
+    public void SetPlayerColor(Color color)
+    {
+        spriteRenderer.color = color;
     }
 
     /// <summary>
@@ -33,6 +44,9 @@ public class CharacterSelectPlayer : MonoBehaviour
         if(MultiplayerGameManager.instance.IsPlayerIndexConnected(playerIndex)) 
         {
             Show();
+
+            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            SetPlayerColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
         }
         else
         {

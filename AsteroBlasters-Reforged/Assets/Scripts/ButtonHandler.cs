@@ -68,6 +68,11 @@ public class ButtonHandler : MonoBehaviour
     {
         LobbyManager.instance.playerName = playerNameInputField.text;
     }
+
+    public void ShutDownNetworkManager()
+    {
+        NetworkManager.Singleton.Shutdown();
+    }
     /// <summary>
     /// Method destroying chosen game object
     /// </summary>

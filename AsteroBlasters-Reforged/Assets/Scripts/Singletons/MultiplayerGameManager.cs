@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,6 +9,9 @@ using UnityEngine;
 public class MultiplayerGameManager : NetworkBehaviour
 {
     public static MultiplayerGameManager instance;
+
+    [SerializeField]
+    List<Color> playerColorList;
 
     public NetworkList<PlayerData> playerDataNetworkList;
     public event EventHandler OnPlayerDataNetworkListChanged;
@@ -67,6 +69,7 @@ public class MultiplayerGameManager : NetworkBehaviour
         playerDataNetworkList.Add(new PlayerData
         {
             clientId = clientId,
+            colorId = GetFirstUnusedColorId(),
         });
     }
 
@@ -78,5 +81,90 @@ public class MultiplayerGameManager : NetworkBehaviour
     public bool IsPlayerIndexConnected(int playerIndex) 
     { 
         return playerIndex < playerDataNetworkList.Count;
+    }
+
+    public int GetPlayerIndexFromClientId(ulong clientId)
+    {
+        for (int i = 0; i < playerDataNetworkList.Count; i++)
+        {
+            if (playerDataNetworkList[i].clientId == clientId)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public PlayerData GetPlayerDataFromClientId(ulong clientId)
+    {
+        foreach (PlayerData playerData in playerDataNetworkList)
+        {
+            if (playerData.clientId == clientId)
+            {
+                return playerData;
+            }
+        }
+        return default;
+    }
+
+    public PlayerData GetCurrentPlayerData()
+    {
+        return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
+    }
+
+    public Color GetPlayerColor(int playerIndex)
+    {
+        return playerColorList[playerIndex];
+    }
+
+    public void ChangePlayerColor(int colorId)
+    {
+        ChangePlayerColorServerRpc(colorId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ChangePlayerColorServerRpc(int colorId, ServerRpcParams serverRpcParams = default)
+    {
+        if (!IsColorAvailable(colorId))
+        {
+            return;
+        }
+
+        int playerDataIndex = GetPlayerIndexFromClientId(serverRpcParams.Receive.SenderClientId);
+
+        PlayerData playerData = playerDataNetworkList[playerDataIndex];
+
+        playerData.colorId = colorId;
+        playerDataNetworkList[playerDataIndex] = playerData;
+    }
+
+    private bool IsColorAvailable(int colorId)
+    {
+        foreach (PlayerData playerData in playerDataNetworkList)
+        {
+            if (playerData.colorId == colorId)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    int GetFirstUnusedColorId()
+    {
+        for (int i = 0; i < playerColorList.Count; i++)
+        {
+            if (IsColorAvailable(i))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex)
+    {
+        return playerDataNetworkList[playerIndex];
     }
 }

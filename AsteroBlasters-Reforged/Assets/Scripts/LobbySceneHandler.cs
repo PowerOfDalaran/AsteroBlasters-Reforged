@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class LobbySceneHandler : MonoBehaviour
     Text lobbyNameText;
     [SerializeField]
     Text lobbyCodeText;
+    [SerializeField]
+    Button startGameButton;
 
     private void Start()
     {
@@ -18,5 +21,10 @@ public class LobbySceneHandler : MonoBehaviour
 
         lobbyNameText.text = "Lobby name: " + currentLobby.Name;
         lobbyCodeText.text = "Lobby code: " + currentLobby.LobbyCode;
+
+        if (NetworkManager.Singleton.IsHost)
+        {
+            startGameButton.gameObject.SetActive(true);
+        }
     }
 }
