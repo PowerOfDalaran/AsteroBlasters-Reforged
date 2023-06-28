@@ -67,15 +67,17 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         // Checking if the player is still alive
         if (currentHealth.Value <= 0)
         {
+            Debug.Log(currentHealth);
             currentHealth = maxHealth;
             Die();
         }
     }
 
     [ServerRpc]
-    private void ImpactDamageServerRpc(PlayerData player1)
+    private void ImpactDamageServerRpc(PlayerData player1, PlayerData player2)
     {
-        Debug.Log("Impact Damage: " + player1.ImpactVelocity);
+        Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
+        Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
         if (player1.ImpactVelocity > 8)
         {
             Die();
@@ -107,13 +109,14 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
                     ImpactVelocity = collision.relativeVelocity.magnitude
                 };
 
-                //var player2 = new PlayerData()
-                //{
-                //    Id = networkPlayer.OwnerClientId,
-                //    ImpactVelocity = networkPlayer.
-            
-                //}
-                ImpactDamageServerRpc(player1);
+                var player2 = new PlayerData()
+                {
+                    Id = networkPlayer.OwnerClientId,
+                    ImpactVelocity = collision.relativeVelocity.magnitude
+
+
+                };
+                ImpactDamageServerRpc(player1, player2);
             }
 
         }
@@ -174,6 +177,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         currentHealth.Value -= damage;
         Debug.Log("You took " + damage + " damage!");
     }
+
     public void Die()
     {
         Debug.Log("You died");
