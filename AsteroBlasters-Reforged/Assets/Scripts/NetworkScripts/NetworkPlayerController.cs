@@ -67,8 +67,8 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         // Checking if the player is still alive
         if (currentHealth.Value <= 0)
         {
-            Debug.Log(currentHealth);
-            AddDamage(3);
+            //Debug.Log(currentHealth);
+            currentHealth.Value = 3;
             Die();
         }
     }
@@ -177,13 +177,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         currentHealth.Value -= damage;
         Debug.Log("You took " + damage + " damage!");
     }
-
-    public void AddDamage(int damage)
-    {
-        currentHealth.Value += damage;
-        Debug.Log("You add " + damage + " damage!");
-    }
-
 
     public void Die()
     {
