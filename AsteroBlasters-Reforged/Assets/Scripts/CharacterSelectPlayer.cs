@@ -12,22 +12,28 @@ public class CharacterSelectPlayer : MonoBehaviour
 
     private void Start()
     {
+        // Adding the method to the event and updating the visual
         MultiplayerGameManager.instance.OnPlayerDataNetworkListChanged += CharacterSelect_OnPlayerDataNetworkListChanged;
         UpdatePlayer();
     }
 
     private void Awake()
     {
+        // Assigning values to properties
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
+    /// <summary>
+    /// Method setting the player visual color to given one
+    /// </summary>
+    /// <param name="color">Color you want to swap to</param>
     public void SetPlayerColor(Color color)
     {
         spriteRenderer.color = color;
     }
 
     /// <summary>
-    /// Method, which runs eevery time the player list is being changed
+    /// Method, which runs every time the player list is being changed
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -37,7 +43,7 @@ public class CharacterSelectPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// Method checking if the player image should be visible
+    /// Method checking if the player image should be visible and changing the color to the actual one
     /// </summary>
     private void UpdatePlayer()
     {
@@ -70,4 +76,8 @@ public class CharacterSelectPlayer : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+        MultiplayerGameManager.instance.OnPlayerDataNetworkListChanged -= CharacterSelect_OnPlayerDataNetworkListChanged;
+    }
 }
