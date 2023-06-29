@@ -68,8 +68,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         if (currentHealth.Value <= 0)
         {
             Debug.Log(currentHealth);
-            currentHealth = maxHealth;
-            TakeDamage(-3);
+            AddDamage(3);
             Die();
         }
     }
@@ -178,6 +177,13 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         currentHealth.Value -= damage;
         Debug.Log("You took " + damage + " damage!");
     }
+
+    public void AddDamage(int damage)
+    {
+        currentHealth.Value += damage;
+        Debug.Log("You add " + damage + " damage!");
+    }
+
 
     public void Die()
     {
