@@ -47,6 +47,11 @@ public class LobbyManager : MonoBehaviour
         LobbyHeartbeat();
     }
 
+    /// <summary>
+    /// Method calling the Unity Relay Service to create new allocation
+    /// </summary>
+    /// <param name="maxPlayers">Maximum number of players (with host)</param>
+    /// <returns>Created allocation</returns>
     async Task<Allocation> AllocateRelay(int maxPlayers)
     {
         try
@@ -61,6 +66,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method calling the Unity Relay Service to get join code of given allocation
+    /// </summary>
+    /// <param name="allocation">Allocation you want to get code of</param>
+    /// <returns>Joining code of given allocation</returns>
     async Task<string> GetRelayJoinCode(Allocation allocation)
     {
         try
