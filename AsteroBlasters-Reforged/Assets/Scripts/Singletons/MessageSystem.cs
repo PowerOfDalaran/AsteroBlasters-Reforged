@@ -3,9 +3,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MessegeSystem : MonoBehaviour
+/// <summary>
+/// Singleton responsible for managing text messeges displayed on user screen
+/// </summary>
+public class MessageSystem : MonoBehaviour
 {
-    public static MessegeSystem instance;
+    public static MessageSystem instance;
 
 
     [SerializeField]
@@ -18,6 +21,9 @@ public class MessegeSystem : MonoBehaviour
     List<Message> highMessages;
     bool displayingMessage = false;
 
+    /// <summary>
+    /// Enum representing possible priority levels for a message
+    /// </summary>
     public enum MessagePriority
     {
         Low,
@@ -41,6 +47,7 @@ public class MessegeSystem : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Checking if message should be displayed
         if (!displayingMessage && (lowMessages.Count > 0 || mediumMessages.Count > 0 || highMessages.Count > 0))
         {
             Message messageToDisplay = GetTopProrityMessage();
@@ -48,6 +55,12 @@ public class MessegeSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method creating new message and assigning it to proper list, basing on its priority
+    /// </summary>
+    /// <param name="value">Text value of the message</param>
+    /// <param name="displayTime">Time in which the message will be displayed</param>
+    /// <param name="priority">Level of priority of the message</param>
     public void AddMessage(string value, int displayTime, MessagePriority priority)
     {
         Message newMessage = new Message(value, displayTime);
@@ -68,6 +81,10 @@ public class MessegeSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method activating the animations and displaying the text for set amount of time
+    /// </summary>
+    /// <param name="message">Message object, containing the data of the message</param>
     async void DisplayMessege(Message message)
     {
         messegeText.text = message.messageValue;
@@ -80,6 +97,10 @@ public class MessegeSystem : MonoBehaviour
         animator.SetBool("NoMessage", true);
     }
 
+    /// <summary>
+    /// Method choosing the top priority message, which is supposed to be displayed
+    /// </summary>
+    /// <returns>Top priority message</returns>
     Message GetTopProrityMessage()
     {
         Message resultMessage;

@@ -1,3 +1,6 @@
+/// <summary>
+/// Class used to contain messeges for <c>MessageSystem</c>
+/// </summary>
 public class Message
 {
     public string messageValue;
