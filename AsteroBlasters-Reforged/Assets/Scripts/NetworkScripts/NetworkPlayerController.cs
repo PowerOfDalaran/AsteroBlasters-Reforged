@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
 
+
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
@@ -37,7 +38,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         myPlayerControls.Enable();
         myPlayerControls.PlayerActions.Shoot.performed += Shoot;
     }
-    
+
     void OnDisable()
     {
         // Removing methods from PlayerControls delegates and deactivating it
@@ -68,8 +69,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         if (currentHealth.Value <= 0)
         {
             //Debug.Log(currentHealth);
-            currentHealth.Value = 3;
-            Die();
+            
         }
     }
 
@@ -94,12 +94,12 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+
         // Checking if collision damage should be applied and applying it
         if (!collision.gameObject.CompareTag("NoImpactDamage"))
         {
             if (!IsOwner) return;
-            if (collision.gameObject.TryGetComponent(out NetworkPlayerController networkPlayer)) 
+            if (collision.gameObject.TryGetComponent(out NetworkPlayerController networkPlayer))
             {
                 //impactVelocity.Value = collision.relativeVelocity.magnitude;
 
@@ -121,7 +121,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 
         }
     }
-    
+
     struct PlayerData : INetworkSerializable
     {
         public ulong Id;
@@ -174,15 +174,45 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 
     public void TakeDamage(int damage)
     {
-        currentHealth.Value -= damage;
-        Debug.Log("You took " + damage + " damage!");
+        //currentHealth.Value -= damage;
+        
+        var playerId = OwnerClientId;
+
+        TakeDamageServerRpc(damage, playerId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDamageServerRpc(int damage, ulong clientId)
+    {
+        var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
+        
+        if (client.currentHealth.Value > 0)
+        {
+            client.currentHealth.Value -= damage;
+        }
+        else
+        {
+            client.currentHealth.Value = 3;
+            DieServerRpc(clientId);
+        }
+        Debug.Log("You took " + damage + " damage!, You have " + client.currentHealth.Value);
     }
 
     public void Die()
     {
         Debug.Log("You died");
-        myRigidbody2D.position = new Vector2(0f, 0f);
-        myRigidbody2D.velocity = Vector2.zero;
+
+        //DieServerRpc();
         
+    }
+
+    [ServerRpc]
+    public void DieServerRpc(ulong clientId)
+    {
+        Debug.Log("You are dead " + clientId);
+        var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
+        client.myRigidbody2D.position = new Vector2(0f, 0f);
+        client.myRigidbody2D.velocity = Vector2.zero;
+        Debug.Log(client.myRigidbody2D.position);
     }
 }
