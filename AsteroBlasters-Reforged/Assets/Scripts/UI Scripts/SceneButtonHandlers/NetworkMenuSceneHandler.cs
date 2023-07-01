@@ -1,8 +1,10 @@
-using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class responsible for managing buttons and other UI elements of "NetworkMenuScene" scene.
+/// </summary>
 public class NetworkMenuSceneHandler : MonoBehaviour
 {
     // Buttons
@@ -50,6 +52,11 @@ public class NetworkMenuSceneHandler : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Method providing functionalities to CreateGame button, it calls <c>LobbyManager</c> to create new lobby with given parameters.
+    /// If the attempt succedes, the scene is changed, otherwise error message is displayed.
+    /// The method was moved to different class in order to use async properties.
+    /// </summary>
     async void CreateGameButton()
     {
         bool creatingResult = await LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int)maxPlayersSlider.value);
@@ -65,6 +72,11 @@ public class NetworkMenuSceneHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method providing functionalities to JoinGame button, it calls <c>LobbyManager</c> to connect to lobby with given code.
+    /// If the attempt succedes, the scene is changed, otherwise error message is displayed.
+    /// The method was moved to different class in order to use async properties.
+    /// </summary>
     async void JoinGameButton()
     {
         bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);

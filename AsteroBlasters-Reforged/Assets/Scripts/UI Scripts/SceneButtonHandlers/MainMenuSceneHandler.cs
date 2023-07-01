@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class responsible for managing buttons and other UI elements of "MainMenuScene" scene.
+/// </summary>
 public class MainMenuSceneHandler : MonoBehaviour
 {
     // Buttons

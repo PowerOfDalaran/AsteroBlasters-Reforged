@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class responsible for managing buttons and other UI elements of "GameScene" scene.
+/// </summary>
 public class GameSceneHandler : MonoBehaviour
 {
     // Buttons

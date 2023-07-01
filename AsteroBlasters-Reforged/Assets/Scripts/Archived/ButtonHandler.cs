@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
+/// ||ARCHIVED||
 /// Class containing methods for buttons. It is meant to be attatched to button in order to provide it functionality.
 /// </summary>
 public class ButtonHandler : MonoBehaviour
