@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 
+
 /// <summary>
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
@@ -176,14 +177,15 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     {
         //currentHealth.Value -= damage;
         
-        var playerId = OwnerClientId;
 
-        TakeDamageServerRpc(damage, playerId);
+        //Debug.Log(playerId);
+        TakeDamageServerRpc(damage);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int damage, ulong clientId)
+    [ServerRpc (RequireOwnership = false)]
+    public void TakeDamageServerRpc(int damage,ServerRpcParams serverRpcParams = default)
     {
+        var clientId = serverRpcParams.Receive.SenderClientId;
         var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
         
         if (client.currentHealth.Value > 0)
@@ -193,7 +195,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         else
         {
             client.currentHealth.Value = 3;
-            DieServerRpc(clientId);
+            DieServerRpc();
         }
         Debug.Log("You took " + damage + " damage!, You have " + client.currentHealth.Value);
     }
@@ -207,8 +209,9 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     }
 
     [ServerRpc]
-    public void DieServerRpc(ulong clientId)
+    public void DieServerRpc(ServerRpcParams serverRpcParams = default)
     {
+        var clientId = serverRpcParams.Receive.SenderClientId;
         Debug.Log("You are dead " + clientId);
         var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
         client.myRigidbody2D.position = new Vector2(0f, 0f);
