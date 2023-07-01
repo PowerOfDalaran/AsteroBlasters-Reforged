@@ -43,6 +43,10 @@ public class MessageSystem : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        lowMessages = new List<Message>();
+        mediumMessages = new List<Message>();
+        highMessages = new List<Message>();
     }
 
     private void FixedUpdate()

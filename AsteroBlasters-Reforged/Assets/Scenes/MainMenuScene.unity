@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 101821947}
   - component: {fileID: 101821946}
   - component: {fileID: 101821945}
+  - component: {fileID: 101821949}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -229,6 +230,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &101821949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101821944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58f1c08fc88c9544891358748cf4f82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  singleplayerGameButton: {fileID: 697155655}
+  multiplayerGameButton: {fileID: 2039415367}
+  LoadingScreen: {fileID: 1108912475}
 --- !u!1 &239364111
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +478,6 @@ GameObject:
   - component: {fileID: 697155657}
   - component: {fileID: 697155656}
   - component: {fileID: 697155655}
-  - component: {fileID: 697155658}
   m_Layer: 5
   m_Name: GameSceneButton
   m_TagString: Untagged
@@ -534,19 +549,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 697155656}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 697155658}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: GameScene
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &697155656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,22 +588,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 697155653}
   m_CullTransparentMesh: 1
---- !u!114 &697155658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 697155653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!1 &892656761
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,6 +778,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4541600884827817736, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
   m_PrefabInstance: {fileID: 1108912473}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1108912475 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 792171380412264454, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
+  m_PrefabInstance: {fileID: 1108912473}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1146465561
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,7 +955,6 @@ GameObject:
   - component: {fileID: 2039415369}
   - component: {fileID: 2039415368}
   - component: {fileID: 2039415367}
-  - component: {fileID: 2039415366}
   m_Layer: 5
   m_Name: NetworkMenuSceneButton
   m_TagString: Untagged
@@ -992,22 +983,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1, y: -1.5}
   m_SizeDelta: {x: 4, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2039415366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2039415364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &2039415367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1051,19 +1026,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2039415368}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2039415366}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: NetworkMenuScene
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2039415368
 MonoBehaviour:
   m_ObjectHideFlags: 0

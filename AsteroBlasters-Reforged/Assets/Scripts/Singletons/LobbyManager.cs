@@ -110,7 +110,7 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     /// <param name="lobbyName">Name of new lobby</param>
     /// <param name="maxPlayers">Maximum number of players, which can join the lobby</param>
-    public async void CreateLobby(string lobbyName, int maxPlayers)
+    public async Task<bool> CreateLobby(string lobbyName, int maxPlayers)
     {
         try
         {
@@ -146,10 +146,12 @@ public class LobbyManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
 
             MultiplayerGameManager.instance.StartAsHost();
+            return true;
         }
         catch (LobbyServiceException exception)
         {
             Debug.LogException(exception);
+            return false;
         }
     }
 
@@ -173,7 +175,7 @@ public class LobbyManager : MonoBehaviour
     /// Method joining the lobby with certain code.
     /// </summary>
     /// <param name="lobbyCode">Code of lobby you want to join</param>
-    public async void JoinLobbyByCode(string lobbyCode)
+    public async Task<bool> JoinLobbyByCode(string lobbyCode)
     {
         try
         {
@@ -199,10 +201,12 @@ public class LobbyManager : MonoBehaviour
 
             // Starting the NetworkManager (as client)
             MultiplayerGameManager.instance.StartAsClient();
+            return true;
         }
         catch (LobbyServiceException exception)
         {
             Debug.Log(exception);
+            return false;
         }
     }
 

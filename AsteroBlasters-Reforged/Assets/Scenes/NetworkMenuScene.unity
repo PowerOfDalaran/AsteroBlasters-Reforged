@@ -364,7 +364,6 @@ GameObject:
   - component: {fileID: 414453436}
   - component: {fileID: 414453435}
   - component: {fileID: 414453434}
-  - component: {fileID: 414453433}
   m_Layer: 5
   m_Name: ExitLobbyCreationButton
   m_TagString: Untagged
@@ -393,22 +392,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &414453433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 414453431}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &414453434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,193 +497,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414453431}
-  m_CullTransparentMesh: 1
---- !u!1 &421771515
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 421771516}
-  - component: {fileID: 421771520}
-  - component: {fileID: 421771519}
-  - component: {fileID: 421771518}
-  - component: {fileID: 421771517}
-  m_Layer: 5
-  m_Name: ReturnButton
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &421771516
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421771515}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1663441297}
-  m_Father: {fileID: 1201969245}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.020498438, y: 0.906}
-  m_AnchorMax: {x: 0.21800001, y: 0.9620001}
-  m_AnchoredPosition: {x: 1, y: -1}
-  m_SizeDelta: {x: -1.902771, y: 0.0847168}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &421771517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421771515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
---- !u!114 &421771518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421771515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 421771519}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 421771517}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: MainMenuScene
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 421771517}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: DestroyObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1992131947}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 421771517}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: ShutDownNetworkManager
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 421771517}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: DestroyObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1609413901}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &421771519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421771515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &421771520
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421771515}
   m_CullTransparentMesh: 1
 --- !u!1 &425118535
 GameObject:
@@ -861,7 +657,6 @@ GameObject:
   - component: {fileID: 506696969}
   - component: {fileID: 506696968}
   - component: {fileID: 506696967}
-  - component: {fileID: 506696970}
   m_Layer: 5
   m_Name: CreateLobbyButton
   m_TagString: Untagged
@@ -996,22 +791,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 506696965}
   m_CullTransparentMesh: 1
---- !u!114 &506696970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 506696965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!1 &543674571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,6 +842,7 @@ GameObject:
   - component: {fileID: 588381695}
   - component: {fileID: 588381694}
   - component: {fileID: 588381693}
+  - component: {fileID: 588381697}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1149,6 +929,7 @@ RectTransform:
   - {fileID: 2103956913}
   - {fileID: 543674572}
   - {fileID: 1201969245}
+  - {fileID: 1332065680}
   - {fileID: 1486861872}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1158,6 +939,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &588381697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588381692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f7aa04573636b48b9936c4935aab12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joinGameButton: {fileID: 589968365}
+  createGameButton: {fileID: 612730174}
+  returnToMenuButton: {fileID: 1248469517}
+  setPlayerNameButton: {fileID: 966225158}
+  lobbyCodeInputField: {fileID: 425118537}
+  maxPlayersSlider: {fileID: 1295946889}
+  lobbyNameInputField: {fileID: 928595133}
+  LoadingScreen: {fileID: 1486861873}
+  playerNameInputField: {fileID: 1232625183}
 --- !u!1 &589968362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +972,6 @@ GameObject:
   - component: {fileID: 589968367}
   - component: {fileID: 589968366}
   - component: {fileID: 589968365}
-  - component: {fileID: 589968364}
   m_Layer: 5
   m_Name: JoinGameButton
   m_TagString: Untagged
@@ -1199,22 +1000,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &589968364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 589968362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 1295946889}
-  lobbyNameInputField: {fileID: 928595133}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 425118537}
 --- !u!114 &589968365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1258,31 +1043,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 589968366}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 589968364}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: JoinLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 589968364}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: NetworkLobbyScene
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &589968366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1413,7 +1174,6 @@ GameObject:
   - component: {fileID: 612730176}
   - component: {fileID: 612730175}
   - component: {fileID: 612730174}
-  - component: {fileID: 612730173}
   m_Layer: 5
   m_Name: CreateGameButton
   m_TagString: Untagged
@@ -1442,22 +1202,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &612730173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612730171}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 1295946889}
-  lobbyNameInputField: {fileID: 928595133}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &612730174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1501,31 +1245,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 612730175}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 612730173}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: CreateLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 612730173}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: NetworkLobbyScene
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &612730175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,7 +1685,6 @@ GameObject:
   - component: {fileID: 966225160}
   - component: {fileID: 966225159}
   - component: {fileID: 966225158}
-  - component: {fileID: 966225157}
   m_Layer: 5
   m_Name: ConfirmNameButton
   m_TagString: Untagged
@@ -1994,22 +1713,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.25004578, y: -0.14039612}
   m_SizeDelta: {x: 0.11456299, y: 0.098098755}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &966225157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 966225155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 1295946889}
-  lobbyNameInputField: {fileID: 928595133}
-  playerNameInputField: {fileID: 1232625183}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &966225158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2054,18 +1757,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 966225157}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: SelectPlayerName
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 2103956912}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -2386,7 +2077,6 @@ RectTransform:
   m_Children:
   - {fileID: 1232625182}
   - {fileID: 966225156}
-  - {fileID: 421771516}
   m_Father: {fileID: 588381696}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2735,7 +2425,6 @@ GameObject:
   - component: {fileID: 1248469519}
   - component: {fileID: 1248469518}
   - component: {fileID: 1248469517}
-  - component: {fileID: 1248469516}
   m_Layer: 5
   m_Name: ReturnButton
   m_TagString: Untagged
@@ -2764,22 +2453,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1248469516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248469514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &1248469517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2823,55 +2496,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1248469518}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1248469516}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: MainMenuScene
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1248469516}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: ShutDownNetworkManager
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1248469516}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: DestroyObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1992131947}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1248469516}
-        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
-        m_MethodName: DestroyObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1609413901}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1248469518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3075,12 +2700,118 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1582842218}
   m_Direction: 0
   m_MinValue: 2
-  m_MaxValue: 5
+  m_MaxValue: 6
   m_WholeNumbers: 1
   m_Value: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &1332065679
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 588381696}
+    m_Modifications:
+    - target: {fileID: 4188613282954618819, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_Name
+      value: MessageBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+--- !u!224 &1332065680 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6095157653551038467, guid: 1ca7724eef8d3284eb1601467982cf6f, type: 3}
+  m_PrefabInstance: {fileID: 1332065679}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1348305597
 GameObject:
   m_ObjectHideFlags: 0
@@ -3210,7 +2941,6 @@ GameObject:
   - component: {fileID: 1448759487}
   - component: {fileID: 1448759486}
   - component: {fileID: 1448759485}
-  - component: {fileID: 1448759484}
   m_Layer: 5
   m_Name: ExitLobbyCreationButton
   m_TagString: Untagged
@@ -3239,22 +2969,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1448759484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448759482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!114 &1448759485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3636,6 +3350,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4541600884827817736, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
   m_PrefabInstance: {fileID: 1486861871}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1486861873 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 792171380412264454, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
+  m_PrefabInstance: {fileID: 1486861871}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1569681718
 GameObject:
   m_ObjectHideFlags: 0
@@ -3967,88 +3686,6 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
---- !u!1 &1663441296
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1663441297}
-  - component: {fileID: 1663441299}
-  - component: {fileID: 1663441298}
-  m_Layer: 5
-  m_Name: Text (Legacy)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1663441297
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663441296}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 421771516}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1663441298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663441296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 4
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Return to menu
-
-'
---- !u!222 &1663441299
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663441296}
-  m_CullTransparentMesh: 1
 --- !u!1 &1704277866
 GameObject:
   m_ObjectHideFlags: 0
@@ -4499,7 +4136,6 @@ GameObject:
   - component: {fileID: 2070089144}
   - component: {fileID: 2070089143}
   - component: {fileID: 2070089142}
-  - component: {fileID: 2070089145}
   m_Layer: 5
   m_Name: JoinLobbyButton
   m_TagString: Untagged
@@ -4634,22 +4270,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070089140}
   m_CullTransparentMesh: 1
---- !u!114 &2070089145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2070089140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a614d34ab1326e846aa693baa203dfd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPlayersSlider: {fileID: 0}
-  lobbyNameInputField: {fileID: 0}
-  playerNameInputField: {fileID: 0}
-  lobbyCodeInputField: {fileID: 0}
 --- !u!1 &2103956912
 GameObject:
   m_ObjectHideFlags: 0
