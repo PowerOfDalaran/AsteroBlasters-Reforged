@@ -10,6 +10,9 @@ public class LobbySceneHandler : MonoBehaviour
 {
     // Buttons
     [SerializeField]
+    Button[] buttons;
+
+    [SerializeField]
     Button startGameButton;
 
     // Other UI elements
@@ -30,6 +33,7 @@ public class LobbySceneHandler : MonoBehaviour
 
         startGameButton.onClick.AddListener(() =>
         {
+            TurnOffButtons();
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.NetworkLoadScene("NetworkGameScene", transition);
         });
@@ -38,6 +42,14 @@ public class LobbySceneHandler : MonoBehaviour
         if (NetworkManager.Singleton.IsHost)
         {
             startGameButton.gameObject.SetActive(true);
+        }
+    }
+
+    private void TurnOffButtons()
+    {
+        foreach (Button button in buttons)
+        {
+            button.enabled = false;
         }
     }
 }

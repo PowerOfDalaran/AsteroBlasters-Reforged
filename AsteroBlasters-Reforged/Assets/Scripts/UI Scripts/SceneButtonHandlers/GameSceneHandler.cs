@@ -8,6 +8,9 @@ public class GameSceneHandler : MonoBehaviour
 {
     // Buttons
     [SerializeField]
+    Button[] buttons;
+
+    [SerializeField]
     Button reloadSceneButton;
     [SerializeField]
     Button returnToMenuButton;
@@ -21,14 +24,24 @@ public class GameSceneHandler : MonoBehaviour
         // Adding functionality to the buttons
         reloadSceneButton.onClick.AddListener(() =>
         {
+            TurnOffButtons();
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("GameScene", transition);
         });
 
         returnToMenuButton.onClick.AddListener(() =>
         {
+            TurnOffButtons();
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("MainMenuScene", transition);
         });
+    }
+
+    private void TurnOffButtons()
+    {
+        foreach (Button button in buttons)
+        {
+            button.enabled = false;
+        }
     }
 }

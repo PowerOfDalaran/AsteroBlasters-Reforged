@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
 using UnityEngine;
 
 /// <summary>
@@ -58,6 +59,17 @@ public class MultiplayerGameManager : NetworkBehaviour
         });
     }
 
+    private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
+    {
+        foreach (PlayerData playerData in playerDataNetworkList)
+        {
+            if (playerData.clientId == clientId)
+            {
+                playerDataNetworkList.Remove(playerData);
+            }
+        }
+    }
+
     // STARTING NETWORK MANAGER
 
     /// <summary>
@@ -66,6 +78,7 @@ public class MultiplayerGameManager : NetworkBehaviour
     public void StartAsHost()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
         NetworkManager.StartHost();
     }
 

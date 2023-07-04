@@ -132,7 +132,6 @@ public class LobbyManager : MonoBehaviour
             // Creating new allocation, accessing its relay joining code and adding it to lobby data
             Allocation allocation = await AllocateRelay(maxPlayers);
             string relayJoinCode = await GetRelayJoinCode(allocation);
-            Debug.Log(relayJoinCode);
 
             await LobbyService.Instance.UpdateLobbyAsync(hostedLobby.Id, new UpdateLobbyOptions
             {
@@ -217,5 +216,18 @@ public class LobbyManager : MonoBehaviour
     public Lobby GetLobby()
     {
         return joinedLobby;
+    }
+
+    // TESTOWANE
+    public async void LeaveLobby()
+    {
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+        }
+        catch (LobbyServiceException exception)
+        {
+            Debug.Log(exception);
+        }
     }
 }

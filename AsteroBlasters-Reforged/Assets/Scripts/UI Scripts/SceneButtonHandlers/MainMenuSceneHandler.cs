@@ -10,6 +10,9 @@ public class MainMenuSceneHandler : MonoBehaviour
 {
     // Buttons
     [SerializeField]
+    Button[] buttons;
+
+    [SerializeField]
     Button singleplayerGameButton;
     [SerializeField]
     Button multiplayerGameButton;
@@ -23,14 +26,24 @@ public class MainMenuSceneHandler : MonoBehaviour
         // Adding functionality to the buttons
         singleplayerGameButton.onClick.AddListener(() =>
         {
+            TurnOffButtons();
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("GameScene", transition);
         });
 
         multiplayerGameButton.onClick.AddListener(() => 
         {
+            TurnOffButtons();
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("NetworkMenuScene", transition);
         });
+    }
+
+    private void TurnOffButtons()
+    {
+        foreach (Button button in buttons) 
+        {
+            button.enabled = false;
+        }
     }
 }

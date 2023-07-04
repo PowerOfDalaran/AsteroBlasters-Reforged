@@ -9,6 +9,9 @@ public class NetworkMenuSceneHandler : MonoBehaviour
 {
     // Buttons
     [SerializeField]
+    Button[] buttons;
+
+    [SerializeField]
     Button joinGameButton;
     [SerializeField]
     Button createGameButton;
@@ -37,6 +40,7 @@ public class NetworkMenuSceneHandler : MonoBehaviour
 
         returnToMenuButton.onClick.AddListener(() =>
         {
+            ChangeButtonsState(false);
             NetworkManager.Singleton.Shutdown();
 
             Destroy(NetworkManager.Singleton.gameObject);
@@ -59,6 +63,7 @@ public class NetworkMenuSceneHandler : MonoBehaviour
     /// </summary>
     async void CreateGameButton()
     {
+        ChangeButtonsState(false);
         bool creatingResult = await LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int)maxPlayersSlider.value);
 
         if (creatingResult)
@@ -68,6 +73,7 @@ public class NetworkMenuSceneHandler : MonoBehaviour
         }
         else
         {
+            ChangeButtonsState(true);
             MessageSystem.instance.AddMessage("An error has occurred while creating the lobby!", 3000, MessageSystem.MessagePriority.High);
         }
     }
@@ -79,6 +85,7 @@ public class NetworkMenuSceneHandler : MonoBehaviour
     /// </summary>
     async void JoinGameButton()
     {
+        ChangeButtonsState(false);
         bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
 
         if (joiningReslut)
@@ -88,7 +95,16 @@ public class NetworkMenuSceneHandler : MonoBehaviour
         }
         else
         {
+            ChangeButtonsState(true);
             MessageSystem.instance.AddMessage("An error has occurred while joining the lobby!", 3000, MessageSystem.MessagePriority.High);
+        }
+    }
+
+    private void ChangeButtonsState(bool state)
+    {
+        foreach (Button button in buttons)
+        {
+            button.enabled = state;
         }
     }
 }
