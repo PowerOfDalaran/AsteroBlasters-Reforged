@@ -219,6 +219,9 @@ public class LobbyManager : MonoBehaviour
     }
 
     // TESTOWANE
+    /// <summary>
+    /// Method removing current player from the lobby
+    /// </summary>
     public async void LeaveLobby()
     {
         try

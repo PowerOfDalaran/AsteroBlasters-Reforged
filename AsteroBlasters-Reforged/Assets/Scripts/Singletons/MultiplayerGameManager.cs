@@ -59,6 +59,10 @@ public class MultiplayerGameManager : NetworkBehaviour
         });
     }
 
+    /// <summary>
+    /// Method, which removes player with given id from the playerNetworkList
+    /// </summary>
+    /// <param name="clientId">Id of player you want to remove</param>
     private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
     {
         foreach (PlayerData playerData in playerDataNetworkList)
