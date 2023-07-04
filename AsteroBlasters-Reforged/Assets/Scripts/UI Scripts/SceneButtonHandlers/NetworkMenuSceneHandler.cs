@@ -5,12 +5,9 @@ using UnityEngine.UI;
 /// <summary>
 /// Class responsible for managing buttons and other UI elements of "NetworkMenuScene" scene.
 /// </summary>
-public class NetworkMenuSceneHandler : MonoBehaviour
+public class NetworkMenuSceneHandler : SceneButtonHandler
 {
     // Buttons
-    [SerializeField]
-    Button[] buttons;
-
     [SerializeField]
     Button joinGameButton;
     [SerializeField]
@@ -97,14 +94,6 @@ public class NetworkMenuSceneHandler : MonoBehaviour
         {
             ChangeButtonsState(true);
             MessageSystem.instance.AddMessage("An error has occurred while joining the lobby!", 3000, MessageSystem.MessagePriority.High);
-        }
-    }
-
-    private void ChangeButtonsState(bool state)
-    {
-        foreach (Button button in buttons)
-        {
-            button.enabled = state;
         }
     }
 }

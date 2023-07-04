@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58f1c08fc88c9544891358748cf4f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
+  buttonsToDisable:
   - {fileID: 697155655}
   - {fileID: 2039415367}
   singleplayerGameButton: {fileID: 697155655}

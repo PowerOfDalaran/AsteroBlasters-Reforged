@@ -886,7 +886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7247bd13e8a43c429787da1deae252e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
+  buttonsToDisable:
   - {fileID: 145793817}
   startGameButton: {fileID: 145793817}
   lobbyNameText: {fileID: 1798058840}

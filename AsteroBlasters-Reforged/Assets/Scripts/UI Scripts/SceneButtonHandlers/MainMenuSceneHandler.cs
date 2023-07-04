@@ -6,12 +6,9 @@ using UnityEngine.UI;
 /// <summary>
 /// Class responsible for managing buttons and other UI elements of "MainMenuScene" scene.
 /// </summary>
-public class MainMenuSceneHandler : MonoBehaviour
+public class MainMenuSceneHandler : SceneButtonHandler
 {
     // Buttons
-    [SerializeField]
-    Button[] buttons;
-
     [SerializeField]
     Button singleplayerGameButton;
     [SerializeField]
@@ -26,24 +23,16 @@ public class MainMenuSceneHandler : MonoBehaviour
         // Adding functionality to the buttons
         singleplayerGameButton.onClick.AddListener(() =>
         {
-            TurnOffButtons();
+            ChangeButtonsState(false);
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("GameScene", transition);
         });
 
         multiplayerGameButton.onClick.AddListener(() => 
         {
-            TurnOffButtons();
+            ChangeButtonsState(false);
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.LoadScene("NetworkMenuScene", transition);
         });
-    }
-
-    private void TurnOffButtons()
-    {
-        foreach (Button button in buttons) 
-        {
-            button.enabled = false;
-        }
     }
 }

@@ -2024,11 +2024,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d808e3bc64fd343856f172b76c9910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 365341085}
-  - {fileID: 1209038261}
-  - {fileID: 1152767260}
+  buttonsToDisable:
   - {fileID: 1052334008}
+  - {fileID: 365341085}
+  - {fileID: 1152767260}
+  - {fileID: 1209038261}
   reloadSceneButton: {fileID: 365341085}
   returnToMenuButton: {fileID: 1209038261}
   LoadingScreen: {fileID: 1819077442}

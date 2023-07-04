@@ -951,14 +951,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f7aa04573636b48b9936c4935aab12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 612730174}
-  - {fileID: 1248469517}
+  buttonsToDisable:
   - {fileID: 589968365}
-  - {fileID: 414453434}
   - {fileID: 1448759485}
-  - {fileID: 2070089142}
   - {fileID: 506696967}
+  - {fileID: 2070089142}
+  - {fileID: 1248469517}
+  - {fileID: 612730174}
+  - {fileID: 414453434}
   joinGameButton: {fileID: 589968365}
   createGameButton: {fileID: 612730174}
   returnToMenuButton: {fileID: 1248469517}

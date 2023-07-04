@@ -6,12 +6,9 @@ using UnityEngine.UI;
 /// <summary>
 /// Class responsible for communication between UI elements and network scripts
 /// </summary>
-public class LobbySceneHandler : MonoBehaviour
+public class LobbySceneHandler : SceneButtonHandler
 {
     // Buttons
-    [SerializeField]
-    Button[] buttons;
-
     [SerializeField]
     Button startGameButton;
 
@@ -33,7 +30,7 @@ public class LobbySceneHandler : MonoBehaviour
 
         startGameButton.onClick.AddListener(() =>
         {
-            TurnOffButtons();
+            ChangeButtonsState(false);
             Animator transition = LoadingScreen.GetComponent<Animator>();
             LevelManager.instance.NetworkLoadScene("NetworkGameScene", transition);
         });
@@ -42,14 +39,6 @@ public class LobbySceneHandler : MonoBehaviour
         if (NetworkManager.Singleton.IsHost)
         {
             startGameButton.gameObject.SetActive(true);
-        }
-    }
-
-    private void TurnOffButtons()
-    {
-        foreach (Button button in buttons)
-        {
-            button.enabled = false;
         }
     }
 }
