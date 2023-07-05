@@ -23,7 +23,8 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
     //public NetworkVariable<float> impactVelocity = new NetworkVariable<float>();
 
-    private NetworkList<PlayerData> playerDataNetworkList;
+    // wat???
+    //private NetworkList<PlayerData> playerDataNetworkList;
 
     void Awake()
     {
@@ -34,7 +35,8 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         maxHealth.Value = 3;
         currentHealth = maxHealth;
 
-        playerDataNetworkList = new NetworkList<PlayerData>();
+        // wat???
+        //playerDataNetworkList = new NetworkList<PlayerData>();
 
     }
 
