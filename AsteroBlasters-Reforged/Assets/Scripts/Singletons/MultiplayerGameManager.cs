@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Services.Authentication;
-using Unity.Services.Lobbies;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -239,6 +237,10 @@ public class MultiplayerGameManager : NetworkBehaviour
         playerDataNetworkList[playerDataIndex] = playerData;
     }
 
+    /// <summary>
+    /// Method called only by the host, to remove player from the lobby.
+    /// </summary>
+    /// <param name="clientId">Id of the player you want to remove</param>
     public void KickPlayer(ulong clientId)
     {
         RemoveSelfClientRpc(clientId);
@@ -246,6 +248,11 @@ public class MultiplayerGameManager : NetworkBehaviour
         NetworkManager_OnClientDisconnectedCallback(clientId);
     }
 
+    /// <summary>
+    /// ClientRpc method, which is triggered by the host and activated on every client.
+    /// Every client checks if his id is equal the given one, and if yes, then they go back to main menu.
+    /// </summary>
+    /// <param name="clientId">Id of player that have to leave the lobby</param>
     [ClientRpc]
     void RemoveSelfClientRpc(ulong clientId)
     {

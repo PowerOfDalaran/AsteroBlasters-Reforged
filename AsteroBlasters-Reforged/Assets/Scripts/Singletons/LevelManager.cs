@@ -30,7 +30,6 @@ public class LevelManager : MonoBehaviour
     /// <br></br>This method is build for handling scene changing BEFORE starting the multiplayer.
     /// </summary>
     /// <param name="sceneName">Name of the scene to be loaded</param>
-    /// <param name="transition">Animator of loading screen (UI element)</param>
     public async void LoadScene(string sceneName)
     {
         Animator transition = GameObject.FindGameObjectWithTag("LoadingScreen").GetComponent<Animator>();
@@ -57,7 +56,6 @@ public class LevelManager : MonoBehaviour
     /// It should be also used only on the host, as other connected players will also automaticly change scene.
     /// </summary>
     /// <param name="sceneName">Name of the scene to be loaded</param>
-    /// <param name="transition">Animator of loading screen (UI element)</param>
     public async void NetworkLoadScene(string sceneName)
     {
         Animator transition = GameObject.FindGameObjectWithTag("LoadingScreen").GetComponent<Animator>();

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +23,7 @@ public class CharacterSelectPlayer : MonoBehaviour
         // Assigning values to properties
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-        // Adding functionality to button
+        // Adding functionality to buttons
         kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer);
         kickButton.onClick.AddListener(() =>
         {

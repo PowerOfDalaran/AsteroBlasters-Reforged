@@ -26,6 +26,7 @@ public class LobbySceneHandler : SceneButtonHandler
         lobbyNameText.text = "Lobby name: " + currentLobby.Name;
         lobbyCodeText.text = "Lobby code: " + currentLobby.LobbyCode;
 
+        // Adding functionality to the buttons
         startGameButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
