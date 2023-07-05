@@ -10,15 +10,6 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    //public enum Scenes
-    //{
-    //    GameScene,
-    //    MainMenuScene,
-    //    NetworkGameScene,
-    //    NetworkLobbyScene,
-    //    NetworkMenuScene,
-    //}
-
     private void Awake()
     {
         // Checking if another instance of this class don't exist yet and deleting itself if that is the case
@@ -40,8 +31,9 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     /// <param name="sceneName">Name of the scene to be loaded</param>
     /// <param name="transition">Animator of loading screen (UI element)</param>
-    public async void LoadScene(string sceneName, Animator transition)
+    public async void LoadScene(string sceneName)
     {
+        Animator transition = GameObject.FindGameObjectWithTag("LoadingScreen").GetComponent<Animator>();
         transition.SetTrigger("LeaveScene");
         await Task.Delay(2000);
 
@@ -66,8 +58,9 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     /// <param name="sceneName">Name of the scene to be loaded</param>
     /// <param name="transition">Animator of loading screen (UI element)</param>
-    public async void NetworkLoadScene(string sceneName, Animator transition)
+    public async void NetworkLoadScene(string sceneName)
     {
+        Animator transition = GameObject.FindGameObjectWithTag("LoadingScreen").GetComponent<Animator>();
         transition.SetTrigger("LeaveScene");
         await Task.Delay(2000);
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);

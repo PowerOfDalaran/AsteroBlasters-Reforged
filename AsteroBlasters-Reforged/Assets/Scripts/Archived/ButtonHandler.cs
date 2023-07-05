@@ -32,8 +32,7 @@ public class ButtonHandler : MonoBehaviour
     /// <param name="sceneName">Name of the scene to be loaded</param>
     public void LoadScene(string sceneName)
     {
-        Animator transition = LoadingScreen.GetComponent<Animator>();
-        LevelManager.instance.LoadScene(sceneName, transition);
+        LevelManager.instance.LoadScene(sceneName);
     }
 
     /// <summary>
@@ -43,8 +42,7 @@ public class ButtonHandler : MonoBehaviour
     /// <param name="sceneName">Name of the scene to be loaded</param>
     public void NetworkLoadScene(string sceneName)
     {
-        Animator transition = LoadingScreen.GetComponent<Animator>();
-        LevelManager.instance.NetworkLoadScene(sceneName, transition);
+        LevelManager.instance.NetworkLoadScene(sceneName);
     }
     /// <summary>
     /// Method calling the <c>LobbyManager</c> class to create new lobby with given parameters.

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Class respionsible for managing player images in lobby
@@ -8,6 +10,7 @@ using UnityEngine;
 public class CharacterSelectPlayer : MonoBehaviour
 {
     [SerializeField] private int playerIndex;
+    [SerializeField] Button kickButton;
     SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -21,6 +24,14 @@ public class CharacterSelectPlayer : MonoBehaviour
     {
         // Assigning values to properties
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
+        // Adding functionality to button
+        kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer);
+        kickButton.onClick.AddListener(() =>
+        {
+            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            MultiplayerGameManager.instance.KickPlayer(playerData.clientId);
+        });
     }
 
     /// <summary>

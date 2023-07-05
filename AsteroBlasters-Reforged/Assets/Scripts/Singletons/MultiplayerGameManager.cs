@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -65,6 +67,7 @@ public class MultiplayerGameManager : NetworkBehaviour
     /// <param name="clientId">Id of player you want to remove</param>
     private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
     {
+        // Removing player from the list
         foreach (PlayerData playerData in playerDataNetworkList)
         {
             if (playerData.clientId == clientId)
@@ -234,5 +237,30 @@ public class MultiplayerGameManager : NetworkBehaviour
 
         playerData.colorId = colorId;
         playerDataNetworkList[playerDataIndex] = playerData;
+    }
+
+    public void KickPlayer(ulong clientId)
+    {
+        RemoveSelfClientRpc(clientId);
+        NetworkManager.Singleton.DisconnectClient(clientId);
+        NetworkManager_OnClientDisconnectedCallback(clientId);
+    }
+
+    [ClientRpc]
+    void RemoveSelfClientRpc(ulong clientId)
+    {
+        ulong currentPlayerId = GetCurrentPlayerData().clientId;
+
+        if (clientId == currentPlayerId)
+        {
+            LobbyManager.instance.LeaveLobby();
+            NetworkManager.Singleton.Shutdown();
+            AuthenticationService.Instance.SignOut();
+
+            Destroy(NetworkManager.Singleton.gameObject);
+            Destroy(LobbyManager.instance.gameObject.gameObject);
+
+            LevelManager.instance.LoadScene("MainMenuScene");
+        }
     }
 }

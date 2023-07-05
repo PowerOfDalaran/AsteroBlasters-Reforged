@@ -26,8 +26,6 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
     [SerializeField]
     InputField lobbyNameInputField;
     [SerializeField]
-    GameObject LoadingScreen;
-    [SerializeField]
     InputField playerNameInputField;
     [SerializeField]
     GameObject CreateJoinScreen;
@@ -50,8 +48,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
             Destroy(NetworkManager.Singleton.gameObject);
             Destroy(LobbyManager.instance.gameObject.gameObject);
 
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.LoadScene("MainMenuScene", transition);
+            LevelManager.instance.LoadScene("MainMenuScene");
         });
 
         setPlayerNameButton.onClick.AddListener(() =>
@@ -83,8 +80,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
 
             if (creatingResult)
             {
-                Animator transition = LoadingScreen.GetComponent<Animator>();
-                LevelManager.instance.LoadScene("NetworkLobbyScene", transition);
+                LevelManager.instance.LoadScene("NetworkLobbyScene");
             }
             else
             {
@@ -112,8 +108,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
 
             if (joiningReslut)
             {
-                Animator transition = LoadingScreen.GetComponent<Animator>();
-                LevelManager.instance.LoadScene("NetworkLobbyScene", transition);
+                LevelManager.instance.LoadScene("NetworkLobbyScene");
             }
             else
             {

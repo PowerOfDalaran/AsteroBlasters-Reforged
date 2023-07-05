@@ -17,8 +17,6 @@ public class LobbySceneHandler : SceneButtonHandler
     Text lobbyNameText;
     [SerializeField]
     Text lobbyCodeText;
-    [SerializeField]
-    GameObject LoadingScreen;
 
     private void Awake()
     {
@@ -31,9 +29,8 @@ public class LobbySceneHandler : SceneButtonHandler
         startGameButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.NetworkLoadScene("NetworkGameScene", transition);
-            //LobbyManager.instance.DestroyLobby();
+            LevelManager.instance.NetworkLoadScene("NetworkGameScene");
+            LobbyManager.instance.DestroyLobby();
         });
 
         // Setting the start button visibility to true, if current player is a host

@@ -12,9 +12,6 @@ public class GameSceneHandler : SceneButtonHandler
     [SerializeField]
     Button returnToMenuButton;
 
-    // Other UI elements
-    [SerializeField]
-    GameObject LoadingScreen;
 
     private void Awake()
     {
@@ -22,15 +19,13 @@ public class GameSceneHandler : SceneButtonHandler
         reloadSceneButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.LoadScene("GameScene", transition);
+            LevelManager.instance.LoadScene("GameScene");
         });
 
         returnToMenuButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.LoadScene("MainMenuScene", transition);
+            LevelManager.instance.LoadScene("MainMenuScene");
         });
     }
 }

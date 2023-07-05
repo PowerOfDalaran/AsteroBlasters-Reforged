@@ -14,25 +14,19 @@ public class MainMenuSceneHandler : SceneButtonHandler
     [SerializeField]
     Button multiplayerGameButton;
 
-    // Other UI elements
-    [SerializeField]
-    GameObject LoadingScreen;
-
     private void Awake()
     {
         // Adding functionality to the buttons
         singleplayerGameButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.LoadScene("GameScene", transition);
+            LevelManager.instance.LoadScene("GameScene");
         });
 
         multiplayerGameButton.onClick.AddListener(() => 
         {
             ChangeButtonsState(false);
-            Animator transition = LoadingScreen.GetComponent<Animator>();
-            LevelManager.instance.LoadScene("NetworkMenuScene", transition);
+            LevelManager.instance.LoadScene("NetworkMenuScene");
         });
     }
 }

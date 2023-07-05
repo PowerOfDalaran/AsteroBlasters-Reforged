@@ -237,6 +237,5 @@ public class LobbyManager : MonoBehaviour
     public async void DestroyLobby()
     {
         await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
-        Destroy(gameObject);
     }
 }
