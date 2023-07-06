@@ -54,7 +54,7 @@ public class CharacterSelectPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// Method checking if the player image should be visible and changing the color to the actual one
+    /// Method checking if the player image should be visible, changing the color to the proper one and setting Text UI object to player name
     /// </summary>
     private void UpdatePlayer()
     {

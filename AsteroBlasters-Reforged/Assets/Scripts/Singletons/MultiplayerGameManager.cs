@@ -48,7 +48,7 @@ public class MultiplayerGameManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Method, which adds new PlayerData to the list
+    /// Method, which adds new PlayerData to the list and assigns their data
     /// </summary>
     /// <param name="clientId">Id of the player</param>
     private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -58,6 +58,8 @@ public class MultiplayerGameManager : NetworkBehaviour
             clientId = clientId,
             colorId = GetFirstUnusedColorId(),
         });
+        
+        // Triggering the player to make them assign their name
         TriggerSetNameClientRpc(clientId);
     }
 
@@ -108,6 +110,12 @@ public class MultiplayerGameManager : NetworkBehaviour
     }
 
     // PLAYER DATA, INDEX ETC.
+    /// <summary>
+    /// Server Rpc method, which sets the player name (of the sending client) in the <c>playerDataNetworkList</c>.
+    /// Does not require ownership.
+    /// </summary>
+    /// <param name="playerName">Name the player want to set</param>
+    /// <param name="serverRpcParams">Default parameters of server rpc</param>
     [ServerRpc (RequireOwnership = false)]
     private void SetPlayerNameServerRpc(FixedString64Bytes playerName, ServerRpcParams serverRpcParams = default)
     {
@@ -119,6 +127,12 @@ public class MultiplayerGameManager : NetworkBehaviour
         playerDataNetworkList[playerDataIndex] = playerData;
     }
 
+
+    /// <summary>
+    /// Client Rpc method, which serves as an activator to <c>SetPlayerNameServerRpc</c> method.
+    /// Thanks to that, the server can force the player to set their name.
+    /// </summary>
+    /// <param name="playerId">Id of player you want to trigger</param>
     [ClientRpc]
     private void TriggerSetNameClientRpc(ulong playerId)
     {
