@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: NetworkSceneTemplemate
+  m_EditorClassIdentifier: 
+  templateScene: {fileID: 102900000, guid: 111b0e38e1b59b84ab145a08a8f2140a, type: 3}
+  templateName: Network Scene Templemate
+  description: Templemate for scenes, in which players will play with each other.
+  preview: {fileID: 0}
+  dependencies:
+  - dependency: {fileID: 8390254594366121051, guid: cb7d14a787100884e844f9139522e51f, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 11400000, guid: 52c7da533bb84aa4e9d6b6637db07245, type: 2}
+    instantiationMode: 1
+  - dependency: {fileID: 792171380412264454, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 7400000, guid: 04b40ab120987fc409052eadcf935e7a, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 7635609446129040680, guid: 8d63749b4a589074db8d48423e73e30e, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 4715944071043663114, guid: f70b2cdcc0855394ba6131ebd3d792df, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 9100000, guid: d898c67ecd8c2a548a2e06d05b22f309, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 5f2a108eb023faf43a809979fd3d38f2, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 7400000, guid: 08bd8dc8b02b6454eb4333bec30c4497, type: 2}
+    instantiationMode: 0
+  templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
+  addToDefaults: 0
