@@ -17,6 +17,8 @@ public class LobbySceneHandler : SceneButtonHandler
     Text lobbyNameText;
     [SerializeField]
     Text lobbyCodeText;
+    [SerializeField]
+    GameObject LoadingScreen;
 
     private void Awake()
     {

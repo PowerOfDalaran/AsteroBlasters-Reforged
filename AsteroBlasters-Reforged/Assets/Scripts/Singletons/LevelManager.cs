@@ -10,6 +10,15 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    //public enum Scenes
+    //{
+    //    GameScene,
+    //    MainMenuScene,
+    //    NetworkGameScene,
+    //    NetworkLobbyScene,
+    //    NetworkMenuScene,
+    //}
+
     private void Awake()
     {
         // Checking if another instance of this class don't exist yet and deleting itself if that is the case

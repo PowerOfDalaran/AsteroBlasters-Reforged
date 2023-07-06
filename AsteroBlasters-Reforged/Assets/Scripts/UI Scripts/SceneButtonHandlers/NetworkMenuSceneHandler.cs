@@ -26,6 +26,8 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
     [SerializeField]
     InputField lobbyNameInputField;
     [SerializeField]
+    GameObject LoadingScreen;
+    [SerializeField]
     InputField playerNameInputField;
     [SerializeField]
     GameObject CreateJoinScreen;
@@ -55,7 +57,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
         {
             if (playerNameInputField.text.Length > 0)
             {
-                LobbyManager.instance.playerName = playerNameInputField.text;
+            LobbyManager.instance.playerName = playerNameInputField.text;
                 EnterNameScreen.SetActive(false);
                 CreateJoinScreen.SetActive(true);
             }
@@ -76,18 +78,18 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
         if (lobbyNameInputField.text.Length > 0)
         {
             ChangeButtonsState(false);
-            bool creatingResult = await LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int)maxPlayersSlider.value);
+        bool creatingResult = await LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int)maxPlayersSlider.value);
 
-            if (creatingResult)
-            {
+        if (creatingResult)
+        {
                 LevelManager.instance.LoadScene("NetworkLobbyScene");
-            }
-            else
-            {
-                ChangeButtonsState(true);
-                MessageSystem.instance.AddMessage("An error has occurred while creating the lobby!", 3000, MessageSystem.MessagePriority.High);
-            }
         }
+        else
+        {
+                ChangeButtonsState(true);
+            MessageSystem.instance.AddMessage("An error has occurred while creating the lobby!", 3000, MessageSystem.MessagePriority.High);
+        }
+    }
         else
         {
             MessageSystem.instance.AddMessage("Enter the proper lobby name", 2000, MessageSystem.MessagePriority.Medium);
@@ -104,18 +106,18 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
         if (lobbyCodeInputField.text.Length > 0)
         {
             ChangeButtonsState(false);
-            bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
+        bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
 
-            if (joiningReslut)
-            {
+        if (joiningReslut)
+        {
                 LevelManager.instance.LoadScene("NetworkLobbyScene");
-            }
-            else
-            {
-                ChangeButtonsState(true);
-                MessageSystem.instance.AddMessage("An error has occurred while joining the lobby!", 3000, MessageSystem.MessagePriority.High);
-            }
         }
+        else
+        {
+                ChangeButtonsState(true);
+            MessageSystem.instance.AddMessage("An error has occurred while joining the lobby!", 3000, MessageSystem.MessagePriority.High);
+        }
+    }
         else
         {
             MessageSystem.instance.AddMessage("Enter the proper lobby code", 2000, MessageSystem.MessagePriority.Medium);

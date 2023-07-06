@@ -14,6 +14,10 @@ public class MainMenuSceneHandler : SceneButtonHandler
     [SerializeField]
     Button multiplayerGameButton;
 
+    // Other UI elements
+    [SerializeField]
+    GameObject LoadingScreen;
+
     private void Awake()
     {
         // Adding functionality to the buttons
