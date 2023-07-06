@@ -122,10 +122,12 @@ public class MultiplayerGameManager : NetworkBehaviour
     [ClientRpc]
     private void TriggerSetNameClientRpc(ulong playerId)
     {
-        ulong myClientId = GetCurrentPlayerData().clientId;
-        FixedString64Bytes myName = LobbyManager.instance.playerName;
-        SetPlayerNameServerRpc(myName);
-
+        ulong myClientId = NetworkManager.Singleton.LocalClientId;
+        if (myClientId == playerId)
+        {
+            FixedString64Bytes myName = LobbyManager.instance.playerName;
+            SetPlayerNameServerRpc(myName);
+        }
     }
 
     /// <summary>
