@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 {
     [SerializeField] private int playerIndex;
     [SerializeField] Button kickButton;
+    [SerializeField] TextMeshProUGUI playerNameText;
     SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -52,7 +54,7 @@ public class CharacterSelectPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// Method checking if the player image should be visible and changing the color to the actual one
+    /// Method checking if the player image should be visible, changing the color to the proper one and setting Text UI object to player name
     /// </summary>
     private void UpdatePlayer()
     {
@@ -62,6 +64,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 
             PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             SetPlayerColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
+            playerNameText.text = playerData.playerName.ToString();
         }
         else
         {

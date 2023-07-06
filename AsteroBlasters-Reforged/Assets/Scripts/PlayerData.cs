@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using Unity.Netcode;
 
 /// <summary>
@@ -8,6 +9,7 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
 {
     public ulong clientId;
     public int colorId;
+    public FixedString64Bytes playerName;
 
     /// <summary>
     /// Method comparing players id.
@@ -16,7 +18,7 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
     /// <returns></returns>
     public bool Equals(PlayerData other)
     {
-        return clientId == other.clientId && colorId == other.colorId;
+        return clientId == other.clientId && colorId == other.colorId && playerName == other.playerName;
     }
 
     /// <summary>
@@ -29,5 +31,6 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
     {
         serializer.SerializeValue(ref clientId);
         serializer.SerializeValue(ref colorId);
+        serializer.SerializeValue(ref playerName);
     }
 }
