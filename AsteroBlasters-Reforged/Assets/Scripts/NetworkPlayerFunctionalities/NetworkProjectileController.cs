@@ -21,7 +21,6 @@ public class NetworkProjectileController : NetworkBehaviour
     {
         // Checking if colliding object implement health system, if yes, dealing damage to it
         IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
-        
 
         if (healthSystem != null)
         {

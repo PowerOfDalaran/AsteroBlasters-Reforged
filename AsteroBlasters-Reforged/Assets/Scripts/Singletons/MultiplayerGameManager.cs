@@ -15,7 +15,11 @@ public class MultiplayerGameManager : NetworkBehaviour
     [SerializeField]
     List<Color> playerColorList;
 
+    [SerializeField]
+    GameObject playerPrefab;
+
     public NetworkList<PlayerData> playerDataNetworkList;
+
     public event EventHandler OnPlayerDataNetworkListChanged;
 
     private void Awake()
@@ -97,6 +101,16 @@ public class MultiplayerGameManager : NetworkBehaviour
     public void StartAsClient()
     {
         NetworkManager.StartClient();
+    }
+
+    public void StartTheGame()
+    {
+        foreach (var playerData in playerDataNetworkList)
+        {
+            Debug.Log("mamy cos czy nie?");
+            GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+        }
     }
 
     /// <summary>
@@ -192,7 +206,7 @@ public class MultiplayerGameManager : NetworkBehaviour
     /// </summary>
     /// <param name="playerIndex">Index of player, whose data you want to access</param>
     /// <returns>Data of player with given id</returns>
-    public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex = default)
+    public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex)
     {
         return playerDataNetworkList[playerIndex];
     }

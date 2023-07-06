@@ -12,6 +12,9 @@ public class GameSceneHandler : SceneButtonHandler
     [SerializeField]
     Button returnToMenuButton;
 
+    // Other UI elements
+    [SerializeField]
+    GameObject LoadingScreen;
 
     private void Awake()
     {

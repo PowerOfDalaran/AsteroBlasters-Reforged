@@ -966,7 +966,7 @@ MonoBehaviour:
   lobbyCodeInputField: {fileID: 425118537}
   maxPlayersSlider: {fileID: 1295946889}
   lobbyNameInputField: {fileID: 928595133}
-  LoadingScreen: {fileID: 1486861873}
+  LoadingScreen: {fileID: 0}
   playerNameInputField: {fileID: 1232625183}
   CreateJoinScreen: {fileID: 2103956912}
   EnterNameScreen: {fileID: 1201969244}
@@ -3082,6 +3082,10 @@ PrefabInstance:
       value: MultiplayerGameManager
       objectReference: {fileID: 0}
     - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 7635609446129040680, guid: 8d63749b4a589074db8d48423e73e30e, type: 3}
+    - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
       propertyPath: playerColorList.Array.size
       value: 6
       objectReference: {fileID: 0}
@@ -3338,11 +3342,6 @@ PrefabInstance:
 --- !u!224 &1486861872 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4541600884827817736, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
-  m_PrefabInstance: {fileID: 1486861871}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1486861873 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 792171380412264454, guid: af8d8b934cedc764fb3e493257ccf1bb, type: 3}
   m_PrefabInstance: {fileID: 1486861871}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1569681718
