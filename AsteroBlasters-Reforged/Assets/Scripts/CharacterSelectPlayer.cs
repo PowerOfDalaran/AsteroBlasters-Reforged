@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 {
     [SerializeField] private int playerIndex;
     [SerializeField] Button kickButton;
+    [SerializeField] TextMeshProUGUI playerNameText;
     SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -62,6 +64,7 @@ public class CharacterSelectPlayer : MonoBehaviour
 
             PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             SetPlayerColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
+            playerNameText.text = playerData.playerName.ToString();
         }
         else
         {
