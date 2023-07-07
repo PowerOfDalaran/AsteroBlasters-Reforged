@@ -218,7 +218,6 @@ public class LobbyManager : MonoBehaviour
         return joinedLobby;
     }
 
-    // TESTOWANE
     /// <summary>
     /// Method removing current player from the lobby
     /// </summary>
@@ -234,8 +233,21 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method deleting the lobby from Unity Services and removing its references.
+    /// FOR HOST ONLY!
+    /// </summary>
     public async void DestroyLobby()
     {
-        await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
+        try
+        {
+            await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
+            joinedLobby = null;
+            hostedLobby = null;
+        }
+        catch (LobbyServiceException exception)
+        {
+            Debug.Log(exception);
+        }
     }
 }

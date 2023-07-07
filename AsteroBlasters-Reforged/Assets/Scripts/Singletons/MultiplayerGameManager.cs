@@ -103,13 +103,19 @@ public class MultiplayerGameManager : NetworkBehaviour
         NetworkManager.StartClient();
     }
 
+    /// <summary>
+    /// Method spawning player character for each player in <c>playerDataNetworkList</c>
+    /// </summary>
     public void StartTheGame()
     {
-        foreach (var playerData in playerDataNetworkList)
+        if (NetworkManager.Singleton.IsHost)
         {
-            Debug.Log("mamy cos czy nie?");
-            GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+            foreach (var playerData in playerDataNetworkList)
+            {
+                Debug.Log("mamy cos czy nie?");
+                GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+            }
         }
     }
 
