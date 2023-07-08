@@ -44,6 +44,10 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         mySpriteRenderer.color = myColor;
     }
 
+    /// <summary>
+    /// Method assigning given player index to this instance of player character
+    /// </summary>
+    /// <param name="givenIndex">Player index you this player to store</param>
     [ClientRpc]
     public void SetMyIndexClientRpc(int givenIndex)
     {
