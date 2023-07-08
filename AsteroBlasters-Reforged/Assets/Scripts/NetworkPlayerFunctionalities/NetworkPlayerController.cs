@@ -13,11 +13,13 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
     NetworkWeapon myWeapon;
+    SpriteRenderer mySpriteRenderer;
 
     [SerializeField]
     float movementSpeed = 3f;
     [SerializeField]
     float rotationSpeed = 720;
+    public int playerIndex;
 
     public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
     public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
@@ -27,10 +29,25 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     {
         // Assigning values to properties
         myRigidbody2D = GetComponent<Rigidbody2D>();
-        myPlayerControls = new PlayerControls();
         myWeapon = GetComponent<NetworkWeapon>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
+        myPlayerControls = new PlayerControls();
         maxHealth.Value = 3;
         currentHealth = maxHealth;
+    }
+
+    void Start()
+    {
+        // Setting up color of the player
+        PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+        Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
+        mySpriteRenderer.color = myColor;
+    }
+
+    [ClientRpc]
+    public void SetMyIndexClientRpc(int givenIndex)
+    {
+        playerIndex = givenIndex;
     }
 
     void OnEnable()
@@ -47,6 +64,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
     }
 
+
     private void FixedUpdate()
     {
         // Deciding whether the rest of method should be activated
@@ -54,6 +72,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         {
             return;
         }
+
         CameraController.instance.FollowPlayer(transform);
 
 
@@ -75,7 +94,7 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     }
 
     [ServerRpc]
-    private void ImpactDamageServerRpc(PlayerData player1, PlayerData player2)
+    private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
     {
         Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
         Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
@@ -104,13 +123,13 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
             {
                 //impactVelocity.Value = collision.relativeVelocity.magnitude;
 
-                var player1 = new PlayerData()
+                var player1 = new PlayerInGameData()
                 {
                     Id = OwnerClientId,
                     ImpactVelocity = collision.relativeVelocity.magnitude
                 };
 
-                var player2 = new PlayerData()
+                var player2 = new PlayerInGameData()
                 {
                     Id = networkPlayer.OwnerClientId,
                     ImpactVelocity = collision.relativeVelocity.magnitude
@@ -120,18 +139,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
                 ImpactDamageServerRpc(player1, player2);
             }
 
-        }
-    }
-
-    struct PlayerData : INetworkSerializable
-    {
-        public ulong Id;
-        public float ImpactVelocity;
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref Id);
-            serializer.SerializeValue(ref ImpactVelocity);
         }
     }
 
@@ -208,10 +215,8 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     public void DieServerRpc(ServerRpcParams serverRpcParams = default)
     {
         var clientId = serverRpcParams.Receive.SenderClientId;
-        Debug.Log("You are dead " + clientId);
         var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
         client.myRigidbody2D.position = new Vector2(0f, 0f);
         client.myRigidbody2D.velocity = Vector2.zero;
-        Debug.Log(client.myRigidbody2D.position);
     }
 }
