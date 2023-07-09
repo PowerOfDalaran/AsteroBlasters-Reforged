@@ -308,6 +308,12 @@ public class MultiplayerGameManager : NetworkBehaviour
         NetworkManager_OnClientDisconnectedCallback(clientId);
     }
 
+    public void Leave(ulong clientId)
+    {
+        NetworkManager.Singleton.DisconnectClient(clientId);
+        NetworkManager_OnClientDisconnectedCallback(clientId);
+    }
+
     /// <summary>
     /// ClientRpc method, which is triggered by the host and activated on every client.
     /// Every client checks if his id is equal the given one, and if yes, then they go back to main menu.
@@ -325,9 +331,8 @@ public class MultiplayerGameManager : NetworkBehaviour
             AuthenticationService.Instance.SignOut();
 
             Destroy(NetworkManager.Singleton.gameObject);
-            Destroy(LobbyManager.instance.gameObject.gameObject);
 
-            LevelManager.instance.LoadScene("MainMenuScene");
+            LevelManager.instance.LoadScene("NetworkMenuScene");
         }
     }
 }

@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class LobbySceneHandler : SceneButtonHandler
     // Buttons
     [SerializeField]
     Button startGameButton;
+    [SerializeField]
+    Button leaveLobbyButton;
 
     // Other UI elements
     [SerializeField]
@@ -34,6 +37,23 @@ public class LobbySceneHandler : SceneButtonHandler
             ChangeButtonsState(false);
             LevelManager.instance.NetworkLoadScene("NetworkGameScene");
             LobbyManager.instance.DestroyLobby();
+        });
+
+        leaveLobbyButton.onClick.AddListener(() =>
+        {
+            ChangeButtonsState(false);
+
+            // Logging out of services
+            ChangeButtonsState(false);
+            MultiplayerGameManager.instance.Leave(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
+
+
+            NetworkManager.Singleton.Shutdown();
+            LobbyManager.instance.LeaveLobby();
+            AuthenticationService.Instance.SignOut();
+            Destroy(NetworkManager.Singleton.gameObject);
+
+            LevelManager.instance.LoadScene("NetworkMenuScene");
         });
 
         // Setting the start button visibility to true, if current player is a host

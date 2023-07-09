@@ -57,7 +57,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
         {
             if (playerNameInputField.text.Length > 0)
             {
-            LobbyManager.instance.playerName = playerNameInputField.text;
+                LobbyManager.instance.playerName = playerNameInputField.text;
                 EnterNameScreen.SetActive(false);
                 CreateJoinScreen.SetActive(true);
             }
@@ -66,6 +66,15 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
                 MessageSystem.instance.AddMessage("Enter the proper name", 2000, MessageSystem.MessagePriority.Medium);
             }
         });
+    }
+
+    private void Start()
+    {
+        if (LobbyManager.instance.playerName.Length > 0)
+        {
+            EnterNameScreen.SetActive(false);
+            CreateJoinScreen.SetActive(true);
+        }
     }
 
     /// <summary>
