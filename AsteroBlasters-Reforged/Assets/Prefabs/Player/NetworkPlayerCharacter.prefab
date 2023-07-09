@@ -164,8 +164,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 3
   rotationSpeed: 6
-  maxHealth: 3
-  currentHealth: 0
+  maxHealth:
+    m_InternalValue: 0
+  currentHealth:
+    m_InternalValue: 0
 --- !u!58 &5530364461489902994
 CircleCollider2D:
   m_ObjectHideFlags: 0

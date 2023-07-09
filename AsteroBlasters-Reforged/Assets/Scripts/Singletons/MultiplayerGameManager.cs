@@ -112,9 +112,13 @@ public class MultiplayerGameManager : NetworkBehaviour
         {
             foreach (var playerData in playerDataNetworkList)
             {
-                Debug.Log("mamy cos czy nie?");
                 GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                // Assigning proper player index to every play character ON HOST
+                newPlayer.GetComponent<NetworkPlayerController>().playerIndex = playerDataNetworkList.IndexOf(playerData);
                 newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+
+                // Assigning proper player index to every play character ON CLIENT
+                newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
             }
         }
     }
