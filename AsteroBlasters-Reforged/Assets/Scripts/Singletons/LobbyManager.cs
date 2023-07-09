@@ -22,7 +22,7 @@ public class LobbyManager : MonoBehaviour
     Lobby joinedLobby;
     float heartbeatTimer;
     float maxHeartbeatTimer = 15f;
-    public string? playerName;
+    public string playerName;
 
     private async void Awake()
     {

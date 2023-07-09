@@ -314,7 +314,7 @@ public class MultiplayerGameManager : NetworkBehaviour
     public void DisconnectClient(ulong clientId)
     {
         NetworkManager.Singleton.DisconnectClient(clientId);
-        NetworkManager_OnClientDisconnectedCallback(clientId);
+        //NetworkManager_OnClientDisconnectedCallback(clientId);
     }
 
     /// <summary>

@@ -116,7 +116,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
         if (lobbyCodeInputField.text.Length > 0)
         {
             ChangeButtonsState(false);
-        bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
+            bool joiningReslut = await LobbyManager.instance.JoinLobbyByCode(lobbyCodeInputField.text);
 
         if (joiningReslut)
         {
