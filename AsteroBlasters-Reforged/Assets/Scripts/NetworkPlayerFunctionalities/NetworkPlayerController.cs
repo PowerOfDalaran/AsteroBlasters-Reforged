@@ -23,7 +23,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
 
     public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
     public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
-    //public NetworkVariable<float> impactVelocity = new NetworkVariable<float>();
 
     void Awake()
     {
@@ -88,31 +87,24 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
             Movement(movementVector);
             Rotate(movementVector);
         }
-
-        // Checking if the player is still alive
-        if (currentHealth.Value <= 0)
-        {
-            //Debug.Log(currentHealth);
-
-        }
     }
 
     [ServerRpc]
     private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
     {
-        Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
-        Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
+        //Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
+        //Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
         if (player1.ImpactVelocity > 8)
         {
             Die();
         }
         else if (player1.ImpactVelocity > 6)
         {
-            TakeDamage(2);
+            TakeDamageServerRpc(2);
         }
         else if (player1.ImpactVelocity > 5)
         {
-            TakeDamage(1);
+            TakeDamageServerRpc(1);
         }
     }
 
@@ -137,8 +129,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
                 {
                     Id = networkPlayer.OwnerClientId,
                     ImpactVelocity = collision.relativeVelocity.magnitude
-
-
                 };
                 ImpactDamageServerRpc(player1, player2);
             }
@@ -189,38 +179,40 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         TakeDamageServerRpc(damage);
     }
 
+    /// <summary>
+    /// Method calling server to deal damage to proper player character and killing it if its health is too low.
+    /// </summary>
+    /// <param name="damage">Amount of damage you want to deal</param>
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int damage, ServerRpcParams serverRpcParams = default)
+    public void TakeDamageServerRpc(int damage)
     {
-        var clientId = serverRpcParams.Receive.SenderClientId;
+        ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
         var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
 
-        if (client.currentHealth.Value > 0)
+        if (client.currentHealth.Value > 1)
         {
             client.currentHealth.Value -= damage;
         }
         else
         {
             client.currentHealth.Value = 3;
-            DieServerRpc();
+            Die();
         }
-        Debug.Log("You took " + damage + " damage!, You have " + client.currentHealth.Value);
     }
 
     public void Die()
     {
-        Debug.Log("You died");
-
-        //DieServerRpc();
-
+        DieClientRpc();
     }
 
-    [ServerRpc]
-    public void DieServerRpc(ServerRpcParams serverRpcParams = default)
+    /// <summary>
+    /// Method called on every client (host too) and activating death on this player character object.
+    /// Currently just reset the game object position and velocity.
+    /// </summary>
+    [ClientRpc]
+    public void DieClientRpc()
     {
-        var clientId = serverRpcParams.Receive.SenderClientId;
-        var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
-        client.myRigidbody2D.position = new Vector2(0f, 0f);
-        client.myRigidbody2D.velocity = Vector2.zero;
+        myRigidbody2D.position = new Vector3(0f, 0f, 0f);
+        myRigidbody2D.velocity = Vector2.zero;
     }
 }
