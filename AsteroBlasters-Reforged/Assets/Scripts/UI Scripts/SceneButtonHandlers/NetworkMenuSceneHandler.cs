@@ -70,6 +70,7 @@ public class NetworkMenuSceneHandler : SceneButtonHandler
 
     private void Start()
     {
+        // Checking if name wasn't already entered
         if (LobbyManager.instance.playerName.Length > 0)
         {
             EnterNameScreen.SetActive(false);

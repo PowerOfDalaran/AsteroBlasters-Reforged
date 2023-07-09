@@ -43,9 +43,9 @@ public class LobbySceneHandler : SceneButtonHandler
         {
             ChangeButtonsState(false);
 
-            // Logging out of services
+            // Logging out of services and leaving scene
             ChangeButtonsState(false);
-            MultiplayerGameManager.instance.Leave(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
+            MultiplayerGameManager.instance.DisconnectClient(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
 
 
             NetworkManager.Singleton.Shutdown();
