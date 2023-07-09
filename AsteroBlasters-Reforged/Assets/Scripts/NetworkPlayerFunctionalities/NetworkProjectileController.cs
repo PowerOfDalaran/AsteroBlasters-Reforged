@@ -27,9 +27,7 @@ public class NetworkProjectileController : NetworkBehaviour
             healthSystem.TakeDamage(damage);
         }
 
-        // Destroying the game object and despawning it from server
-        Destroy(gameObject);
-        gameObject.GetComponent<NetworkObject>().Despawn();
+        DespawnSelfServerRpc();
     }
 
     /// <summary>
@@ -38,5 +36,14 @@ public class NetworkProjectileController : NetworkBehaviour
     public void Launch()
     {
         myRigidbody2D.velocity = transform.up * speed;
+    }
+
+    /// <summary>
+    /// Method calling the host to despawn this projectile
+    /// </summary>
+    [ServerRpc(RequireOwnership = false)]
+    void DespawnSelfServerRpc()
+    {
+        gameObject.GetComponent<NetworkObject>().Despawn();
     }
 }

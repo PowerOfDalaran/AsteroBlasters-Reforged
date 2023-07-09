@@ -92,19 +92,19 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
     [ServerRpc]
     private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
     {
-        Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
-        Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
+        //Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
+        //Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
         if (player1.ImpactVelocity > 8)
         {
             Die();
         }
         else if (player1.ImpactVelocity > 6)
         {
-            TakeDamage(2);
+            TakeDamageServerRpc(2);
         }
         else if (player1.ImpactVelocity > 5)
         {
-            TakeDamage(1);
+            TakeDamageServerRpc(1);
         }
     }
 
@@ -129,8 +129,6 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
                 {
                     Id = networkPlayer.OwnerClientId,
                     ImpactVelocity = collision.relativeVelocity.magnitude
-
-
                 };
                 ImpactDamageServerRpc(player1, player2);
             }
