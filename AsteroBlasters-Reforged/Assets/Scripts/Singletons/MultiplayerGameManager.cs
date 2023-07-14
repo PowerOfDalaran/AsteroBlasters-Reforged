@@ -304,13 +304,22 @@ public class MultiplayerGameManager : NetworkBehaviour
     public void KickPlayer(ulong clientId)
     {
         RemoveSelfClientRpc(clientId);
+        DisconnectClient(clientId);
+    }
+
+    /// <summary>
+    /// Method disconnecting client with given id from <c>NetworkManager</c> and activating <c>NetworkManager_OnClientDisconnectedCallback</c>
+    /// </summary>
+    /// <param name="clientId">Id of client you want to disconnect</param>
+    public void DisconnectClient(ulong clientId)
+    {
         NetworkManager.Singleton.DisconnectClient(clientId);
-        NetworkManager_OnClientDisconnectedCallback(clientId);
+        //NetworkManager_OnClientDisconnectedCallback(clientId);
     }
 
     /// <summary>
     /// ClientRpc method, which is triggered by the host and activated on every client.
-    /// Every client checks if his id is equal the given one, and if yes, then they go back to main menu.
+    /// Every client checks if his id is equal the given one, and if yes, then they go back to network menu.
     /// </summary>
     /// <param name="clientId">Id of player that have to leave the lobby</param>
     [ClientRpc]
@@ -325,9 +334,8 @@ public class MultiplayerGameManager : NetworkBehaviour
             AuthenticationService.Instance.SignOut();
 
             Destroy(NetworkManager.Singleton.gameObject);
-            Destroy(LobbyManager.instance.gameObject.gameObject);
 
-            LevelManager.instance.LoadScene("MainMenuScene");
+            LevelManager.instance.LoadScene("NetworkMenuScene");
         }
     }
 }

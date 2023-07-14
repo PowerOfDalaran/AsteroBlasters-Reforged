@@ -226,6 +226,8 @@ public class LobbyManager : MonoBehaviour
         try
         {
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+            joinedLobby = null;
+            hostedLobby = null;
         }
         catch (LobbyServiceException exception)
         {
