@@ -6,17 +6,14 @@ using UnityEngine;
 public class DeathmatchGameManager : NetworkBehaviour
 {
     public static DeathmatchGameManager instance;
-    public NetworkList<int> playersKillCount;
-    public NetworkVariable<float> timeLeft;
+    public NetworkList<int> playersKillCount = new NetworkList<int>();
+    public NetworkVariable<float> timeLeft = new NetworkVariable<float>();
 
-
-    private void Awake()
+    private void Start()
     {
-                instance = this;
+        instance = this;
         if (IsHost)
         {
-            playersKillCount = new NetworkList<int>();
-
             foreach (PlayerData playerData in MultiplayerGameManager.instance.playerDataNetworkList) 
             {
                 playersKillCount.Add(0);
