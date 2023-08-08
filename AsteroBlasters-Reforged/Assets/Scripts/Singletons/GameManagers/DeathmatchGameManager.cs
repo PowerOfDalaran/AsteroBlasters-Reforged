@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -8,6 +9,8 @@ public class DeathmatchGameManager : NetworkBehaviour
     public static DeathmatchGameManager instance;
     public NetworkList<int> playersKillCount = new NetworkList<int>();
     public NetworkVariable<float> timeLeft = new NetworkVariable<float>();
+
+    public event EventHandler OnPlayersKillCountNetworkListChanged;
 
     private void Start()
     {
@@ -21,6 +24,13 @@ public class DeathmatchGameManager : NetworkBehaviour
 
             timeLeft.Value = 100f;
         }
+
+        playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
+    }
+
+    private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
+    {
+        OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
     }
 
     [ServerRpc]
