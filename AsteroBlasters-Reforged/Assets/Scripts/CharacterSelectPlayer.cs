@@ -26,7 +26,7 @@ public class CharacterSelectPlayer : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
         // Adding functionality to buttons
-        kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer);
+        kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer && playerIndex != 0);
         kickButton.onClick.AddListener(() =>
         {
             PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
