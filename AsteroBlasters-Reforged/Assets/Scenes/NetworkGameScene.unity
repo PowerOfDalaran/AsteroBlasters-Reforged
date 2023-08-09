@@ -399,6 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8947994f3dd8f724fb4cae054c69eb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matchDataPrefab: {fileID: 3862273311351123620, guid: 5fffc44f7841b4b4688723a3cad717b5, type: 3}
   timeLeft:
     m_InternalValue: 0
 --- !u!4 &425566852

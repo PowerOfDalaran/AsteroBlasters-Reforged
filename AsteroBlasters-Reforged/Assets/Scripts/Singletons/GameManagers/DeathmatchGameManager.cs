@@ -10,10 +10,17 @@ using UnityEngine;
 public class DeathmatchGameManager : NetworkBehaviour
 {
     public static DeathmatchGameManager instance;
+
+    [SerializeField]
+    GameObject matchDataPrefab;
+
     private NetworkList<int> playersKillCount = new NetworkList<int>();
+    private float timeLimit;
     public NetworkVariable<float> timeLeft = new NetworkVariable<float>();
 
     public event EventHandler OnPlayersKillCountNetworkListChanged;
+
+    private bool gameActive = true;
 
     private void Start()
     {
@@ -27,10 +34,11 @@ public class DeathmatchGameManager : NetworkBehaviour
                 playersKillCount.Add(0);
             }
 
-            timeLeft.Value = 100f;
+            timeLeft.Value = 3f;
         }
 
         playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
+        timeLimit = timeLeft.Value;
     }
 
     /// <summary>
@@ -69,7 +77,7 @@ public class DeathmatchGameManager : NetworkBehaviour
 
         if (playersKillCount[playerIndex] == 1)
         {
-            EndGame();
+            EndGameClientRpc();
         }
     }
 
@@ -80,18 +88,32 @@ public class DeathmatchGameManager : NetworkBehaviour
         {
             timeLeft.Value -= Time.deltaTime;
 
-            if (timeLeft.Value <= 0)
+            if (timeLeft.Value <= 0 && gameActive)
             {
-                EndGame();
+                EndGameClientRpc();
+                gameActive = false;
             }
         }
     }
 
-    /// <summary>
-    /// Method responsible for ending the game
-    /// </summary>
-    void EndGame()
+    [ClientRpc]
+    void EndGameClientRpc()
     {
-        Debug.Log("We are in engame now!");
+        object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
+
+        for(int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
+        {
+            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
+
+            object[] playerSubArray = new object[2];
+            playerSubArray[0] = playerData.playerName.ToString();
+            playerSubArray[1] = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId).ToString();
+
+            playerDataArray[i] = playerSubArray;
+        }
+
+        GameObject newMatchData = Instantiate(matchDataPrefab);
+        newMatchData.GetComponent<MatchData>().SetData(playerDataArray, timeLimit.ToString());
+        LevelManager.instance.LoadScene("MatchResultScene");
     }
 }
