@@ -137,7 +137,7 @@ public class DeathmatchGameManager : NetworkBehaviour
             object[] playerSubArray = new object[3];
             playerSubArray[0] = playerData.playerName.ToString();
             playerSubArray[1] = playersRanking[i];
-            playerSubArray[2] = ColorConvertTools.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
+            playerSubArray[2] = UtilitiesToolbox.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
 
             playerDataArray[i] = playerSubArray;
         }

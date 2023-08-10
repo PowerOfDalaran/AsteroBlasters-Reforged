@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -16,18 +17,16 @@ public class MatchResultSceneHandler : SceneButtonHandler
 
     void Awake()
     {
-        Destroy(CameraController.instance.gameObject);
-
         returnToMenuButton.onClick.AddListener(() =>
         {
-            Debug.Log("Button clicked");
-
             ChangeButtonsState(false);
             Destroy(MatchData.instance.gameObject);
             LevelManager.instance.LoadScene("MainMenuScene");
         });
 
-        TimeLimitText.text = "Time limit: " + MatchData.instance.timeLimit;
+        TimeSpan timeSpan = TimeSpan.FromSeconds(float.Parse(MatchData.instance.timeLimit));
+
+        TimeLimitText.text = "Time limit: " + UtilitiesToolbox.GetTimeAsString(timeSpan);
         NumberOfPlayersText.text = "Number of players: " + MatchData.instance.numberOfPlayers.ToString();
     }
 }

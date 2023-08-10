@@ -50,11 +50,7 @@ public class NetworkGameSceneHandler : MonoBehaviour
     private void UpdateTimer()
     {
         TimeSpan timerTimeSpan = TimeSpan.FromSeconds(DeathmatchGameManager.instance.timeLeft.Value);
-
-        string minutesLeft = timerTimeSpan.Minutes < 10 ? "0" + timerTimeSpan.Minutes.ToString() : timerTimeSpan.Minutes.ToString();
-        string secondsLeft = timerTimeSpan.Seconds < 10 ? "0" + timerTimeSpan.Seconds.ToString() : timerTimeSpan.Seconds.ToString();
-
-        timerText.text = minutesLeft + ":" + secondsLeft;
+        timerText.text = UtilitiesToolbox.GetTimeAsString(timerTimeSpan);
     }
 
     /// <summary>

@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ColorConvertTools
+public static class UtilitiesToolbox
 {
+    #region Color
     public static int HexToDec(string hex)
     {
         int dec = System.Convert.ToInt32(hex, 16);
@@ -59,4 +61,15 @@ public static class ColorConvertTools
             return red + green + blue + alpha;
         }
     }
+    #endregion
+
+    #region Time
+    public static string GetTimeAsString(TimeSpan timeSpan)
+    {
+        string minutesLeft = timeSpan.Minutes < 10 ? "0" + timeSpan.Minutes.ToString() : timeSpan.Minutes.ToString();
+        string secondsLeft = timeSpan.Seconds < 10 ? "0" + timeSpan.Seconds.ToString() : timeSpan.Seconds.ToString();
+
+        return minutesLeft + ":" + secondsLeft;
+    }
+    #endregion
 }

@@ -27,6 +27,6 @@ public class PodiumPlayerData : MonoBehaviour
         object[] playerData = MatchData.instance.GetPlayerOnPosition(position);
 
         PlayerNameText.text = playerData[0].ToString();
-        playerImage.color = ColorConvertTools.GetColorFromString(playerData[1].ToString());
+        playerImage.color = UtilitiesToolbox.GetColorFromString(playerData[1].ToString());
     }
 }
