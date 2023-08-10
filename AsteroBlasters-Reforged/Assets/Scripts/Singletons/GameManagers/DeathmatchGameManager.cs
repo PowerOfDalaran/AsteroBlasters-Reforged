@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -58,6 +59,27 @@ public class DeathmatchGameManager : NetworkBehaviour
     }
 
     /// <summary>
+    /// Method ordering the players by their score.
+    /// </summary>
+    /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
+    public int[] OrderThePlayers()
+    {
+        List<int> newList = GetPlayersKillCount();
+        int[] orderedPlayers = new int[newList.Count];
+
+        for (int i = 0; i < newList.Count; i++)
+        {
+            int highestValue = newList.Max();
+            int highestValueIndex = newList.IndexOf(highestValue);
+
+            orderedPlayers[highestValueIndex] = i;
+            newList[highestValueIndex] = -1;
+        }
+
+        return orderedPlayers;
+    }
+
+    /// <summary>
     /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
     /// </summary>
     /// <param name="changeEvent"></param>
@@ -75,7 +97,7 @@ public class DeathmatchGameManager : NetworkBehaviour
     {
         playersKillCount[playerIndex] += 1;
 
-        if (playersKillCount[playerIndex] == 1)
+        if (playersKillCount[playerIndex] == 1 && gameActive)
         {
             EndGameClientRpc();
         }
@@ -84,11 +106,11 @@ public class DeathmatchGameManager : NetworkBehaviour
     private void FixedUpdate()
     {
         // Updating timer
-        if (IsHost)
+        if (IsHost && gameActive)
         {
             timeLeft.Value -= Time.deltaTime;
 
-            if (timeLeft.Value <= 0 && gameActive)
+            if (timeLeft.Value <= 0)
             {
                 EndGameClientRpc();
                 gameActive = false;
@@ -99,15 +121,23 @@ public class DeathmatchGameManager : NetworkBehaviour
     [ClientRpc]
     void EndGameClientRpc()
     {
-        object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
+        NetworkManager.Singleton.Shutdown();
 
-        for(int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
+        Destroy(MultiplayerGameManager.instance.gameObject);
+        Destroy(LobbyManager.instance.gameObject);
+        Destroy(NetworkManager.Singleton.gameObject);
+
+        object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
+        int[] playersRanking = OrderThePlayers();
+
+        for (int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
         {
             PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
 
-            object[] playerSubArray = new object[2];
+            object[] playerSubArray = new object[3];
             playerSubArray[0] = playerData.playerName.ToString();
-            playerSubArray[1] = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId).ToString();
+            playerSubArray[1] = playersRanking[i];
+            playerSubArray[2] = ColorConvertTools.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
 
             playerDataArray[i] = playerSubArray;
         }

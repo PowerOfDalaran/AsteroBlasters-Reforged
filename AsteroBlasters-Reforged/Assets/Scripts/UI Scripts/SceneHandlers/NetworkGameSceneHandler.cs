@@ -63,7 +63,7 @@ public class NetworkGameSceneHandler : MonoBehaviour
     /// </summary>
     private void UpdateScoreBoard()
     {
-        int[] newPlayersOrder = OrderThePlayers();
+        int[] newPlayersOrder = DeathmatchGameManager.instance.OrderThePlayers();
 
         for (int i = 0; i < newPlayersOrder.Length; i++)
         {
@@ -84,26 +84,5 @@ public class NetworkGameSceneHandler : MonoBehaviour
         newPlayerScoreUI.transform.position = positions[playerPosition].transform.position;
 
         newPlayerScoreUI.GetComponent<PlayerScore>().SetPlayerData(playerId);
-    }
-
-    /// <summary>
-    /// Method ordering the players by their score.
-    /// </summary>
-    /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
-    private int[] OrderThePlayers()
-    {
-        List<int> newList = DeathmatchGameManager.instance.GetPlayersKillCount();
-        int[] orderedPlayers = new int[newList.Count];
-
-        for (int i = 0; i < newList.Count; i++)
-        {
-            int highestValue = newList.Max();
-            int highestValueIndex = newList.IndexOf(highestValue);
-
-            orderedPlayers[highestValueIndex] = i;
-            newList[highestValueIndex] = -1;
-        }
-
-        return orderedPlayers;
     }
 }

@@ -29,10 +29,10 @@ public class MatchData : MonoBehaviour
 
         for (int i = 0; i < playersData.Length; i++)
         {
-            if (Convert.ToInt32(playersData[1]) == position)
+            if (Convert.ToInt32(playersData[i][1]) == position)
             {
-                resultArray[0] = Convert.ToString(playersData[0]);
-                resultArray[1] = Convert.ToString(playersData[3]);
+                resultArray[0] = Convert.ToString(playersData[i][0]);
+                resultArray[1] = Convert.ToString(playersData[i][2]);
 
                 return resultArray;
             }

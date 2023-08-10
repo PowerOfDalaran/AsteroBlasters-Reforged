@@ -16,21 +16,18 @@ public class MatchResultSceneHandler : SceneButtonHandler
 
     void Awake()
     {
-
-        NetworkManager.Singleton.Shutdown();
-
-        Destroy(MultiplayerGameManager.instance.gameObject);
-        Destroy(LobbyManager.instance.gameObject);
-        Destroy(NetworkManager.Singleton);
+        Destroy(CameraController.instance.gameObject);
 
         returnToMenuButton.onClick.AddListener(() =>
         {
+            Debug.Log("Button clicked");
+
             ChangeButtonsState(false);
             Destroy(MatchData.instance.gameObject);
             LevelManager.instance.LoadScene("MainMenuScene");
         });
 
-        TimeLimitText.text = MatchData.instance.timeLimit;
-        NumberOfPlayersText.text = MatchData.instance.numberOfPlayers.ToString();
+        TimeLimitText.text = "Time limit: " + MatchData.instance.timeLimit;
+        NumberOfPlayersText.text = "Number of players: " + MatchData.instance.numberOfPlayers.ToString();
     }
 }
