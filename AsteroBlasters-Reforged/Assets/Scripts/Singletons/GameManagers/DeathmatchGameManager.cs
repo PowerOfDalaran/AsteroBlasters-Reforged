@@ -15,18 +15,24 @@ public class DeathmatchGameManager : NetworkBehaviour
     [SerializeField]
     GameObject matchDataPrefab;
 
-    private NetworkList<int> playersKillCount = new NetworkList<int>();
+    private NetworkList<int> playersKillCount;
     private float timeLimit;
-    public NetworkVariable<float> timeLeft = new NetworkVariable<float>();
+    public NetworkVariable<float> timeLeft;
 
     public event EventHandler OnPlayersKillCountNetworkListChanged;
 
     private bool gameActive = true;
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
 
+        playersKillCount = new NetworkList<int>();
+        timeLeft = new NetworkVariable<float>();
+    }
+
+    private void Start()
+    {
         // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
         if (IsHost)
         {
