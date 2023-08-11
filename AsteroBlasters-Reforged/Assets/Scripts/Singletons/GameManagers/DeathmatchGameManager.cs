@@ -118,18 +118,24 @@ public class DeathmatchGameManager : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Client Rpc method, which activated on every client executes endgame mechanics
+    /// </summary>
     [ClientRpc]
     void EndGameClientRpc()
     {
+        // Turning off and destroying game objects responsible for network connections etc.
         NetworkManager.Singleton.Shutdown();
 
         Destroy(MultiplayerGameManager.instance.gameObject);
         Destroy(LobbyManager.instance.gameObject);
         Destroy(NetworkManager.Singleton.gameObject);
 
+        // Creating the player data array and getting the proper order of players
         object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
         int[] playersRanking = OrderThePlayers();
 
+        // For each player in the game, creating new entry in the data object and assinging values to it
         for (int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
         {
             PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
@@ -142,6 +148,7 @@ public class DeathmatchGameManager : NetworkBehaviour
             playerDataArray[i] = playerSubArray;
         }
 
+        // Creating data object, assiging values to it and loading new scene.
         GameObject newMatchData = Instantiate(matchDataPrefab);
         newMatchData.GetComponent<MatchData>().SetData(playerDataArray, timeLimit.ToString());
         LevelManager.instance.LoadScene("MatchResultScene");

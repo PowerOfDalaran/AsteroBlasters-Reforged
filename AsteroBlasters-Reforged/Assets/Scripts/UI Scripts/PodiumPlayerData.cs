@@ -5,6 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class attatched to UI podium element, responsible for assigning the proper data to its texts, etc.
+/// </summary>
 public class PodiumPlayerData : MonoBehaviour
 {
     [SerializeField]
@@ -17,13 +20,14 @@ public class PodiumPlayerData : MonoBehaviour
 
     void Awake()
     {
+        // Checking if the podium element should be even visible
         if ((position + 1) > MatchData.instance.numberOfPlayers)
         {
             gameObject.SetActive(false);
             return;
         }
 
-        // Getting the data from some kind of object and assigning it to UI elements
+        // Getting the data from MatchData instance and assigning it to texts
         object[] playerData = MatchData.instance.GetPlayerOnPosition(position);
 
         PlayerNameText.text = playerData[0].ToString();

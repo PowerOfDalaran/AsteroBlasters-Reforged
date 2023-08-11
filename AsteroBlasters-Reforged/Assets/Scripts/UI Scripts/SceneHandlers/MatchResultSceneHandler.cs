@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class responsible for managing buttons and other UI elements of <c>MatchResultScene</c> scene.
+/// </summary>
 public class MatchResultSceneHandler : SceneButtonHandler
 {
     [SerializeField]
@@ -17,6 +17,7 @@ public class MatchResultSceneHandler : SceneButtonHandler
 
     void Awake()
     {
+        // Buttons
         returnToMenuButton.onClick.AddListener(() =>
         {
             ChangeButtonsState(false);
@@ -24,6 +25,7 @@ public class MatchResultSceneHandler : SceneButtonHandler
             LevelManager.instance.LoadScene("MainMenuScene");
         });
 
+        // Texts
         TimeSpan timeSpan = TimeSpan.FromSeconds(float.Parse(MatchData.instance.timeLimit));
 
         TimeLimitText.text = "Time limit: " + UtilitiesToolbox.GetTimeAsString(timeSpan);
