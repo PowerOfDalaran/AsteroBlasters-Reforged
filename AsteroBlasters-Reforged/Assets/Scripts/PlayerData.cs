@@ -23,7 +23,6 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
 
     /// <summary>
     /// Implementation of <c>INetworkSerializable</c> interface. 
-    /// Needs further examination.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="serializer"></param>

@@ -20,14 +20,16 @@ public class NetworkWeapon : NetworkBehaviour
     /// Method, which using ServerRpc, creates new projectile, spawn and launch it, if fire cooldown has passed.
     /// </summary>
     [ServerRpc]
-    public void ShootServerRpc()
+    public void ShootServerRpc(ServerRpcParams serverRpcParams = default)
     {
+        ulong projectileOwner = serverRpcParams.Receive.SenderClientId;
+
         if (Time.time > cooldownStatus)
         {
             cooldownStatus = Time.time + fireCooldown;
             GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 
-            newProjectile.GetComponent<NetworkObject>().Spawn();
+            newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(projectileOwner);
             newProjectile.GetComponent<NetworkProjectileController>().Launch();
         }
     }
