@@ -19,12 +19,11 @@ public class NetworkProjectileController : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Checking if colliding object implement health system, if yes, dealing damage to it
-        IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+        NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
-        if (healthSystem != null)
+        if (networkPlayerController != null)
         {
-            healthSystem.TakeDamage(damage);
+            networkPlayerController.TakeDamage(damage, gameObject.GetComponent<NetworkObject>().OwnerClientId);
         }
 
         DespawnSelfServerRpc();

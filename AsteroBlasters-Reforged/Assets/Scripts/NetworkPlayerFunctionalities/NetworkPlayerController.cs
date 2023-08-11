@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
 /// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
 /// </summary>
-public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
+public class NetworkPlayerController : NetworkBehaviour
 {
     Rigidbody2D myRigidbody2D;
     PlayerControls myPlayerControls;
@@ -179,12 +179,17 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         TakeDamageServerRpc(damage);
     }
 
+    public void TakeDamage(int damage, ulong damagingPlayerId)
+    {
+        TakeDamageServerRpc(damage, damagingPlayerId);
+    }
+
     /// <summary>
     /// Method calling server to deal damage to proper player character and killing it if its health is too low.
     /// </summary>
     /// <param name="damage">Amount of damage you want to deal</param>
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int damage)
+    public void TakeDamageServerRpc(int damage, ulong damagingPlayerId = ulong.MaxValue)
     {
         ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
         var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
@@ -196,13 +201,16 @@ public class NetworkPlayerController : NetworkBehaviour, IHealthSystem
         else
         {
             client.currentHealth.Value = 3;
-            Die();
+            Die(damagingPlayerId);
         }
     }
 
-    public void Die()
+    public void Die(ulong killerPlayerId = ulong.MaxValue)
     {
+        int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
+
         DieClientRpc();
+        DeathmatchGameManager.instance.AddKillCountServerRpc(killingPlayerIndex);
     }
 
     /// <summary>
