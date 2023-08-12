@@ -103,7 +103,7 @@ public class DeathmatchGameManager : NetworkBehaviour
     {
         playersKillCount[playerIndex] += 1;
 
-        if (playersKillCount[playerIndex] == 1 && gameActive)
+        if (playersKillCount[playerIndex] == 5 && gameActive)
         {
             EndGameClientRpc();
         }
