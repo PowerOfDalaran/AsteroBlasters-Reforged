@@ -41,7 +41,7 @@ public class DeathmatchGameManager : NetworkBehaviour
                 playersKillCount.Add(0);
             }
 
-            timeLeft.Value = 3f;
+            timeLeft.Value = 120f;
         }
 
         playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
