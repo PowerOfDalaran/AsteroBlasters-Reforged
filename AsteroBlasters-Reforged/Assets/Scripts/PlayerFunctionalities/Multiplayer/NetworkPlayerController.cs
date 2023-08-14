@@ -15,19 +15,18 @@ namespace PlayerFunctionality
     public class NetworkPlayerController : NetworkBehaviour
     {
         Rigidbody2D myRigidbody2D;
+        SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
         NetworkWeapon myWeapon;
-        SpriteRenderer mySpriteRenderer;
 
-        [SerializeField]
-        float movementSpeed = 3f;
-        [SerializeField]
-        float rotationSpeed = 720;
+        [SerializeField] float movementSpeed = 3f;
+        [SerializeField] float rotationSpeed = 720f;
         public int playerIndex;
 
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
+        #region Build-in methods
         void Awake()
         {
             // Assigning values to properties
@@ -35,6 +34,7 @@ namespace PlayerFunctionality
             myWeapon = GetComponent<NetworkWeapon>();
             mySpriteRenderer = GetComponent<SpriteRenderer>();
             myPlayerControls = new PlayerControls();
+
             maxHealth.Value = 3;
             currentHealth = maxHealth;
         }
@@ -46,31 +46,6 @@ namespace PlayerFunctionality
             Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
             mySpriteRenderer.color = myColor;
         }
-
-        /// <summary>
-        /// Method assigning given player index to this instance of player character
-        /// </summary>
-        /// <param name="givenIndex">Player index you this player to store</param>
-        [ClientRpc]
-        public void SetMyIndexClientRpc(int givenIndex)
-        {
-            playerIndex = givenIndex;
-        }
-
-        void OnEnable()
-        {
-            // Adding methods to PlayerControls delegates and activating it
-            myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.Shoot.performed += Shoot;
-        }
-
-        void OnDisable()
-        {
-            // Removing methods from PlayerControls delegates and deactivating it
-            myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
-        }
-
 
         private void FixedUpdate()
         {
@@ -90,25 +65,6 @@ namespace PlayerFunctionality
             {
                 Movement(movementVector);
                 Rotate(movementVector);
-            }
-        }
-
-        [ServerRpc]
-        private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
-        {
-            //Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
-            //Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
-            if (player1.ImpactVelocity > 8)
-            {
-                Die();
-            }
-            else if (player1.ImpactVelocity > 6)
-            {
-                TakeDamageServerRpc(2);
-            }
-            else if (player1.ImpactVelocity > 5)
-            {
-                TakeDamageServerRpc(1);
             }
         }
 
@@ -140,6 +96,34 @@ namespace PlayerFunctionality
             }
         }
 
+        void OnEnable()
+        {
+            // Adding methods to PlayerControls delegates and activating it
+            myPlayerControls.Enable();
+            myPlayerControls.PlayerActions.Shoot.performed += Shoot;
+        }
+
+        void OnDisable()
+        {
+            // Removing methods from PlayerControls delegates and deactivating it
+            myPlayerControls.Disable();
+            myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
+        }
+        #endregion
+
+        #region Set Player Data
+        /// <summary>
+        /// Method assigning given player index to this instance of player character
+        /// </summary>
+        /// <param name="givenIndex">Player index you this player to store</param>
+        [ClientRpc]
+        public void SetMyIndexClientRpc(int givenIndex)
+        {
+            playerIndex = givenIndex;
+        }
+        #endregion
+
+        #region Player Actions
         /// <summary>
         /// Method activating the current weapon in order to fire.
         /// Is added to the "PlayerActions.Move.performed" delegate.
@@ -177,7 +161,9 @@ namespace PlayerFunctionality
             Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
             gameObject.transform.rotation = newRotation;
         }
+        #endregion
 
+        #region Taking Damage
         public void TakeDamage(int damage)
         {
             TakeDamageServerRpc(damage);
@@ -209,6 +195,27 @@ namespace PlayerFunctionality
             }
         }
 
+        [ServerRpc]
+        private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
+        {
+            //Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
+            //Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
+            if (player1.ImpactVelocity > 8)
+            {
+                Die();
+            }
+            else if (player1.ImpactVelocity > 6)
+            {
+                TakeDamageServerRpc(2);
+            }
+            else if (player1.ImpactVelocity > 5)
+            {
+                TakeDamageServerRpc(1);
+            }
+        }
+        #endregion
+
+        #region Player Death
         public void Die(ulong killerPlayerId = ulong.MaxValue)
         {
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
@@ -227,5 +234,6 @@ namespace PlayerFunctionality
             myRigidbody2D.position = new Vector3(0f, 0f, 0f);
             myRigidbody2D.velocity = Vector2.zero;
         }
+        #endregion
     }
 }

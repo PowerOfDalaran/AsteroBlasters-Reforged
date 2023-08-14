@@ -18,14 +18,19 @@ namespace NetworkFunctionality
     /// </summary>
     public class LobbyManager : MonoBehaviour
     {
-        const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
         public static LobbyManager instance;
+        
+        const string KEY_RELAY_JOIN_CODE = "RelayJoinCode";
+
         Lobby hostedLobby;
         Lobby joinedLobby;
+
         float heartbeatTimer;
         float maxHeartbeatTimer = 15f;
+
         public string playerName;
 
+        #region Build-in methods
         private async void Awake()
         {
             // Checking if another instance of this class don't exist yet and deleting itself if that is the case
@@ -48,7 +53,9 @@ namespace NetworkFunctionality
         {
             LobbyHeartbeat();
         }
+        #endregion
 
+        #region Relay
         /// <summary>
         /// Method calling the Unity Relay Service to create new allocation
         /// </summary>
@@ -106,7 +113,9 @@ namespace NetworkFunctionality
                 return default;
             }
         }
+        #endregion
 
+        #region Lobby
         /// <summary>
         /// Method creating lobby with given name and maximum number of players.
         /// </summary>
@@ -157,22 +166,6 @@ namespace NetworkFunctionality
         }
 
         /// <summary>
-        /// Method pinging the hosted lobby, in order to not let it close itself.
-        /// </summary>
-        async void LobbyHeartbeat()
-        {
-            if (hostedLobby != null)
-            {
-                heartbeatTimer -= Time.deltaTime;
-                if (heartbeatTimer < 0f)
-                {
-                    heartbeatTimer = maxHeartbeatTimer;
-                    await LobbyService.Instance.SendHeartbeatPingAsync(hostedLobby.Id);
-                }
-            }
-        }
-
-        /// <summary>
         /// Method joining the lobby with certain code.
         /// </summary>
         /// <param name="lobbyCode">Code of lobby you want to join</param>
@@ -212,15 +205,6 @@ namespace NetworkFunctionality
         }
 
         /// <summary>
-        /// Method returning the lobby, in which player currently is
-        /// </summary>
-        /// <returns>The lobby object</returns>
-        public Lobby GetLobby()
-        {
-            return joinedLobby;
-        }
-
-        /// <summary>
         /// Method removing current player from the lobby
         /// </summary>
         public async void LeaveLobby()
@@ -254,5 +238,31 @@ namespace NetworkFunctionality
                 Debug.Log(exception);
             }
         }
+
+        /// <summary>
+        /// Method pinging the hosted lobby, in order to not let it close itself.
+        /// </summary>
+        async void LobbyHeartbeat()
+        {
+            if (hostedLobby != null)
+            {
+                heartbeatTimer -= Time.deltaTime;
+                if (heartbeatTimer < 0f)
+                {
+                    heartbeatTimer = maxHeartbeatTimer;
+                    await LobbyService.Instance.SendHeartbeatPingAsync(hostedLobby.Id);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method returning the lobby, in which player currently is
+        /// </summary>
+        /// <returns>The lobby object</returns>
+        public Lobby GetLobby()
+        {
+            return joinedLobby;
+        }
+        #endregion
     }
 }
