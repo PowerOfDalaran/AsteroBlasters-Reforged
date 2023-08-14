@@ -2,6 +2,8 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using DataStructure;
+using NetworkFunctionality;
 
 /// <summary>
 /// Class respionsible for managing player images in lobby
