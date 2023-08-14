@@ -27,6 +27,7 @@ namespace GameManager
 
         private bool gameActive = true;
 
+        #region Build-in methods
         private void Awake()
         {
             instance = this;
@@ -52,6 +53,32 @@ namespace GameManager
             timeLimit = timeLeft.Value;
         }
 
+        private void FixedUpdate()
+        {
+            // Updating timer
+            if (IsHost && gameActive)
+            {
+                timeLeft.Value -= Time.deltaTime;
+
+                if (timeLeft.Value <= 0)
+                {
+                    EndGameClientRpc();
+                    gameActive = false;
+                }
+            }
+        }
+        #endregion
+
+        #region KillCount Array
+        /// <summary>
+        /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
+        /// </summary>
+        /// <param name="changeEvent"></param>
+        private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
+        {
+            OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         /// <summary>
         /// Method returning <c>playerKillCount</c> Network List object in form of standard List.
         /// </summary>
@@ -67,6 +94,22 @@ namespace GameManager
 
             return resultArray;
         }
+
+        /// <summary>
+        /// Server Rpc method adding one point to the player with given id.
+        /// </summary>
+        /// <param name="playerIndex">Id of player, which scored the point</param>
+        [ServerRpc]
+        public void AddKillCountServerRpc(int playerIndex)
+        {
+            playersKillCount[playerIndex] += 1;
+
+            if (playersKillCount[playerIndex] == 1 && gameActive)
+            {
+                EndGameClientRpc();
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Method ordering the players by their score.
@@ -87,45 +130,6 @@ namespace GameManager
             }
 
             return orderedPlayers;
-        }
-
-        /// <summary>
-        /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
-        /// </summary>
-        /// <param name="changeEvent"></param>
-        private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
-        {
-            OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Server Rpc method adding one point to the player with given id.
-        /// </summary>
-        /// <param name="playerIndex">Id of player, which scored the point</param>
-        [ServerRpc]
-        public void AddKillCountServerRpc(int playerIndex)
-        {
-            playersKillCount[playerIndex] += 1;
-
-            if (playersKillCount[playerIndex] == 1 && gameActive)
-            {
-                EndGameClientRpc();
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            // Updating timer
-            if (IsHost && gameActive)
-            {
-                timeLeft.Value -= Time.deltaTime;
-
-                if (timeLeft.Value <= 0)
-                {
-                    EndGameClientRpc();
-                    gameActive = false;
-                }
-            }
         }
 
         /// <summary>
