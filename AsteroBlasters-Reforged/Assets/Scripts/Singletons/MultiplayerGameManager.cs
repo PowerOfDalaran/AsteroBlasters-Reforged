@@ -17,16 +17,14 @@ namespace NetworkFunctionality
     {
         public static MultiplayerGameManager instance;
 
-        [SerializeField]
-        List<Color> playerColorList;
+        [SerializeField] GameObject playerPrefab;
 
-        [SerializeField]
-        GameObject playerPrefab;
-
+        [SerializeField] List<Color> playerColorList;
         public NetworkList<PlayerData> playerDataNetworkList;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
+        #region Build-in methods
         private void Awake()
         {
             // Checking if another instance of this class don't exist yet and deleting itself if that is the case
@@ -44,8 +42,9 @@ namespace NetworkFunctionality
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }
+        #endregion
 
-        // METHODS FOR DELEGATES
+        #region NetworkList Events
 
         /// <summary>
         /// Event, which triggers every time the list of players data is changed
@@ -87,9 +86,10 @@ namespace NetworkFunctionality
                 }
             }
         }
+        #endregion
 
-        // STARTING NETWORK MANAGER
 
+        #region Start The Game
         /// <summary>
         /// Method handling creating the game as the host
         /// </summary>
@@ -127,18 +127,9 @@ namespace NetworkFunctionality
                 }
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Method checking if player with given index is connected.
-        /// </summary>
-        /// <param name="playerIndex">Player index</param>
-        /// <returns></returns>
-        public bool IsPlayerIndexConnected(int playerIndex)
-        {
-            return playerIndex < playerDataNetworkList.Count;
-        }
-
-        // PLAYER DATA, INDEX ETC.
+        #region Set Player Data
         /// <summary>
         /// Server Rpc method, which sets the player name (of the sending client) in the <c>playerDataNetworkList</c>.
         /// Does not require ownership.
@@ -172,7 +163,9 @@ namespace NetworkFunctionality
                 SetPlayerNameServerRpc(myName);
             }
         }
+        #endregion
 
+        #region Get Player Data
         /// <summary>
         /// Method returning the index of the player in <c>playerDataNetworkList</c> array
         /// </summary>
@@ -188,6 +181,16 @@ namespace NetworkFunctionality
                 }
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Method checking if player with given index is connected.
+        /// </summary>
+        /// <param name="playerIndex">Player index</param>
+        /// <returns></returns>
+        public bool IsPlayerIndexConnected(int playerIndex)
+        {
+            return playerIndex < playerDataNetworkList.Count;
         }
 
         /// <summary>
@@ -225,8 +228,9 @@ namespace NetworkFunctionality
         {
             return playerDataNetworkList[playerIndex];
         }
+        #endregion
 
-        // PLAYERS COLORS
+        #region Player Color
 
         /// <summary>
         /// Method returning the color with given index from <c>playerColorList</c>
@@ -301,7 +305,9 @@ namespace NetworkFunctionality
             playerData.colorId = colorId;
             playerDataNetworkList[playerDataIndex] = playerData;
         }
+        #endregion
 
+        #region Remove Player
         /// <summary>
         /// Method called only by the host, to remove player from the lobby.
         /// </summary>
@@ -343,5 +349,6 @@ namespace NetworkFunctionality
                 LevelManager.instance.LoadScene("NetworkMenuScene");
             }
         }
+        #endregion
     }
 }
