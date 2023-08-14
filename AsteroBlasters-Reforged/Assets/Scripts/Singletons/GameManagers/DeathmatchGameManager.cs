@@ -1,11 +1,11 @@
+using DataStructure;
+using NetworkFunctionality;
+using SceneManagment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using DataStructure;
-using SceneManagment;
-using NetworkFunctionality;
 
 namespace GameManager
 {
@@ -45,15 +45,11 @@ namespace GameManager
                     playersKillCount.Add(0);
                 }
 
-                timeLeft.Value = 3f;
+                timeLeft.Value = 120f;
             }
 
-<<<<<<< HEAD
-            timeLeft.Value = 120f;
-=======
             playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
             timeLimit = timeLeft.Value;
->>>>>>> master-without-graphics
         }
 
         /// <summary>
@@ -93,36 +89,11 @@ namespace GameManager
             return orderedPlayers;
         }
 
-<<<<<<< HEAD
-        return orderedPlayers;
-    }
-
-    /// <summary>
-    /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
-    /// </summary>
-    /// <param name="changeEvent"></param>
-    private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
-    {
-        OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Server Rpc method adding one point to the player with given id.
-    /// </summary>
-    /// <param name="playerIndex">Id of player, which scored the point</param>
-    [ServerRpc]
-    public void AddKillCountServerRpc(int playerIndex)
-    {
-        playersKillCount[playerIndex] += 1;
-
-        if (playersKillCount[playerIndex] == 5 && gameActive)
-=======
         /// <summary>
         /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
         /// </summary>
         /// <param name="changeEvent"></param>
         private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
->>>>>>> master-without-graphics
         {
             OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -136,7 +107,7 @@ namespace GameManager
         {
             playersKillCount[playerIndex] += 1;
 
-            if (playersKillCount[playerIndex] == 1 && gameActive)
+            if (playersKillCount[playerIndex] == 5 && gameActive)
             {
                 EndGameClientRpc();
             }
