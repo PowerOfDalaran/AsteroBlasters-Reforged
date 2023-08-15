@@ -232,6 +232,8 @@ namespace NetworkFunctionality
                 await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
                 joinedLobby = null;
                 hostedLobby = null;
+                AuthenticationService.Instance.SignOut();
+                Destroy(gameObject);
             }
             catch (LobbyServiceException exception)
             {

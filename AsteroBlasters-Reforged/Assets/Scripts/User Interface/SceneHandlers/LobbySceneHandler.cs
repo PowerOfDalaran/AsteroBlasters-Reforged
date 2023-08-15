@@ -14,18 +14,12 @@ namespace UserInterface
     public class LobbySceneHandler : SceneButtonHandler
     {
         // Buttons
-        [SerializeField]
-        Button startGameButton;
-        [SerializeField]
-        Button leaveLobbyButton;
+        [SerializeField] Button startGameButton;
+        [SerializeField] Button leaveLobbyButton;
 
         // Other UI elements
-        [SerializeField]
-        Text lobbyNameText;
-        [SerializeField]
-        Text lobbyCodeText;
-        [SerializeField]
-        GameObject LoadingScreen;
+        [SerializeField] Text lobbyNameText;
+        [SerializeField] Text lobbyCodeText;
 
         private void Awake()
         {
@@ -47,14 +41,7 @@ namespace UserInterface
             {
                 ChangeButtonsState(false);
                 // Logging out of services and leaving scene
-                //MultiplayerGameManager.instance.DisconnectClient(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
-
-                LobbyManager.instance.LeaveLobby();
-                NetworkManager.Singleton.Shutdown();
-                AuthenticationService.Instance.SignOut();
-                Destroy(NetworkManager.Singleton.gameObject);
-
-                LevelManager.instance.LoadScene("NetworkMenuScene");
+                MultiplayerGameManager.instance.RemoveMeServerRpc(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
             });
 
             // Setting the start button visibility to true, if current player is a host

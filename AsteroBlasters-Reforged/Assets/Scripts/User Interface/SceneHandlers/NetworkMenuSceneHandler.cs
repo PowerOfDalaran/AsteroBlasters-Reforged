@@ -14,30 +14,18 @@ namespace UserInterface
     public class NetworkMenuSceneHandler : SceneButtonHandler
     {
         // Buttons
-        [SerializeField]
-        Button joinGameButton;
-        [SerializeField]
-        Button createGameButton;
-        [SerializeField]
-        Button returnToMenuButton;
-        [SerializeField]
-        Button setPlayerNameButton;
+        [SerializeField] Button joinGameButton;
+        [SerializeField] Button createGameButton;
+        [SerializeField] Button returnToMenuButton;
+        [SerializeField] Button setPlayerNameButton;
 
         // Other UI elements
-        [SerializeField]
-        InputField lobbyCodeInputField;
-        [SerializeField]
-        Slider maxPlayersSlider;
-        [SerializeField]
-        InputField lobbyNameInputField;
-        [SerializeField]
-        GameObject LoadingScreen;
-        [SerializeField]
-        InputField playerNameInputField;
-        [SerializeField]
-        GameObject CreateJoinScreen;
-        [SerializeField]
-        GameObject EnterNameScreen;
+        [SerializeField] InputField lobbyCodeInputField;
+        [SerializeField] Slider maxPlayersSlider;
+        [SerializeField] InputField lobbyNameInputField;
+        [SerializeField] InputField playerNameInputField;
+        [SerializeField] GameObject CreateJoinScreen;
+        [SerializeField] GameObject EnterNameScreen;
 
         private void Awake()
         {

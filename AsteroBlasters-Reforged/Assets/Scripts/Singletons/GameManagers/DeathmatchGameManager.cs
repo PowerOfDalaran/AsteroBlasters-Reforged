@@ -46,7 +46,7 @@ namespace GameManager
                     playersKillCount.Add(0);
                 }
 
-                timeLeft.Value = 3f;
+                timeLeft.Value = 45f;
             }
 
             playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
@@ -104,7 +104,7 @@ namespace GameManager
         {
             playersKillCount[playerIndex] += 1;
 
-            if (playersKillCount[playerIndex] == 1 && gameActive)
+            if (playersKillCount[playerIndex] == 2 && gameActive)
             {
                 EndGameClientRpc();
             }

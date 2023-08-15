@@ -308,6 +308,17 @@ namespace NetworkFunctionality
         #endregion
 
         #region Remove Player
+
+        /// <summary>
+        /// Method called only by clients in order to make host throw them out of the lobby
+        /// </summary>
+        /// <param name="clientId"></param>
+        [ServerRpc(RequireOwnership = false)]
+        public void RemoveMeServerRpc(ulong clientId)
+        {
+            KickPlayer(clientId);
+        }
+
         /// <summary>
         /// Method called only by the host, to remove player from the lobby.
         /// </summary>
@@ -325,7 +336,7 @@ namespace NetworkFunctionality
         public void DisconnectClient(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
-            //NetworkManager_OnClientDisconnectedCallback(clientId);
+            NetworkManager_OnClientDisconnectedCallback(clientId);
         }
 
         /// <summary>
@@ -344,9 +355,11 @@ namespace NetworkFunctionality
                 NetworkManager.Singleton.Shutdown();
                 AuthenticationService.Instance.SignOut();
 
-                Destroy(NetworkManager.Singleton.gameObject);
+                LevelManager.instance.LoadScene("MainMenuScene");
 
-                LevelManager.instance.LoadScene("NetworkMenuScene");
+                Destroy(NetworkManager.Singleton.gameObject);
+                Destroy(LobbyManager.instance.gameObject);
+                Destroy(gameObject);
             }
         }
         #endregion
