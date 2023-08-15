@@ -42,6 +42,17 @@ namespace NetworkFunctionality
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }
+
+        private void Update()
+        {
+            //Debug.Log(NetworkManager.Singleton.ShutdownInProgress);
+            //Debug.Log(NetworkManager.Singleton.IsConnectedClient);
+            //if (!NetworkManager.Singleton.IsConnectedClient)
+            //{
+            //    UtilitiesToolbox.DeleteNetworkConnections();
+            //    LevelManager.instance.LoadScene("MainMenuScene");
+            //}
+        }
         #endregion
 
         #region NetworkList Events
@@ -87,7 +98,6 @@ namespace NetworkFunctionality
             }
         }
         #endregion
-
 
         #region Start The Game
         /// <summary>

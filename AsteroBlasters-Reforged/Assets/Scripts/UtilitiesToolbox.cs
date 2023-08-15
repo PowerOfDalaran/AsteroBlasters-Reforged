@@ -1,4 +1,9 @@
+using NetworkFunctionality;
 using System;
+using System.Net;
+using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 
 /// <summary>
@@ -108,6 +113,27 @@ public static class UtilitiesToolbox
         string secondsLeft = timeSpan.Seconds < 10 ? "0" + timeSpan.Seconds.ToString() : timeSpan.Seconds.ToString();
 
         return minutesLeft + ":" + secondsLeft;
+    }
+    #endregion
+
+    #region Network
+    public static void DeleteNetworkConnections()
+    {
+        AuthenticationService.Instance.SignOut();
+
+        if (NetworkManager.Singleton.gameObject != null)
+        {
+            NetworkManager.Singleton.Shutdown();
+            UnityEngine.GameObject.Destroy(NetworkManager.Singleton.gameObject);
+        }
+        if (LobbyManager.instance != null)
+        {
+            UnityEngine.GameObject.Destroy(LobbyManager.instance.gameObject);
+        }
+        if (MultiplayerGameManager.instance != null)
+        {
+            UnityEngine.GameObject.Destroy(MultiplayerGameManager.instance.gameObject);
+        }
     }
     #endregion
 }
