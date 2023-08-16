@@ -40,7 +40,6 @@ namespace SceneManagment
 
 
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
-            //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(scene.ToString());
             asyncOperation.allowSceneActivation = false;
 
             do

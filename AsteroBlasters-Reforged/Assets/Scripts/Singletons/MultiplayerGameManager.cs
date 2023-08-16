@@ -42,17 +42,6 @@ namespace NetworkFunctionality
             playerDataNetworkList = new NetworkList<PlayerData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }
-
-        private void Update()
-        {
-            //Debug.Log(NetworkManager.Singleton.ShutdownInProgress);
-            //Debug.Log(NetworkManager.Singleton.IsConnectedClient);
-            //if (!NetworkManager.Singleton.IsConnectedClient)
-            //{
-            //    UtilitiesToolbox.DeleteNetworkConnections();
-            //    LevelManager.instance.LoadScene("MainMenuScene");
-            //}
-        }
         #endregion
 
         #region NetworkList Events
@@ -72,29 +61,43 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of the player</param>
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
         {
-            playerDataNetworkList.Add(new PlayerData
+            if (NetworkManager.Singleton.IsHost)
             {
-                clientId = clientId,
-                colorId = GetFirstUnusedColorId(),
-            });
+                playerDataNetworkList.Add(new PlayerData
+                {
+                    clientId = clientId,
+                    colorId = GetFirstUnusedColorId(),
+                });
 
-            // Triggering the player to make them assign their name
-            TriggerSetNameClientRpc(clientId);
+                // Triggering the player to make them assign their name
+                TriggerSetNameClientRpc(clientId);
+            }
         }
 
         /// <summary>
-        /// Method, which removes player with given id from the playerNetworkList
+        /// Method, which activates for host and (disconnecting) client when player disconnects
+        /// For host, it removes player with given id from the playerNetworkList.
+        /// For client it moves him to the main menu
         /// </summary>
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
-            // Removing player from the list
-            foreach (PlayerData playerData in playerDataNetworkList)
+            if (NetworkManager.Singleton.IsHost)
             {
-                if (playerData.clientId == clientId)
+                // Removing player from the list
+                foreach (PlayerData playerData in playerDataNetworkList)
                 {
-                    playerDataNetworkList.Remove(playerData);
+                    if (playerData.clientId == clientId)
+                    {
+                        playerDataNetworkList.Remove(playerData);
+                    }
                 }
+            }
+            else
+            {
+                // Deleting network connections and moving players to main menu
+                UtilitiesToolbox.DeleteNetworkConnections();
+                LevelManager.instance.LoadScene("MainMenuScene");
             }
         }
         #endregion
@@ -115,6 +118,8 @@ namespace NetworkFunctionality
         /// </summary>
         public void StartAsClient()
         {
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
             NetworkManager.StartClient();
         }
 

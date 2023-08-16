@@ -117,6 +117,9 @@ public static class UtilitiesToolbox
     #endregion
 
     #region Network
+    /// <summary>
+    /// Method being called when there's is need to close all current network connection
+    /// </summary>
     public static void DeleteNetworkConnections()
     {
         AuthenticationService.Instance.SignOut();
