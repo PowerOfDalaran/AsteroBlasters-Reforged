@@ -24,6 +24,8 @@ namespace NetworkFunctionality
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
+        public bool gameActive = false;
+
         #region Build-in methods
         private void Awake()
         {
@@ -61,6 +63,7 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of the player</param>
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
         {
+            Debug.Log(clientId);
             if (NetworkManager.Singleton.IsHost)
             {
                 playerDataNetworkList.Add(new PlayerData
@@ -95,9 +98,12 @@ namespace NetworkFunctionality
             }
             else
             {
-                // Deleting network connections and moving players to main menu
-                UtilitiesToolbox.DeleteNetworkConnections();
-                LevelManager.instance.LoadScene("MainMenuScene");
+                if (gameActive)
+                {
+                    // Deleting network connections and moving players to main menu
+                    UtilitiesToolbox.DeleteNetworkConnections();
+                    LevelManager.instance.LoadScene("MainMenuScene");
+                }
             }
         }
         #endregion
@@ -111,6 +117,7 @@ namespace NetworkFunctionality
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
             NetworkManager.StartHost();
+            gameActive = true;
         }
 
         /// <summary>
@@ -121,6 +128,7 @@ namespace NetworkFunctionality
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
             NetworkManager.StartClient();
+            gameActive = true;
         }
 
         /// <summary>
@@ -369,8 +377,6 @@ namespace NetworkFunctionality
                 LobbyManager.instance.LeaveLobby();
                 NetworkManager.Singleton.Shutdown();
                 AuthenticationService.Instance.SignOut();
-
-                LevelManager.instance.LoadScene("MainMenuScene");
 
                 Destroy(NetworkManager.Singleton.gameObject);
                 Destroy(LobbyManager.instance.gameObject);

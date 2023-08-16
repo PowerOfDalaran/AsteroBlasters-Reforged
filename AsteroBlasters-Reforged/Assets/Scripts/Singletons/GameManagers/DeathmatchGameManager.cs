@@ -139,6 +139,7 @@ namespace GameManager
         void EndGameClientRpc()
         {
             gameActive = false;
+            MultiplayerGameManager.instance.gameActive = false;
 
             // Creating the player data array and getting the proper order of players
             object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
