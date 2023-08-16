@@ -37,38 +37,11 @@ namespace UserInterface
             {
                 // Logging out of services and destroying singletons
                 ChangeButtonsState(false);
-                NetworkManager.Singleton.Shutdown();
-                AuthenticationService.Instance.SignOut();
 
-                Destroy(NetworkManager.Singleton.gameObject);
-                Destroy(LobbyManager.instance.gameObject.gameObject);
+                UtilitiesToolbox.DeleteNetworkConnections(true, true, true, true);
 
-                LevelManager.instance.LoadScene("MainMenuScene");
+                LevelManager.instance.LoadScene("LoginScene");
             });
-
-            setPlayerNameButton.onClick.AddListener(() =>
-            {
-                if (playerNameInputField.text.Length > 0)
-                {
-                    LobbyManager.instance.playerName = playerNameInputField.text;
-                    EnterNameScreen.SetActive(false);
-                    CreateJoinScreen.SetActive(true);
-                }
-                else
-                {
-                    MessageSystem.instance.AddMessage("Enter the proper name", 2000, MessageSystem.MessagePriority.Medium);
-                }
-            });
-        }
-
-        private void Start()
-        {
-            // Checking if name wasn't already entered
-            if (LobbyManager.instance.playerName.Length > 0)
-            {
-                EnterNameScreen.SetActive(false);
-                CreateJoinScreen.SetActive(true);
-            }
         }
 
         /// <summary>

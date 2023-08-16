@@ -131,7 +131,7 @@ public static class UtilitiesToolbox
             AuthenticationService.Instance.SignOut();
         }
 
-        if (NetworkManager.Singleton.gameObject != null && deleteNetworkManager)
+        if (NetworkManager.Singleton != null && deleteNetworkManager)
         {
             NetworkManager.Singleton.Shutdown();
             UnityEngine.GameObject.Destroy(NetworkManager.Singleton.gameObject);
