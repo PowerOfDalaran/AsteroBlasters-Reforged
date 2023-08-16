@@ -966,7 +966,6 @@ MonoBehaviour:
   lobbyCodeInputField: {fileID: 425118537}
   maxPlayersSlider: {fileID: 1295946889}
   lobbyNameInputField: {fileID: 928595133}
-  LoadingScreen: {fileID: 0}
   playerNameInputField: {fileID: 1232625183}
   CreateJoinScreen: {fileID: 2103956912}
   EnterNameScreen: {fileID: 1201969244}

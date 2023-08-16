@@ -234,8 +234,7 @@ namespace NetworkFunctionality
                 joinedLobby = null;
                 hostedLobby = null;
 
-                AuthenticationService.Instance.SignOut();
-                Destroy(gameObject);
+                UtilitiesToolbox.DeleteNetworkConnections(true, false, true, false);
             }
             catch (LobbyServiceException exception)
             {

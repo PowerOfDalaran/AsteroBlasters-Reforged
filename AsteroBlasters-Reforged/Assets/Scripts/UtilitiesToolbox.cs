@@ -118,22 +118,29 @@ public static class UtilitiesToolbox
 
     #region Network
     /// <summary>
-    /// Method being called when there's is need to close all current network connection
+    /// Method being called when there's is need to close chosen network connections
     /// </summary>
-    public static void DeleteNetworkConnections()
+    /// <param name="logOutOfAuthentication">Do you want to log out of Unity Authentication Service?</param>
+    /// <param name="deleteNetworkManager">Do you want to Shutdown and destroy NetworkManager?</param>
+    /// <param name="deleteLobbyManager">Do you want to destroy LobbyManager?</param>
+    /// <param name="deleteMultiplayerGameManager">Do you want to destroy MultiplayerGameManager?</param>
+    public static void DeleteNetworkConnections(bool logOutOfAuthentication, bool deleteNetworkManager, bool deleteLobbyManager, bool deleteMultiplayerGameManager)
     {
-        AuthenticationService.Instance.SignOut();
+        if (logOutOfAuthentication)
+        {
+            AuthenticationService.Instance.SignOut();
+        }
 
-        if (NetworkManager.Singleton.gameObject != null)
+        if (NetworkManager.Singleton.gameObject != null && deleteNetworkManager)
         {
             NetworkManager.Singleton.Shutdown();
             UnityEngine.GameObject.Destroy(NetworkManager.Singleton.gameObject);
         }
-        if (LobbyManager.instance != null)
+        if (LobbyManager.instance != null && deleteLobbyManager)
         {
             UnityEngine.GameObject.Destroy(LobbyManager.instance.gameObject);
         }
-        if (MultiplayerGameManager.instance != null)
+        if (MultiplayerGameManager.instance != null && deleteMultiplayerGameManager)
         {
             UnityEngine.GameObject.Destroy(MultiplayerGameManager.instance.gameObject);
         }

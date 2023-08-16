@@ -159,7 +159,7 @@ namespace GameManager
             }
 
             // Turning off and destroying game objects responsible for network connections etc.
-            UtilitiesToolbox.DeleteNetworkConnections();
+            UtilitiesToolbox.DeleteNetworkConnections(true, true, true, true);
 
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);
