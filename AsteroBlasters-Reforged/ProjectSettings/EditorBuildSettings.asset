@@ -29,6 +29,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MatchResultScene.unity
     guid: b07cef15baf8a9945af3d5fde347eba2
+  - enabled: 1
+    path: Assets/Scenes/LoginScene.unity
+    guid: f2456c99c1da42e4787b4e73c4bb5406
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3b5262cf3eecb584ba24031fc0b5219c, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 10523f2b49335b04a8644f4745a65e5e, type: 2}

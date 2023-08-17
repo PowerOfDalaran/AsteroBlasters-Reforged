@@ -46,7 +46,7 @@ namespace GameManager
                     playersKillCount.Add(0);
                 }
 
-                timeLeft.Value = 120f;
+                timeLeft.Value = 45f;
             }
 
             playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
@@ -63,7 +63,6 @@ namespace GameManager
                 if (timeLeft.Value <= 0)
                 {
                     EndGameClientRpc();
-                    gameActive = false;
                 }
             }
         }
@@ -104,8 +103,9 @@ namespace GameManager
         {
             playersKillCount[playerIndex] += 1;
 
-            if (playersKillCount[playerIndex] == 1 && gameActive)
+            if (playersKillCount[playerIndex] == 2 && gameActive)
             {
+
                 EndGameClientRpc();
             }
         }
@@ -138,12 +138,8 @@ namespace GameManager
         [ClientRpc]
         void EndGameClientRpc()
         {
-            // Turning off and destroying game objects responsible for network connections etc.
-            NetworkManager.Singleton.Shutdown();
-
-            Destroy(MultiplayerGameManager.instance.gameObject);
-            Destroy(LobbyManager.instance.gameObject);
-            Destroy(NetworkManager.Singleton.gameObject);
+            gameActive = false;
+            MultiplayerGameManager.instance.gameActive = false;
 
             // Creating the player data array and getting the proper order of players
             object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
@@ -161,6 +157,9 @@ namespace GameManager
 
                 playerDataArray[i] = playerSubArray;
             }
+
+            // Turning off and destroying game objects responsible for network connections etc.
+            UtilitiesToolbox.DeleteNetworkConnections(true, true, true, true);
 
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);

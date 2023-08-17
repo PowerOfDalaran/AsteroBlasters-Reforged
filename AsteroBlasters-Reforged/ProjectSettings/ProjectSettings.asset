@@ -698,11 +698,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: f8dc39a6-739b-4f8f-8f8b-2c9166cd9943
+  cloudProjectId: dbf494af-56a9-4352-8ccc-379c541eb911
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: astero
-  organizationId: pier23
+  projectName: AsteroBlasters-Reforged
+  organizationId: generalbreddy
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

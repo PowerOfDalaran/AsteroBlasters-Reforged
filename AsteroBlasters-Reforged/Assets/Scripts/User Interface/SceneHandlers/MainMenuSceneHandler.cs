@@ -10,14 +10,8 @@ namespace UserInterface
     public class MainMenuSceneHandler : SceneButtonHandler
     {
         // Buttons
-        [SerializeField]
-        Button singleplayerGameButton;
-        [SerializeField]
-        Button multiplayerGameButton;
-
-        // Other UI elements
-        [SerializeField]
-        GameObject LoadingScreen;
+        [SerializeField] Button singleplayerGameButton;
+        [SerializeField] Button multiplayerGameButton;
 
         private void Awake()
         {
@@ -31,7 +25,7 @@ namespace UserInterface
             multiplayerGameButton.onClick.AddListener(() =>
             {
                 ChangeButtonsState(false);
-                LevelManager.instance.LoadScene("NetworkMenuScene");
+                LevelManager.instance.LoadScene("LoginScene");
             });
         }
     }

@@ -179,9 +179,9 @@ namespace NetworkFunctionality
                     Player = new Player
                     {
                         Data = new Dictionary<string, PlayerDataObject>
-                    {
-                        {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName)}
-                    }
+                        {
+                            {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName)}
+                        }
                     }
                 };
 
@@ -230,8 +230,11 @@ namespace NetworkFunctionality
             try
             {
                 await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
+
                 joinedLobby = null;
                 hostedLobby = null;
+
+                UtilitiesToolbox.DeleteNetworkConnections(true, false, true, false);
             }
             catch (LobbyServiceException exception)
             {
