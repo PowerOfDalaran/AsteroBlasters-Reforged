@@ -24,9 +24,9 @@ namespace UserInterface
         /// <param name="playerId">Id of player, which data will be displayed</param>
         public void SetPlayerData(int playerId)
         {
-            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerId);
+            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerId);
 
-            int score = DeathmatchGameManager.instance.GetPlayersKillCount()[playerId];
+            int score = DeathmatchGameManager.instance.GetPlayerGameDataFromIndex(playerId).killCount;
             string playerName = playerData.playerName.ToString();
             Color color = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
 

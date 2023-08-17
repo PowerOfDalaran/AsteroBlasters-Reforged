@@ -31,7 +31,7 @@ public class CharacterSelectPlayer : MonoBehaviour
         kickButton.gameObject.SetActive(NetworkManager.Singleton.IsServer && playerIndex != 0);
         kickButton.onClick.AddListener(() =>
         {
-            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             MultiplayerGameManager.instance.KickPlayer(playerData.clientId);
         });
     }
@@ -64,7 +64,7 @@ public class CharacterSelectPlayer : MonoBehaviour
         {
             Show();
 
-            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             SetPlayerColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
             playerNameText.text = playerData.playerName.ToString();
         }

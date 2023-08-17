@@ -23,6 +23,9 @@ namespace PlayerFunctionality
         [SerializeField] float rotationSpeed = 720f;
         public int playerIndex;
 
+        public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
+        public static event OnPlayerDeath onPlayerDeath;
+
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
@@ -42,7 +45,7 @@ namespace PlayerFunctionality
         void Start()
         {
             // Setting up color of the player
-            PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
             mySpriteRenderer.color = myColor;
         }
@@ -198,8 +201,6 @@ namespace PlayerFunctionality
         [ServerRpc]
         private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
         {
-            //Debug.Log("Impact Damage player1: " + player1.ImpactVelocity);
-            //Debug.Log("Impact Damage player2: " + player2.ImpactVelocity);
             if (player1.ImpactVelocity > 8)
             {
                 Die();
@@ -221,11 +222,12 @@ namespace PlayerFunctionality
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
 
             DieClientRpc();
-            DeathmatchGameManager.instance.AddKillCountServerRpc(killingPlayerIndex);
+            //DeathmatchGameManager.instance.AddKillCountServerRpc(killingPlayerIndex);
+            onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
         }
 
         /// <summary>
-        /// Method called on every client (host too) and activating death on this player character object.
+        /// Method called on every instance of the game and activating death on this player character object.
         /// Currently just reset the game object position and velocity.
         /// </summary>
         [ClientRpc]

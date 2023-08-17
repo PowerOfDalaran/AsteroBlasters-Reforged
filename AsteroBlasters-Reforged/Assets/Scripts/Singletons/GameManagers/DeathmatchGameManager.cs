@@ -6,6 +6,7 @@ using UnityEngine;
 using DataStructure;
 using SceneManagment;
 using NetworkFunctionality;
+using PlayerFunctionality;
 
 namespace GameManager
 {
@@ -16,14 +17,13 @@ namespace GameManager
     {
         public static DeathmatchGameManager instance;
 
-        [SerializeField]
-        GameObject matchDataPrefab;
+        [SerializeField] GameObject matchDataPrefab;
 
-        private NetworkList<int> playersKillCount;
+        public NetworkList<PlayerGameData> playersGameDataList;
         private float timeLimit;
         public NetworkVariable<float> timeLeft;
 
-        public event EventHandler OnPlayersKillCountNetworkListChanged;
+        public event EventHandler OnPlayersGameDataListNetworkListChanged;
 
         private bool gameActive = true;
 
@@ -32,7 +32,9 @@ namespace GameManager
         {
             instance = this;
 
-            playersKillCount = new NetworkList<int>();
+            playersGameDataList = new NetworkList<PlayerGameData>();
+            playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
+
             timeLeft = new NetworkVariable<float>();
         }
 
@@ -41,16 +43,33 @@ namespace GameManager
             // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
             if (IsHost)
             {
-                foreach (PlayerData playerData in MultiplayerGameManager.instance.playerDataNetworkList)
+                foreach (PlayerNetworkData playerNetworkData in MultiplayerGameManager.instance.playerDataNetworkList)
                 {
-                    playersKillCount.Add(0);
+                    playersGameDataList.Add(new PlayerGameData
+                    {
+                        playerId = playerNetworkData.clientId,
+                        killCount = 0,
+                        deathCount = 0
+                    });
                 }
 
                 timeLeft.Value = 45f;
             }
 
-            playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
             timeLimit = timeLeft.Value;
+        }
+
+        private void OnEnable()
+        {
+            if (IsHost)
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+                NetworkPlayerController.onPlayerDeath += UpdateStats;
+                //foreach(GameObject playerGameObject in MultiplayerGameManager.instance.playerCharacters)
+                //{
+                //    playerGameObject.GetComponent<NetworkPlayerController>().onPlayerDeath += UpdateStats;
+                //}
+            }
         }
 
         private void FixedUpdate()
@@ -68,56 +87,106 @@ namespace GameManager
         }
         #endregion
 
-        #region KillCount Array
+        #region KillCount List
         /// <summary>
         /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
         /// </summary>
         /// <param name="changeEvent"></param>
-        private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
+        private void PlayersGameDataList_OnListChanged(NetworkListEvent<PlayerGameData> changeEvent)
         {
-            OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
+            OnPlayersGameDataListNetworkListChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// Method returning <c>playerKillCount</c> Network List object in form of standard List.
         /// </summary>
         /// <returns><c>playerKillCount</c> as List object</returns>
-        public List<int> GetPlayersKillCount()
+        public List<int> GetPlayersKillCountList()
         {
             List<int> resultArray = new List<int>();
 
-            foreach (int i in playersKillCount)
+            foreach (PlayerGameData playerGameData in playersGameDataList)
             {
-                resultArray.Add(i);
+                resultArray.Add(playerGameData.killCount);
             }
 
             return resultArray;
+        }
+
+        private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
+        {
+            if (NetworkManager.Singleton.IsHost)
+            {
+                foreach (PlayerGameData playerGameData in playersGameDataList)
+                {
+                    if (playerGameData.playerId == clientId)
+                    {
+                        playersGameDataList.Remove(playerGameData);
+                    }
+                }
+            }
         }
 
         /// <summary>
         /// Server Rpc method adding one point to the player with given id.
         /// </summary>
         /// <param name="playerIndex">Id of player, which scored the point</param>
-        [ServerRpc]
-        public void AddKillCountServerRpc(int playerIndex)
+        public void UpdateStats(int killedPlayerIndex, int killingPlayerIndex)
         {
-            playersKillCount[playerIndex] += 1;
+            //PlayerNetworkData killingPlayerNetworkData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(killingPlayerIndex);
+            //PlayerNetworkData killedPlayerNetworkData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(killedPlayerIndex);
 
-            if (playersKillCount[playerIndex] == 2 && gameActive)
+            PlayerGameData killingPlayerGameData = GetPlayerGameDataFromIndex(killingPlayerIndex);
+            killingPlayerGameData.killCount += 1;
+            playersGameDataList[killingPlayerIndex] = killingPlayerGameData;
+
+            PlayerGameData killedPlayerGameData = GetPlayerGameDataFromIndex(killedPlayerIndex);
+            killedPlayerGameData.killCount += 1;
+            playersGameDataList[killedPlayerIndex] = killedPlayerGameData;
+
+            if (playersGameDataList[killingPlayerIndex].killCount == 2 && gameActive)
             {
-
                 EndGameClientRpc();
             }
         }
         #endregion
 
+        #region Get Player Data
+        public PlayerGameData GetPlayerGameDataFromIndex(int playerIndex) 
+        {
+            return playersGameDataList[playerIndex];
+        }
+        public int GetPlayerIndex(ulong playerId)
+        {
+            for (int i = 0; i < playersGameDataList.Count; i++)
+            {
+                if (playersGameDataList[i].playerId == playerId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+        public PlayerGameData GetPlayerGameDataFromId(ulong playerId)
+        {
+            for (int i = 0; i < playersGameDataList.Count; i++)
+            {
+                if (playersGameDataList[i].playerId == playerId)
+                {
+                    return playersGameDataList[i];
+                }
+            }
+
+            return default;
+        }
         /// <summary>
         /// Method ordering the players by their score.
         /// </summary>
         /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
         public int[] OrderThePlayers()
         {
-            List<int> newList = GetPlayersKillCount();
+            List<int> newList = GetPlayersKillCountList();
             int[] orderedPlayers = new int[newList.Count];
 
             for (int i = 0; i < newList.Count; i++)
@@ -132,6 +201,7 @@ namespace GameManager
             return orderedPlayers;
         }
 
+        #endregion
         /// <summary>
         /// Client Rpc method, which activated on every client executes endgame mechanics
         /// </summary>
@@ -148,7 +218,7 @@ namespace GameManager
             // For each player in the game, creating new entry in the data object and assinging values to it
             for (int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
             {
-                PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
+                PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
 
                 object[] playerSubArray = new object[3];
                 playerSubArray[0] = playerData.playerName.ToString();

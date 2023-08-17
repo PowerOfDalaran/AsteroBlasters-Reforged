@@ -23,7 +23,7 @@ namespace UserInterface
         void Start()
         {
             MultiplayerGameManager.instance.StartTheGame();
-            DeathmatchGameManager.instance.OnPlayersKillCountNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
+            DeathmatchGameManager.instance.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
 
             UpdateScoreBoard();
         }

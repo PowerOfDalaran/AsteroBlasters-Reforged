@@ -19,7 +19,8 @@ namespace NetworkFunctionality
         [SerializeField] GameObject playerPrefab;
 
         [SerializeField] List<Color> playerColorList;
-        public NetworkList<PlayerData> playerDataNetworkList;
+        public NetworkList<PlayerNetworkData> playerDataNetworkList;
+        //public GameObject[] playerCharacters;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
@@ -40,7 +41,7 @@ namespace NetworkFunctionality
             }
 
             // Initializating the list of players data and adding an event
-            playerDataNetworkList = new NetworkList<PlayerData>();
+            playerDataNetworkList = new NetworkList<PlayerNetworkData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }
         #endregion
@@ -51,7 +52,7 @@ namespace NetworkFunctionality
         /// Event, which triggers every time the list of players data is changed
         /// </summary>
         /// <param name="changeEvent"></param>
-        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
+        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerNetworkData> changeEvent)
         {
             OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -64,7 +65,7 @@ namespace NetworkFunctionality
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                playerDataNetworkList.Add(new PlayerData
+                playerDataNetworkList.Add(new PlayerNetworkData
                 {
                     clientId = clientId,
                     colorId = GetFirstUnusedColorId(),
@@ -87,7 +88,7 @@ namespace NetworkFunctionality
             if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
                 // Removing player from the list
-                foreach (PlayerData playerData in playerDataNetworkList)
+                foreach (PlayerNetworkData playerData in playerDataNetworkList)
                 {
                     if (playerData.clientId == clientId)
                     {
@@ -139,12 +140,15 @@ namespace NetworkFunctionality
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                foreach (var playerData in playerDataNetworkList)
+                //playerCharacters = new GameObject[playerDataNetworkList.Count];
+                for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
+                    PlayerNetworkData playerData = playerDataNetworkList[i];
                     GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
                     // Assigning proper player index to every play character ON HOST
                     newPlayer.GetComponent<NetworkPlayerController>().playerIndex = playerDataNetworkList.IndexOf(playerData);
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+                    //playerCharacters[i] = newPlayer;
 
                     // Assigning proper player index to every play character ON CLIENT
                     newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
@@ -165,7 +169,7 @@ namespace NetworkFunctionality
         {
             ulong clientId = serverRpcParams.Receive.SenderClientId;
             int playerDataIndex = GetPlayerIndexFromClientId(serverRpcParams.Receive.SenderClientId);
-            PlayerData playerData = GetPlayerDataFromClientId(clientId);
+            PlayerNetworkData playerData = GetPlayerDataFromClientId(clientId);
 
             playerData.playerName = playerName;
             playerDataNetworkList[playerDataIndex] = playerData;
@@ -222,9 +226,9 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="clientId">Id of the player, whose data you want to get</param>
         /// <returns><c>PlayerData</c> object of player with given id</returns>
-        public PlayerData GetPlayerDataFromClientId(ulong clientId)
+        public PlayerNetworkData GetPlayerDataFromClientId(ulong clientId)
         {
-            foreach (PlayerData playerData in playerDataNetworkList)
+            foreach (PlayerNetworkData playerData in playerDataNetworkList)
             {
                 if (playerData.clientId == clientId)
                 {
@@ -238,7 +242,7 @@ namespace NetworkFunctionality
         /// Method returning the <c>PlayerData</c> object of local player
         /// </summary>
         /// <returns><c>PlayerData</c> object of the local player</returns>
-        public PlayerData GetCurrentPlayerData()
+        public PlayerNetworkData GetCurrentPlayerData()
         {
             return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
         }
@@ -248,7 +252,7 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="playerIndex">Index of player, whose data you want to access</param>
         /// <returns>Data of player with given id</returns>
-        public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex)
+        public PlayerNetworkData GetPlayerDataFromPlayerIndex(int playerIndex)
         {
             return playerDataNetworkList[playerIndex];
         }
@@ -273,7 +277,7 @@ namespace NetworkFunctionality
         /// <returns>True if color is available, false if its not</returns>
         private bool IsColorAvailable(int colorId)
         {
-            foreach (PlayerData playerData in playerDataNetworkList)
+            foreach (PlayerNetworkData playerData in playerDataNetworkList)
             {
                 if (playerData.colorId == colorId)
                 {
@@ -324,7 +328,7 @@ namespace NetworkFunctionality
 
             int playerDataIndex = GetPlayerIndexFromClientId(serverRpcParams.Receive.SenderClientId);
 
-            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+            PlayerNetworkData playerData = playerDataNetworkList[playerDataIndex];
 
             playerData.colorId = colorId;
             playerDataNetworkList[playerDataIndex] = playerData;
