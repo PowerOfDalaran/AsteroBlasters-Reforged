@@ -6,15 +6,21 @@ using SceneManagment;
 
 namespace UserInterface
 {
+    /// <summary>
+    /// Class responsible for managing the buttons and other UI elements of <c>LoginScene</c> scene.
+    /// </summary>
     public class LoginScreenSceneHandler : SceneButtonHandler
     {
+        // Buttons
         [SerializeField] Button setPlayerNameButton;
         [SerializeField] Button returnButton;
 
+        // Other UI elements
         [SerializeField] InputField playerNameInputField;
 
         private void Awake()
         {
+            // Adding functionality to the buttons
             setPlayerNameButton.onClick.AddListener(() =>
             {
                 ChangeButtonsState(false);

@@ -1,9 +1,7 @@
 using NetworkFunctionality;
 using System;
-using System.Net;
 using Unity.Netcode;
 using Unity.Services.Authentication;
-using Unity.Services.Core;
 using UnityEngine;
 
 /// <summary>

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 using DataStructure;
 using PlayerFunctionality;
@@ -84,6 +83,7 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
+            // WORK ON IT LATER - the conditions are probably set up wrong, and without the gameActive bool, the method is being run twice
             if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
                 // Removing player from the list
@@ -97,11 +97,11 @@ namespace NetworkFunctionality
             }
             else if (gameActive)
             {
-                // Deleting network connections and moving players to main menu
-                UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
-
+                // Switching the bool in order to assure, 
                 gameActive = false;
 
+                // Deleting network connections and moving players to main menu
+                UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
                 LobbyManager.instance.LeaveLobby();
                 LevelManager.instance.LoadScene("NetworkMenuScene");
             }
@@ -365,7 +365,7 @@ namespace NetworkFunctionality
 
         /// <summary>
         /// ClientRpc method, which is triggered by the host and activated on every client.
-        /// Every client checks if his id is equal the given one, and if yes, then they go back to network menu.
+        /// Every client checks if his id is equal the given one, and if yes, then they close their network connections, and go back to the network menu.
         /// </summary>
         /// <param name="clientId">Id of player that have to leave the lobby</param>
         [ClientRpc]
@@ -375,8 +375,9 @@ namespace NetworkFunctionality
 
             if (clientId == currentPlayerId)
             {
+                // Activating NetworkManager_OnClientDisconnectedCallback to properly remove player from the lobby
+                // FOR SOME REASON, if I just delete network connections, the method doesn't run at all, and if I do the method is being called twice
                 NetworkManager_OnClientDisconnectedCallback(clientId);
-                UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
             }
         }
         #endregion

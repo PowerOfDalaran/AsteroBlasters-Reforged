@@ -1,5 +1,4 @@
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;

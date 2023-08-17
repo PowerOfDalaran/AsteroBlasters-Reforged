@@ -1,5 +1,3 @@
-using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 using SceneManagment;
@@ -17,15 +15,11 @@ namespace UserInterface
         [SerializeField] Button joinGameButton;
         [SerializeField] Button createGameButton;
         [SerializeField] Button returnToMenuButton;
-        [SerializeField] Button setPlayerNameButton;
 
         // Other UI elements
         [SerializeField] InputField lobbyCodeInputField;
         [SerializeField] Slider maxPlayersSlider;
         [SerializeField] InputField lobbyNameInputField;
-        [SerializeField] InputField playerNameInputField;
-        [SerializeField] GameObject CreateJoinScreen;
-        [SerializeField] GameObject EnterNameScreen;
 
         private void Awake()
         {
