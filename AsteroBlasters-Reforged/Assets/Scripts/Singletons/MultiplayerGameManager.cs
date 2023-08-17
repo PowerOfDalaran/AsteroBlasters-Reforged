@@ -84,7 +84,6 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
-            Debug.Log("AKTYWOWANO, ID " + clientId);
             if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
                 // Removing player from the list
@@ -100,6 +99,9 @@ namespace NetworkFunctionality
             {
                 // Deleting network connections and moving players to main menu
                 UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
+
+                gameActive = false;
+
                 LobbyManager.instance.LeaveLobby();
                 LevelManager.instance.LoadScene("NetworkMenuScene");
             }
