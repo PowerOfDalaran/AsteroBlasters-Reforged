@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 using DataStructure;
 using PlayerFunctionality;
@@ -23,6 +22,8 @@ namespace NetworkFunctionality
         public NetworkList<PlayerData> playerDataNetworkList;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
+
+        public bool gameActive = false;
 
         #region Build-in methods
         private void Awake()
@@ -61,33 +62,52 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of the player</param>
         private void NetworkManager_OnClientConnectedCallback(ulong clientId)
         {
-            playerDataNetworkList.Add(new PlayerData
+            if (NetworkManager.Singleton.IsHost)
             {
-                clientId = clientId,
-                colorId = GetFirstUnusedColorId(),
-            });
+                playerDataNetworkList.Add(new PlayerData
+                {
+                    clientId = clientId,
+                    colorId = GetFirstUnusedColorId(),
+                });
 
-            // Triggering the player to make them assign their name
-            TriggerSetNameClientRpc(clientId);
+                // Triggering the player to make them assign their name
+                TriggerSetNameClientRpc(clientId);
+            }
         }
 
         /// <summary>
-        /// Method, which removes player with given id from the playerNetworkList
+        /// Method, which activates for host and (disconnecting) client when player disconnects
+        /// For host, it removes player with given id from the playerNetworkList.
+        /// For client it moves him to the main menu
         /// </summary>
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
-            // Removing player from the list
-            foreach (PlayerData playerData in playerDataNetworkList)
+            // WORK ON IT LATER - the conditions are probably set up wrong, and without the gameActive bool, the method is being run twice
+            if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
-                if (playerData.clientId == clientId)
+                // Removing player from the list
+                foreach (PlayerData playerData in playerDataNetworkList)
                 {
-                    playerDataNetworkList.Remove(playerData);
+                    if (playerData.clientId == clientId)
+                    {
+                        playerDataNetworkList.Remove(playerData);
+                    }
                 }
             }
+            else if (gameActive)
+            {
+                // Switching the bool in order to assure, 
+                gameActive = false;
+
+                // Deleting network connections and moving players to main menu
+                UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
+                LobbyManager.instance.LeaveLobby();
+                LevelManager.instance.LoadScene("NetworkMenuScene");
+            }
+
         }
         #endregion
-
 
         #region Start The Game
         /// <summary>
@@ -98,6 +118,7 @@ namespace NetworkFunctionality
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
             NetworkManager.StartHost();
+            gameActive = true;
         }
 
         /// <summary>
@@ -105,7 +126,10 @@ namespace NetworkFunctionality
         /// </summary>
         public void StartAsClient()
         {
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
             NetworkManager.StartClient();
+            gameActive = true;
         }
 
         /// <summary>
@@ -308,6 +332,17 @@ namespace NetworkFunctionality
         #endregion
 
         #region Remove Player
+
+        /// <summary>
+        /// Method called only by clients in order to make host throw them out of the lobby
+        /// </summary>
+        /// <param name="clientId"></param>
+        [ServerRpc(RequireOwnership = false)]
+        public void RemoveMeServerRpc(ulong clientId)
+        {
+            KickPlayer(clientId);
+        }
+
         /// <summary>
         /// Method called only by the host, to remove player from the lobby.
         /// </summary>
@@ -325,12 +360,12 @@ namespace NetworkFunctionality
         public void DisconnectClient(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
-            //NetworkManager_OnClientDisconnectedCallback(clientId);
+            NetworkManager_OnClientDisconnectedCallback(clientId);
         }
 
         /// <summary>
         /// ClientRpc method, which is triggered by the host and activated on every client.
-        /// Every client checks if his id is equal the given one, and if yes, then they go back to network menu.
+        /// Every client checks if his id is equal the given one, and if yes, then they close their network connections, and go back to the network menu.
         /// </summary>
         /// <param name="clientId">Id of player that have to leave the lobby</param>
         [ClientRpc]
@@ -340,13 +375,9 @@ namespace NetworkFunctionality
 
             if (clientId == currentPlayerId)
             {
-                LobbyManager.instance.LeaveLobby();
-                NetworkManager.Singleton.Shutdown();
-                AuthenticationService.Instance.SignOut();
-
-                Destroy(NetworkManager.Singleton.gameObject);
-
-                LevelManager.instance.LoadScene("NetworkMenuScene");
+                // Activating NetworkManager_OnClientDisconnectedCallback to properly remove player from the lobby
+                // FOR SOME REASON, if I just delete network connections, the method doesn't run at all, and if I do the method is being called twice
+                NetworkManager_OnClientDisconnectedCallback(clientId);
             }
         }
         #endregion

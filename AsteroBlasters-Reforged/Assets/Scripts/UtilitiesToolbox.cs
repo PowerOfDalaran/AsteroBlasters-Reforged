@@ -1,4 +1,7 @@
+using NetworkFunctionality;
 using System;
+using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 /// <summary>
@@ -108,6 +111,37 @@ public static class UtilitiesToolbox
         string secondsLeft = timeSpan.Seconds < 10 ? "0" + timeSpan.Seconds.ToString() : timeSpan.Seconds.ToString();
 
         return minutesLeft + ":" + secondsLeft;
+    }
+    #endregion
+
+    #region Network
+    /// <summary>
+    /// Method being called when there's is need to close chosen network connections
+    /// </summary>
+    /// <param name="logOutOfAuthentication">Do you want to log out of Unity Authentication Service?</param>
+    /// <param name="deleteNetworkManager">Do you want to Shutdown and destroy NetworkManager?</param>
+    /// <param name="deleteLobbyManager">Do you want to destroy LobbyManager?</param>
+    /// <param name="deleteMultiplayerGameManager">Do you want to destroy MultiplayerGameManager?</param>
+    public static void DeleteNetworkConnections(bool logOutOfAuthentication, bool deleteNetworkManager, bool deleteLobbyManager, bool deleteMultiplayerGameManager)
+    {
+        if (logOutOfAuthentication)
+        {
+            AuthenticationService.Instance.SignOut();
+        }
+
+        if (NetworkManager.Singleton != null && deleteNetworkManager)
+        {
+            NetworkManager.Singleton.Shutdown();
+            UnityEngine.GameObject.Destroy(NetworkManager.Singleton.gameObject);
+        }
+        if (LobbyManager.instance != null && deleteLobbyManager)
+        {
+            UnityEngine.GameObject.Destroy(LobbyManager.instance.gameObject);
+        }
+        if (MultiplayerGameManager.instance != null && deleteMultiplayerGameManager)
+        {
+            UnityEngine.GameObject.Destroy(MultiplayerGameManager.instance.gameObject);
+        }
     }
     #endregion
 }
