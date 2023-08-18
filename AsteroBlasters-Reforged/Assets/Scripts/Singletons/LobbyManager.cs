@@ -211,9 +211,12 @@ namespace NetworkFunctionality
         {
             try
             {
-                await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
-                joinedLobby = null;
-                hostedLobby = null;
+                if (joinedLobby != null)
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+                    joinedLobby = null;
+                    hostedLobby = null;
+                }
             }
             catch (LobbyServiceException exception)
             {
@@ -229,12 +232,13 @@ namespace NetworkFunctionality
         {
             try
             {
-                await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
+                if (hostedLobby != null)
+                {
+                    await LobbyService.Instance.DeleteLobbyAsync(hostedLobby.Id);
 
-                joinedLobby = null;
-                hostedLobby = null;
-
-                UtilitiesToolbox.DeleteNetworkConnections(true, false, true, false);
+                    joinedLobby = null;
+                    hostedLobby = null;
+                }
             }
             catch (LobbyServiceException exception)
             {

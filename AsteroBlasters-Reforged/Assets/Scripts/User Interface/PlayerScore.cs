@@ -26,11 +26,12 @@ namespace UserInterface
         {
             PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerId);
 
-            int score = DeathmatchGameManager.instance.GetPlayerGameDataFromIndex(playerId).killCount;
+            int kills = DeathmatchGameManager.instance.GetPlayerGameDataFromIndex(playerId).killCount;
+            int deaths = DeathmatchGameManager.instance.GetPlayerGameDataFromIndex(playerId).deathCount;
             string playerName = playerData.playerName.ToString();
             Color color = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
 
-            scoreText.text = score.ToString();
+            scoreText.text = kills.ToString() + "/" + deaths.ToString();
             playerNameText.text = playerName;
             colorImage.color = color;
         }

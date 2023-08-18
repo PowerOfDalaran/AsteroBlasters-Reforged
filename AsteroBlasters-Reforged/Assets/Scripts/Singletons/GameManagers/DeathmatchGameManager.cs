@@ -31,13 +31,14 @@ namespace GameManager
         #region Build-in methods
         private void Awake()
         {
-            // Assigning this instance to variable, creating network variables and adding the method to the OnListChanged event
+            // Assigning this instance to variable, creating network variables and adding the methodS to the events
             instance = this;
 
             playersGameDataList = new NetworkList<PlayerGameData>();
             timeLeft = new NetworkVariable<float>();
 
             playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
         }
 
         private void Start()
@@ -45,7 +46,6 @@ namespace GameManager
             if (IsHost)
             {
                 // Adding the methods to the events
-                NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
                 NetworkPlayerController.onPlayerDeath += UpdateStats;
 
                 // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
@@ -94,10 +94,12 @@ namespace GameManager
         /// Method, which activated if client is disconnected from the host, deleting the leaving player from the network list
         /// </summary>
         /// <param name="clientId">Id of client, who disconnected</param>
-        private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
+        public void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
+            Debug.Log("aktywowano");
             if (NetworkManager.Singleton.IsHost)
             {
+                Debug.Log("jest host");
                 foreach (PlayerGameData playerGameData in playersGameDataList)
                 {
                     if (playerGameData.playerId == clientId)
@@ -125,7 +127,7 @@ namespace GameManager
 
             if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
             {
-                EndGameClientRpc(UtilitiesToolbox.ListToArray<PlayerGameData>(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
+                EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
             }
         }
         #endregion

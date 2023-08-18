@@ -3,22 +3,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using NetworkFunctionality;
 using GameManager;
+using Archive;
+
 namespace UserInterface
 {
     /// <summary>
     /// Class responsible for managing the UI in <c>NetworkGame</c> scene.
     /// </summary>
-    public class NetworkGameSceneHandler : MonoBehaviour
+    public class NetworkGameSceneHandler : SceneButtonHandler
     {
-        [SerializeField]
-        Text timerText;
+        // Buttons and other UI elements
+        [SerializeField] Button leaveButton;
+        [SerializeField] Text timerText;
 
-        [SerializeField]
-        GameObject scoreBoard;
-        [SerializeField]
-        GameObject playerScoreUI;
-        [SerializeField]
-        GameObject[] positions;
+        // Scoreboard
+        [SerializeField] GameObject scoreBoard;
+        [SerializeField] GameObject playerScoreUI;
+        [SerializeField] GameObject[] positions;
+
+        private GameObject[] playerScoresUI;
+
+        private void Awake()
+        {
+            leaveButton.onClick.AddListener(() =>
+            {
+                ChangeButtonsState(false);
+                // Logging out of services and leaving scene
+                DeathmatchGameManager.instance.NetworkManager_OnClientDisconnectedCallback(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);            });
+        }
 
         void Start()
         {
@@ -54,15 +66,21 @@ namespace UserInterface
 
         /// <summary>
         /// Method being called everytime the playersKillCount list changes.
-        /// It runs trough the order list and calls <c>CreatePlayerScoreUI</c> with proper position and id.
+        /// It clears current player scores and creates new ones
         /// </summary>
         private void UpdateScoreBoard()
         {
+            if (playerScoresUI != null)
+            {
+                ClearScoreBoard();
+            }
+
             int[] newPlayersOrder = DeathmatchGameManager.instance.OrderThePlayers();
+            playerScoresUI = new GameObject[newPlayersOrder.Length];
 
             for (int i = 0; i < newPlayersOrder.Length; i++)
             {
-                CreatePlayerScoreUI(i, newPlayersOrder[i]);
+                playerScoresUI[i] = CreatePlayerScoreUI(i, newPlayersOrder[i]);
             }
         }
 
@@ -71,7 +89,8 @@ namespace UserInterface
         /// </summary>
         /// <param name="playerId">Id of player, which data will be displayed</param>
         /// <param name="playerPosition">Id of position, in which prefab will be generated</param>
-        private void CreatePlayerScoreUI(int playerId, int playerPosition)
+        /// <returns>Created instance of <c>playerScoreUI</c> prefab</returns>
+        private GameObject CreatePlayerScoreUI(int playerId, int playerPosition)
         {
             GameObject newPlayerScoreUI = Instantiate(playerScoreUI);
 
@@ -79,6 +98,18 @@ namespace UserInterface
             newPlayerScoreUI.transform.position = positions[playerPosition].transform.position;
 
             newPlayerScoreUI.GetComponent<PlayerScore>().SetPlayerData(playerId);
+            return newPlayerScoreUI;
+        }
+
+        /// <summary>
+        /// Method, deleting all current instances of <c>playerScoreUI</c> prefab
+        /// </summary>
+        private void ClearScoreBoard()
+        {
+            foreach (GameObject playerScore in playerScoresUI)
+            {
+                Destroy(playerScore);
+            }
         }
     }
 }

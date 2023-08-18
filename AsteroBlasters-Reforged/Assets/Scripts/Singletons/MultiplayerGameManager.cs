@@ -83,7 +83,7 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
-            // WORK ON IT LATER - the conditions are probably set up wrong, and without the gameActive bool, the method is being run twice
+            // WORK ON IT LATER - the conditions are probably set up wrong, because without the gameActive bool, the method is being run twice
             if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
                 // Removing player from the list
@@ -97,7 +97,7 @@ namespace NetworkFunctionality
             }
             else if (gameActive)
             {
-                // Switching the bool in order to assure, 
+                // Switching the bool in order to assure, the player won't run the method twice
                 gameActive = false;
 
                 // Deleting network connections and moving players to main menu
