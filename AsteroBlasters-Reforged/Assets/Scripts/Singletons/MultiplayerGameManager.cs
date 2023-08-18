@@ -20,7 +20,6 @@ namespace NetworkFunctionality
 
         [SerializeField] List<Color> playerColorList;
         public NetworkList<PlayerNetworkData> playerDataNetworkList;
-        //public GameObject[] playerCharacters;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
@@ -140,15 +139,14 @@ namespace NetworkFunctionality
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                //playerCharacters = new GameObject[playerDataNetworkList.Count];
                 for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
                     PlayerNetworkData playerData = playerDataNetworkList[i];
                     GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
                     // Assigning proper player index to every play character ON HOST
                     newPlayer.GetComponent<NetworkPlayerController>().playerIndex = playerDataNetworkList.IndexOf(playerData);
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
-                    //playerCharacters[i] = newPlayer;
 
                     // Assigning proper player index to every play character ON CLIENT
                     newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));

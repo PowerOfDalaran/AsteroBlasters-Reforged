@@ -3,7 +3,6 @@ using Unity.Netcode;
 using UnityEngine.InputSystem;
 using DataStructure;
 using NetworkFunctionality;
-using GameManager;
 using Others;
 
 namespace PlayerFunctionality
@@ -217,13 +216,16 @@ namespace PlayerFunctionality
         #endregion
 
         #region Player Death
+        /// <summary>
+        /// Method handling the player (on host)
+        /// </summary>
+        /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
         public void Die(ulong killerPlayerId = ulong.MaxValue)
         {
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
 
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
-            Debug.Log(playerIndex + " " + killingPlayerIndex);
         }
 
         /// <summary>

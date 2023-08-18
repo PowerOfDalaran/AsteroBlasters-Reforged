@@ -148,6 +148,12 @@ public static class UtilitiesToolbox
     #endregion
 
     #region Data collections
+    /// <summary>
+    /// Generic method, which copy the elements of given List to new Array of chosen type
+    /// </summary>
+    /// <typeparam name="T">List type</typeparam>
+    /// <param name="list">List object, which elements you want to copy</param>
+    /// <returns>New array containing the elements of given list</returns>
     public static T[] ListToArray<T>(List<T> list)
     {
         T[] array = new T[list.Count];
@@ -160,6 +166,12 @@ public static class UtilitiesToolbox
         return array;
     }
 
+    /// <summary>
+    /// Generic method, which copy the elements of given Array to new List of chosen type
+    /// </summary>
+    /// <typeparam name="T">Array type</typeparam>
+    /// <param name="array">Array object, which elements you want to copy</param>
+    /// <returns>New list containing the elements of given array</returns>
     public static List<T> ArrayToList<T>(T[] array)
     {
         List<T> list = new List<T>();
@@ -172,7 +184,12 @@ public static class UtilitiesToolbox
         return list;
     }
 
-    public static List<PlayerGameData> NetworkListToList(NetworkList<PlayerGameData> networkList)
+    /// <summary>
+    /// Method copying items of given Network List (PlayerGameData type) to new List (PlayerGameData type)
+    /// </summary>
+    /// <param name="networkList">Network List, which items you want to copy</param>
+    /// <returns>New list containing the elements of given collection</returns>
+    public static List<PlayerGameData> NetworkListPGDToListPGD(NetworkList<PlayerGameData> networkList)
     {
         List<PlayerGameData> list = new List<PlayerGameData>();
 

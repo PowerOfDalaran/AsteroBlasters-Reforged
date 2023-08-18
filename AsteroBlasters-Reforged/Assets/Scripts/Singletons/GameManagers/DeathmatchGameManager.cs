@@ -21,32 +21,34 @@ namespace GameManager
         [SerializeField] GameObject matchDataPrefab;
 
         public NetworkList<PlayerGameData> playersGameDataList;
-        private float timeLimit;
         public NetworkVariable<float> timeLeft;
 
         public event EventHandler OnPlayersGameDataListNetworkListChanged;
 
+        private float timeLimit;
         private bool gameActive = true;
 
         #region Build-in methods
         private void Awake()
         {
+            // Assigning this instance to variable, creating network variables and adding the method to the OnListChanged event
             instance = this;
 
             playersGameDataList = new NetworkList<PlayerGameData>();
-            playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
-
             timeLeft = new NetworkVariable<float>();
+
+            playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
         }
 
         private void Start()
         {
-            // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
             if (IsHost)
             {
+                // Adding the methods to the events
                 NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
                 NetworkPlayerController.onPlayerDeath += UpdateStats;
 
+                // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
                 foreach (PlayerNetworkData playerNetworkData in MultiplayerGameManager.instance.playerDataNetworkList)
                 {
                     playersGameDataList.Add(new PlayerGameData
@@ -72,7 +74,7 @@ namespace GameManager
 
                 if (timeLeft.Value <= 0)
                 {
-                    EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListToList(playersGameDataList)));
+                    EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
                 }
             }
         }
@@ -89,32 +91,9 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Method returning <c>playerKillCount</c> Network List object in form of standard List.
+        /// Method, which activated if client is disconnected from the host, deleting the leaving player from the network list
         /// </summary>
-        /// <returns><c>playerKillCount</c> as List object</returns>
-        public List<int> GetPlayersKillCountList()
-        {
-            List<int> resultArray = new List<int>();
-
-            foreach (PlayerGameData playerGameData in playersGameDataList)
-            {
-                resultArray.Add(playerGameData.killCount);
-            }
-
-            return resultArray;
-        }
-        public List<int> GetPlayersKillCountList(PlayerGameData[] playerGameDatas)
-        {
-            List<int> resultArray = new List<int>();
-
-            foreach (PlayerGameData playerGameData in playerGameDatas)
-            {
-                resultArray.Add(playerGameData.killCount);
-            }
-
-            return resultArray;
-        }
-
+        /// <param name="clientId">Id of client, who disconnected</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
             if (NetworkManager.Singleton.IsHost)
@@ -130,9 +109,10 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Server Rpc method adding one point to the player with given id.
+        /// Method adding one kill to the killing player, one death to killed player, and then checking if game should be ended.
         /// </summary>
-        /// <param name="playerIndex">Id of player, which scored the point</param>
+        /// <param name="killedPlayerIndex">Index of player, who was killed</param>
+        /// <param name="killingPlayerIndex">Index of player, who killed</param>
         public void UpdateStats(int killedPlayerIndex, int killingPlayerIndex)
         {
             PlayerGameData killingPlayerGameData = GetPlayerGameDataFromIndex(killingPlayerIndex);
@@ -145,13 +125,51 @@ namespace GameManager
 
             if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
             {
-                PlayerGameData[] playerGameDatas = UtilitiesToolbox.ListToArray<PlayerGameData>(UtilitiesToolbox.NetworkListToList(playersGameDataList));
-                EndGameClientRpc(playerGameDatas);
+                EndGameClientRpc(UtilitiesToolbox.ListToArray<PlayerGameData>(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
             }
         }
         #endregion
 
         #region Get Player Data
+        /// <summary>
+        /// Method creating simple List of players kills, with indexes being index of players in <c>playersGameDataList</c>
+        /// </summary>
+        /// <returns>Int type List, with players kills</returns>
+        public List<int> GetPlayersKillCountList()
+        {
+            List<int> resultArray = new List<int>();
+
+            foreach (PlayerGameData playerGameData in playersGameDataList)
+            {
+                resultArray.Add(playerGameData.killCount);
+            }
+
+            return resultArray;
+        }
+
+        /// <summary>
+        /// Method creating simple List of players kills, with indexes being index of players in given <c>PlayerGameData</c> type Array.
+        /// This method exists to handle the situation, in which client needs to work with List passed down by host.
+        /// </summary>
+        /// <param name="playerGameDatas"></param>
+        /// <returns></returns>
+        public List<int> GetPlayersKillCountList(PlayerGameData[] playerGameDatas)
+        {
+            List<int> resultArray = new List<int>();
+
+            foreach (PlayerGameData playerGameData in playerGameDatas)
+            {
+                resultArray.Add(playerGameData.killCount);
+            }
+
+            return resultArray;
+        }
+
+        /// <summary>
+        /// Method returning the <c>PlayerGameData</c> object corresponding to player with given index
+        /// </summary>
+        /// <param name="playerIndex">Index of player, which data we want to get</param>
+        /// <returns>Data of player with given index</returns>
         public PlayerGameData GetPlayerGameDataFromIndex(int playerIndex) 
         {
             return playersGameDataList[playerIndex];
@@ -168,6 +186,12 @@ namespace GameManager
 
             return -1;
         }
+
+        /// <summary>
+        /// Method returning the <c>PlayerGameData</c> object, corresponding to player with given id
+        /// </summary>
+        /// <param name="playerId">Id of player, which data we want to get</param>
+        /// <returns>Data of player with given id</returns>
         public PlayerGameData GetPlayerGameDataFromId(ulong playerId)
         {
             for (int i = 0; i < playersGameDataList.Count; i++)
@@ -202,6 +226,12 @@ namespace GameManager
 
             return orderedPlayers;
         }
+
+        /// <summary>
+        /// Method ordering the players by their score. This overload however, instead of using this client <c>playersGameDataList</c>, uses passed down array of <c>playerGameData</c> objects.
+        /// </summary>
+        /// <param name="gameResult">Array of <c>playerGameData</c> objects. The name origins from the fact that this overloaded method is being used only when the game is ending.</param>
+        /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
         public int[] OrderThePlayers(PlayerGameData[] gameResult)
         {
             List<int> playersKillCountList = GetPlayersKillCountList(gameResult);
@@ -219,45 +249,14 @@ namespace GameManager
             return orderedPlayers;
         }
 
-        //void ActivateEndGameHost()
-        //{
-        //    while (true)
-        //    {
-        //        if (NetworkManager.Singleton.ConnectedClients.Count == 0)
-        //        {
-        //            NetworkManager.Singleton.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnectedCallback;
-        //            gameActive = false;
-        //            MultiplayerGameManager.instance.gameActive = false;
-        //            EndGame();
-        //            return;
-        //        }
-        //    }
-        //}
-
-        //[ClientRpc]
-        //void ActivateGameEndClientRpc()
-        //{
-        //    while (true)
-        //    {
-        //        foreach (PlayerGameData playerGameData in playersGameDataList)
-        //        {
-        //            if (playerGameData.killCount == 3)
-        //            {
-        //                gameActive = false;
-        //                MultiplayerGameManager.instance.gameActive = false;
-        //                EndGame();
-        //                return;
-        //            }
-        //        }
-        //    }
-        //}
-
         /// <summary>
-        /// Client Rpc method, which activated on every client executes endgame mechanics
+        /// Client Rpc method, which activated on every client executes endgame mechanics.
         /// </summary>
+        /// <param name="gameResult">The array of <c>PlayerGameData</c> objects, passed by host to every client</param>
         [ClientRpc]
         void EndGameClientRpc(PlayerGameData[] gameResult)
         {
+            // Turning gameActive bools off
             gameActive = false;
             MultiplayerGameManager.instance.gameActive = false;
 

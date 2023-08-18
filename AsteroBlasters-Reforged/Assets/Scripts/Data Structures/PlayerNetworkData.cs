@@ -17,7 +17,7 @@ namespace DataStructure
         /// Method comparing players id.
         /// </summary>
         /// <param name="other">Id of the player we want to compare to</param>
-        /// <returns></returns>
+        /// <returns>Boolean - whether objects are equal, or not</returns>
         public bool Equals(PlayerNetworkData other)
         {
             return clientId == other.clientId && colorId == other.colorId && playerName == other.playerName;
