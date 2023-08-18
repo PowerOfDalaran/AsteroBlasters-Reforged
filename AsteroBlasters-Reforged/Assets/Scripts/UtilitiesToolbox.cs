@@ -1,5 +1,7 @@
+using DataStructure;
 using NetworkFunctionality;
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
@@ -142,6 +144,44 @@ public static class UtilitiesToolbox
         {
             UnityEngine.GameObject.Destroy(MultiplayerGameManager.instance.gameObject);
         }
+    }
+    #endregion
+
+    #region Data collections
+    public static T[] ListToArray<T>(List<T> list)
+    {
+        T[] array = new T[list.Count];
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            array[i] = list[i];
+        }
+
+        return array;
+    }
+
+    public static List<T> ArrayToList<T>(T[] array)
+    {
+        List<T> list = new List<T>();
+
+        foreach (T item in array)
+        {
+            list.Add(item);
+        }
+
+        return list;
+    }
+
+    public static List<PlayerGameData> NetworkListToList(NetworkList<PlayerGameData> networkList)
+    {
+        List<PlayerGameData> list = new List<PlayerGameData>();
+
+        foreach (PlayerGameData item in networkList)
+        {
+            list.Add(item);
+        }
+
+        return list;
     }
     #endregion
 }

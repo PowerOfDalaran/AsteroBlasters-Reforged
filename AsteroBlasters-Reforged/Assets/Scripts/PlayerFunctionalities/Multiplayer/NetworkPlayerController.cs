@@ -222,8 +222,8 @@ namespace PlayerFunctionality
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
 
             DieClientRpc();
-            //DeathmatchGameManager.instance.AddKillCountServerRpc(killingPlayerIndex);
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
+            Debug.Log(playerIndex + " " + killingPlayerIndex);
         }
 
         /// <summary>
