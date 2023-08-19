@@ -119,7 +119,9 @@ namespace NetworkFunctionality
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+
             NetworkManager.StartHost();
+            
             gameActive = true;
         }
 
@@ -130,15 +132,20 @@ namespace NetworkFunctionality
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+
             NetworkManager.StartClient();
+            
             gameActive = true;
         }
 
         /// <summary>
-        /// Method spawning player character for each player in <c>playerDataNetworkList</c>
+        /// Method spawning player character for each player in <c>playerDataNetworkList</c> and creating new instance of given Game Mode Manager
         /// </summary>
-        public void StartTheGame()
+        /// <param name="gameModeManagerPrefab">Prefab of Game Mode Manager, corresponding to chosen game mode</param>
+        public void StartTheGame(GameObject gameModeManagerPrefab)
         {
+            gameModeManager = Instantiate(gameModeManagerPrefab).GetComponent<GameModeManager>();
+
             if (NetworkManager.Singleton.IsHost)
             {
                 for (int i = 0; i < playerDataNetworkList.Count; i++)

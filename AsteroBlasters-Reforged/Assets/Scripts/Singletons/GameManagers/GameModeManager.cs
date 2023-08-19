@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace GameManager
 {
+    /// <summary>
+    /// Parent class for all Game Mode Managers, takes care of universal functionalities like keeping the player game data list etc.
+    /// </summary>
     public class GameModeManager : NetworkBehaviour
     {
         [SerializeField] protected GameObject matchDataPrefab;
@@ -20,8 +23,10 @@ namespace GameManager
 
         private void Awake()
         {
+            // Adding methods to the delegate and creating new Network List
             playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+
             playersGameDataList = new NetworkList<PlayerGameData>();
         }
 
@@ -29,10 +34,10 @@ namespace GameManager
         {
             if (IsHost)
             {
-                // Adding the methods to the events
+                // Adding the method to the events
                 NetworkPlayerController.onPlayerDeath += UpdateStats;
 
-                // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
+                // Setting up the playersGameDataList
                 foreach (PlayerNetworkData playerNetworkData in MultiplayerGameManager.instance.playerDataNetworkList)
                 {
                     playersGameDataList.Add(new PlayerGameData
@@ -71,6 +76,7 @@ namespace GameManager
                 }
             }
         }
+
         /// <summary>
         /// Method adding one kill to the killing player, one death to killed player, and then checking if game should be ended.
         /// </summary>
@@ -94,7 +100,7 @@ namespace GameManager
 
         #region Get Player Data
         /// <summary>
-        /// Method creating simple List of players kills, with indexes being index of players in <c>playersGameDataList</c>
+        /// Method creating simple List of players kills, with indexes are index of players in <c>playersGameDataList</c>
         /// </summary>
         /// <returns>Int type List, with players kills</returns>
         public List<int> GetPlayersKillCountList()
@@ -168,6 +174,11 @@ namespace GameManager
         }
         #endregion
 
+        /// <summary>
+        /// Client Rpc method, which activated on every client executes endgame mechanics.
+        /// Must be overrided by child scripts.
+        /// </summary>
+        /// <param name="matchResult">The array of <c>PlayerGameData</c> objects, passed by host to every client</param>
         [ClientRpc]
         protected virtual void EndGameClientRpc(PlayerGameData[] matchResult) { }
     }

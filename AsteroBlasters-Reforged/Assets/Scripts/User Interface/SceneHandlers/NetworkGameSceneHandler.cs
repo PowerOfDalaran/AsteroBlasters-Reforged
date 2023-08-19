@@ -20,6 +20,8 @@ namespace UserInterface
         [SerializeField] GameObject playerScoreUI;
         [SerializeField] GameObject[] positions;
 
+        [SerializeField] GameObject DeathmatchGameManagerPrefab;
+
         private GameObject[] playerScoresUI;
 
         private void Awake()
@@ -34,7 +36,8 @@ namespace UserInterface
 
         void Start()
         {
-            MultiplayerGameManager.instance.StartTheGame();
+            // Starting the game and adding method to the delegate so, that the scoreboard will update every time network list changes
+            MultiplayerGameManager.instance.StartTheGame(DeathmatchGameManagerPrefab);
             MultiplayerGameManager.instance.gameModeManager.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
 
             UpdateScoreBoard();

@@ -21,13 +21,13 @@ namespace GameManager
         #region Build-in methods
         private void Awake()
         {
-            // Assigning this instance to variable, creating network variables and adding the methodS to the events
             instance = this;
             timeLeft = new NetworkVariable<float>();
         }
 
         private void Start()
         {
+            // Setting up the timer
             if (IsHost)
             {
                 timeLeft.Value = 45f;
