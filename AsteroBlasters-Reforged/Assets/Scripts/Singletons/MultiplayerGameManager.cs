@@ -6,6 +6,7 @@ using UnityEngine;
 using DataStructure;
 using PlayerFunctionality;
 using SceneManagment;
+using GameManager;
 
 namespace NetworkFunctionality
 {
@@ -15,10 +16,11 @@ namespace NetworkFunctionality
     public class MultiplayerGameManager : NetworkBehaviour
     {
         public static MultiplayerGameManager instance;
+        public GameModeManager gameModeManager;
 
         [SerializeField] GameObject playerPrefab;
-
         [SerializeField] List<Color> playerColorList;
+
         public NetworkList<PlayerNetworkData> playerDataNetworkList;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
@@ -342,27 +344,28 @@ namespace NetworkFunctionality
         [ServerRpc(RequireOwnership = false)]
         public void RemoveMeServerRpc(ulong clientId)
         {
-            KickPlayer(clientId);
+            RemovePlayer(clientId);
         }
 
         /// <summary>
         /// Method called only by the host, to remove player from the lobby.
         /// </summary>
         /// <param name="clientId">Id of the player you want to remove</param>
-        public void KickPlayer(ulong clientId)
+        public void RemovePlayer(ulong clientId)
         {
-            RemoveSelfClientRpc(clientId);
-            DisconnectClient(clientId);
+            RemoveFromClientClientRpc(clientId);
+            RemoveFromServer(clientId);
         }
 
         /// <summary>
         /// Method disconnecting client with given id from <c>NetworkManager</c> and activating <c>NetworkManager_OnClientDisconnectedCallback</c>
         /// </summary>
         /// <param name="clientId">Id of client you want to disconnect</param>
-        public void DisconnectClient(ulong clientId)
+        public void RemoveFromServer(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
             NetworkManager_OnClientDisconnectedCallback(clientId);
+            gameModeManager.NetworkManager_OnClientDisconnectedCallback(clientId);
         }
 
         /// <summary>
@@ -371,14 +374,13 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="clientId">Id of player that have to leave the lobby</param>
         [ClientRpc]
-        void RemoveSelfClientRpc(ulong clientId)
+        void RemoveFromClientClientRpc(ulong clientId)
         {
             ulong currentPlayerId = GetCurrentPlayerData().clientId;
 
             if (clientId == currentPlayerId)
             {
                 // Activating NetworkManager_OnClientDisconnectedCallback to properly remove player from the lobby
-                // FOR SOME REASON, if I just delete network connections, the method doesn't run at all, and if I do the method is being called twice
                 NetworkManager_OnClientDisconnectedCallback(clientId);
             }
         }

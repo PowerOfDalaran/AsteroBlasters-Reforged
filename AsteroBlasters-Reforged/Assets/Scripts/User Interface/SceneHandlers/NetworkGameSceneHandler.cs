@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using NetworkFunctionality;
 using GameManager;
-using Archive;
 
 namespace UserInterface
 {
@@ -29,13 +28,14 @@ namespace UserInterface
             {
                 ChangeButtonsState(false);
                 // Logging out of services and leaving scene
-                DeathmatchGameManager.instance.NetworkManager_OnClientDisconnectedCallback(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);            });
+                MultiplayerGameManager.instance.RemoveMeServerRpc(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
+            });
         }
 
         void Start()
         {
             MultiplayerGameManager.instance.StartTheGame();
-            DeathmatchGameManager.instance.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
+            MultiplayerGameManager.instance.gameModeManager.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
 
             UpdateScoreBoard();
         }

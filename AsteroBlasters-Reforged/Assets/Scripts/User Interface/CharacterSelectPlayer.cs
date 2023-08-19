@@ -32,7 +32,7 @@ public class CharacterSelectPlayer : MonoBehaviour
         kickButton.onClick.AddListener(() =>
         {
             PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
-            MultiplayerGameManager.instance.KickPlayer(playerData.clientId);
+            MultiplayerGameManager.instance.RemovePlayer(playerData.clientId);
         });
     }
 
