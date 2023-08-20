@@ -36,9 +36,7 @@ namespace UserInterface
         {
             // Starting the game and adding method to the delegate so, that the scoreboard will update every time network list changes
             MultiplayerGameManager.instance.StartTheGame();
-            //MultiplayerGameManager.instance.gameModeManager.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
-
-            DeathmatchGameManager.instance.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
+            MultiplayerGameManager.instance.gameModeManager.OnPlayersGameDataListNetworkListChanged += NetworkGameSceneHandler_OnPlayersKillCountNetworkListChanged;
 
             UpdateScoreBoard();
         }
@@ -58,6 +56,7 @@ namespace UserInterface
             UpdateScoreBoard();
         }
 
+        #region Updating The UI
         /// <summary>
         /// Method getting the <c>timeLeft</c> value, transforms it to proper strings and sets the timer's text to formed string
         /// </summary>
@@ -73,7 +72,6 @@ namespace UserInterface
         /// </summary>
         private void UpdateScoreBoard()
         {
-            Debug.Log("Updating");
             if (playerScoresUI != null)
             {
                 ClearScoreBoard();
@@ -115,5 +113,6 @@ namespace UserInterface
                 Destroy(playerScore);
             }
         }
+        #endregion
     }
 }

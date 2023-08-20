@@ -21,28 +21,41 @@ namespace GameManager
 
         protected bool gameActive = true;
 
+        #region Built-in Methods
         protected virtual void Awake()
         {
             // Creating new Network List and adding methods to the delegate
             playersGameDataList = new NetworkList<PlayerGameData>();
 
             playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
+
+            // Adding reference of this script to MultiplayerGameManager
             MultiplayerGameManager.instance.gameModeManager = this;
         }
 
         protected virtual void Start()
         {
-
             if (NetworkManager.IsHost)
             {
                 // Adding the method to the events
                 NetworkPlayerController.onPlayerDeath += UpdateStats;
 
-                CreateNetworkList(MultiplayerGameManager.instance.playerDataNetworkList);
+                // Creating the new data object for each connected player
+                foreach (PlayerNetworkData playerNetworkData in MultiplayerGameManager.instance.playerDataNetworkList)
+                {
+                    playersGameDataList.Add(new PlayerGameData
+                    {
+                        playerId = playerNetworkData.clientId,
+                        killCount = 0,
+                        deathCount = 0,
+                    });
+                }
 
                 NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;            }
         }
+        #endregion
 
+        #region Network List
         /// <summary>
         /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
         /// </summary>
@@ -50,19 +63,6 @@ namespace GameManager
         private void PlayersGameDataList_OnListChanged(NetworkListEvent<PlayerGameData> changeEvent)
         {
             OnPlayersGameDataListNetworkListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void CreateNetworkList(NetworkList<PlayerNetworkData> playerNetworkDataList)
-        {
-            foreach (PlayerNetworkData playerNetworkData in playerNetworkDataList)
-            {
-                playersGameDataList.Add(new PlayerGameData
-                {
-                    playerId = playerNetworkData.clientId,
-                    killCount = 0,
-                    deathCount = 0,
-                });
-            }
         }
 
         /// <summary>
@@ -103,6 +103,7 @@ namespace GameManager
                 EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
             }
         }
+        #endregion
 
         #region Get Player Data
         /// <summary>
