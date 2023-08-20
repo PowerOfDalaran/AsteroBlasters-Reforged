@@ -147,9 +147,9 @@ namespace NetworkFunctionality
                 await LobbyService.Instance.UpdateLobbyAsync(hostedLobby.Id, new UpdateLobbyOptions
                 {
                     Data = new Dictionary<string, DataObject>
-                {
-                    {KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
-                }
+                    {
+                        {KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
+                    }
                 });
 
                 // Setting the NetworkManager to use the created allocation and starting it (as host)

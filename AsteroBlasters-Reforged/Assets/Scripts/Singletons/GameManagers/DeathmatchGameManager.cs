@@ -19,16 +19,20 @@ namespace GameManager
         private float timeLimit;
 
         #region Build-in methods
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             instance = this;
             timeLeft = new NetworkVariable<float>();
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+
             // Setting up the timer
-            if (IsHost)
+            if (NetworkManager.IsHost)
             {
                 timeLeft.Value = 45f;
             }

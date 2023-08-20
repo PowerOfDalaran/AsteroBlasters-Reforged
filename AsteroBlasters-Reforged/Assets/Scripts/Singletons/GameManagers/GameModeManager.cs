@@ -21,33 +21,26 @@ namespace GameManager
 
         protected bool gameActive = true;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            // Adding methods to the delegate and creating new Network List
-            playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
-            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
-
+            // Creating new Network List and adding methods to the delegate
             playersGameDataList = new NetworkList<PlayerGameData>();
+
+            playersGameDataList.OnListChanged += PlayersGameDataList_OnListChanged;
+            MultiplayerGameManager.instance.gameModeManager = this;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
-            if (IsHost)
+
+            if (NetworkManager.IsHost)
             {
                 // Adding the method to the events
                 NetworkPlayerController.onPlayerDeath += UpdateStats;
 
-                // Setting up the playersGameDataList
-                foreach (PlayerNetworkData playerNetworkData in MultiplayerGameManager.instance.playerDataNetworkList)
-                {
-                    playersGameDataList.Add(new PlayerGameData
-                    {
-                        playerId = playerNetworkData.clientId,
-                        killCount = 0,
-                        deathCount = 0
-                    });
-                }
-            }
+                CreateNetworkList(MultiplayerGameManager.instance.playerDataNetworkList);
+
+                NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;            }
         }
 
         /// <summary>
@@ -57,6 +50,19 @@ namespace GameManager
         private void PlayersGameDataList_OnListChanged(NetworkListEvent<PlayerGameData> changeEvent)
         {
             OnPlayersGameDataListNetworkListChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void CreateNetworkList(NetworkList<PlayerNetworkData> playerNetworkDataList)
+        {
+            foreach (PlayerNetworkData playerNetworkData in playerNetworkDataList)
+            {
+                playersGameDataList.Add(new PlayerGameData
+                {
+                    playerId = playerNetworkData.clientId,
+                    killCount = 0,
+                    deathCount = 0,
+                });
+            }
         }
 
         /// <summary>

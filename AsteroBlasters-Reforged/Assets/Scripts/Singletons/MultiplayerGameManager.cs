@@ -142,10 +142,8 @@ namespace NetworkFunctionality
         /// Method spawning player character for each player in <c>playerDataNetworkList</c> and creating new instance of given Game Mode Manager
         /// </summary>
         /// <param name="gameModeManagerPrefab">Prefab of Game Mode Manager, corresponding to chosen game mode</param>
-        public void StartTheGame(GameObject gameModeManagerPrefab)
+        public void StartTheGame()
         {
-            gameModeManager = Instantiate(gameModeManagerPrefab).GetComponent<GameModeManager>();
-
             if (NetworkManager.Singleton.IsHost)
             {
                 for (int i = 0; i < playerDataNetworkList.Count; i++)

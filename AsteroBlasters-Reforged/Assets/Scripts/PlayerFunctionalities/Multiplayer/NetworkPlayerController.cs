@@ -38,7 +38,7 @@ namespace PlayerFunctionality
             myPlayerControls = new PlayerControls();
 
             maxHealth.Value = 3;
-            currentHealth = maxHealth;
+            currentHealth.Value = maxHealth.Value;
         }
 
         void Start()
