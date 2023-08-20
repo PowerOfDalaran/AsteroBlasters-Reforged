@@ -6,6 +6,7 @@ using UnityEngine;
 using DataStructure;
 using PlayerFunctionality;
 using SceneManagment;
+using GameManager;
 
 namespace NetworkFunctionality
 {
@@ -15,11 +16,12 @@ namespace NetworkFunctionality
     public class MultiplayerGameManager : NetworkBehaviour
     {
         public static MultiplayerGameManager instance;
+        public GameModeManager gameModeManager;
 
         [SerializeField] GameObject playerPrefab;
-
         [SerializeField] List<Color> playerColorList;
-        public NetworkList<PlayerData> playerDataNetworkList;
+
+        public NetworkList<PlayerNetworkData> playerDataNetworkList;
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
@@ -40,7 +42,7 @@ namespace NetworkFunctionality
             }
 
             // Initializating the list of players data and adding an event
-            playerDataNetworkList = new NetworkList<PlayerData>();
+            playerDataNetworkList = new NetworkList<PlayerNetworkData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }
         #endregion
@@ -51,7 +53,7 @@ namespace NetworkFunctionality
         /// Event, which triggers every time the list of players data is changed
         /// </summary>
         /// <param name="changeEvent"></param>
-        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerData> changeEvent)
+        private void PlayerDataNetworkList_OnListChanged(NetworkListEvent<PlayerNetworkData> changeEvent)
         {
             OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -64,7 +66,7 @@ namespace NetworkFunctionality
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                playerDataNetworkList.Add(new PlayerData
+                playerDataNetworkList.Add(new PlayerNetworkData
                 {
                     clientId = clientId,
                     colorId = GetFirstUnusedColorId(),
@@ -83,11 +85,11 @@ namespace NetworkFunctionality
         /// <param name="clientId">Id of player you want to remove</param>
         private void NetworkManager_OnClientDisconnectedCallback(ulong clientId)
         {
-            // WORK ON IT LATER - the conditions are probably set up wrong, and without the gameActive bool, the method is being run twice
+            // WORK ON IT LATER - the conditions are probably set up wrong, because without the gameActive bool, the method is being run twice
             if (NetworkManager.Singleton.IsHost && clientId != GetCurrentPlayerData().clientId)
             {
                 // Removing player from the list
-                foreach (PlayerData playerData in playerDataNetworkList)
+                foreach (PlayerNetworkData playerData in playerDataNetworkList)
                 {
                     if (playerData.clientId == clientId)
                     {
@@ -97,7 +99,7 @@ namespace NetworkFunctionality
             }
             else if (gameActive)
             {
-                // Switching the bool in order to assure, 
+                // Switching the bool in order to assure, the player won't run the method twice
                 gameActive = false;
 
                 // Deleting network connections and moving players to main menu
@@ -117,7 +119,9 @@ namespace NetworkFunctionality
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+
             NetworkManager.StartHost();
+            
             gameActive = true;
         }
 
@@ -128,7 +132,9 @@ namespace NetworkFunctionality
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectedCallback;
+
             NetworkManager.StartClient();
+            
             gameActive = true;
         }
 
@@ -139,9 +145,11 @@ namespace NetworkFunctionality
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                foreach (var playerData in playerDataNetworkList)
+                for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
+                    PlayerNetworkData playerData = playerDataNetworkList[i];
                     GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
                     // Assigning proper player index to every play character ON HOST
                     newPlayer.GetComponent<NetworkPlayerController>().playerIndex = playerDataNetworkList.IndexOf(playerData);
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
@@ -165,7 +173,7 @@ namespace NetworkFunctionality
         {
             ulong clientId = serverRpcParams.Receive.SenderClientId;
             int playerDataIndex = GetPlayerIndexFromClientId(serverRpcParams.Receive.SenderClientId);
-            PlayerData playerData = GetPlayerDataFromClientId(clientId);
+            PlayerNetworkData playerData = GetPlayerDataFromClientId(clientId);
 
             playerData.playerName = playerName;
             playerDataNetworkList[playerDataIndex] = playerData;
@@ -222,9 +230,9 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="clientId">Id of the player, whose data you want to get</param>
         /// <returns><c>PlayerData</c> object of player with given id</returns>
-        public PlayerData GetPlayerDataFromClientId(ulong clientId)
+        public PlayerNetworkData GetPlayerDataFromClientId(ulong clientId)
         {
-            foreach (PlayerData playerData in playerDataNetworkList)
+            foreach (PlayerNetworkData playerData in playerDataNetworkList)
             {
                 if (playerData.clientId == clientId)
                 {
@@ -238,7 +246,7 @@ namespace NetworkFunctionality
         /// Method returning the <c>PlayerData</c> object of local player
         /// </summary>
         /// <returns><c>PlayerData</c> object of the local player</returns>
-        public PlayerData GetCurrentPlayerData()
+        public PlayerNetworkData GetCurrentPlayerData()
         {
             return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
         }
@@ -248,7 +256,7 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="playerIndex">Index of player, whose data you want to access</param>
         /// <returns>Data of player with given id</returns>
-        public PlayerData GetPlayerDataFromPlayerIndex(int playerIndex)
+        public PlayerNetworkData GetPlayerDataFromPlayerIndex(int playerIndex)
         {
             return playerDataNetworkList[playerIndex];
         }
@@ -273,7 +281,7 @@ namespace NetworkFunctionality
         /// <returns>True if color is available, false if its not</returns>
         private bool IsColorAvailable(int colorId)
         {
-            foreach (PlayerData playerData in playerDataNetworkList)
+            foreach (PlayerNetworkData playerData in playerDataNetworkList)
             {
                 if (playerData.colorId == colorId)
                 {
@@ -324,7 +332,7 @@ namespace NetworkFunctionality
 
             int playerDataIndex = GetPlayerIndexFromClientId(serverRpcParams.Receive.SenderClientId);
 
-            PlayerData playerData = playerDataNetworkList[playerDataIndex];
+            PlayerNetworkData playerData = playerDataNetworkList[playerDataIndex];
 
             playerData.colorId = colorId;
             playerDataNetworkList[playerDataIndex] = playerData;
@@ -340,27 +348,28 @@ namespace NetworkFunctionality
         [ServerRpc(RequireOwnership = false)]
         public void RemoveMeServerRpc(ulong clientId)
         {
-            KickPlayer(clientId);
+            RemovePlayer(clientId);
         }
 
         /// <summary>
         /// Method called only by the host, to remove player from the lobby.
         /// </summary>
         /// <param name="clientId">Id of the player you want to remove</param>
-        public void KickPlayer(ulong clientId)
+        public void RemovePlayer(ulong clientId)
         {
-            RemoveSelfClientRpc(clientId);
-            DisconnectClient(clientId);
+            RemoveFromClientClientRpc(clientId);
+            RemoveFromServer(clientId);
         }
 
         /// <summary>
         /// Method disconnecting client with given id from <c>NetworkManager</c> and activating <c>NetworkManager_OnClientDisconnectedCallback</c>
         /// </summary>
         /// <param name="clientId">Id of client you want to disconnect</param>
-        public void DisconnectClient(ulong clientId)
+        public void RemoveFromServer(ulong clientId)
         {
             NetworkManager.Singleton.DisconnectClient(clientId);
             NetworkManager_OnClientDisconnectedCallback(clientId);
+            gameModeManager.NetworkManager_OnClientDisconnectedCallback(clientId);
         }
 
         /// <summary>
@@ -369,14 +378,13 @@ namespace NetworkFunctionality
         /// </summary>
         /// <param name="clientId">Id of player that have to leave the lobby</param>
         [ClientRpc]
-        void RemoveSelfClientRpc(ulong clientId)
+        void RemoveFromClientClientRpc(ulong clientId)
         {
             ulong currentPlayerId = GetCurrentPlayerData().clientId;
 
             if (clientId == currentPlayerId)
             {
                 // Activating NetworkManager_OnClientDisconnectedCallback to properly remove player from the lobby
-                // FOR SOME REASON, if I just delete network connections, the method doesn't run at all, and if I do the method is being called twice
                 NetworkManager_OnClientDisconnectedCallback(clientId);
             }
         }

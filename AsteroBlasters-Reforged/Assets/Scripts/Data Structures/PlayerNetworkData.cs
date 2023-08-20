@@ -7,7 +7,7 @@ namespace DataStructure
     /// <summary>
     /// Serializable class for storing data about players
     /// </summary>
-    public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
+    public struct PlayerNetworkData : IEquatable<PlayerNetworkData>, INetworkSerializable
     {
         public ulong clientId;
         public int colorId;
@@ -17,8 +17,8 @@ namespace DataStructure
         /// Method comparing players id.
         /// </summary>
         /// <param name="other">Id of the player we want to compare to</param>
-        /// <returns></returns>
-        public bool Equals(PlayerData other)
+        /// <returns>Boolean - whether objects are equal, or not</returns>
+        public bool Equals(PlayerNetworkData other)
         {
             return clientId == other.clientId && colorId == other.colorId && playerName == other.playerName;
         }

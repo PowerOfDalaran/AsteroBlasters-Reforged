@@ -1,5 +1,7 @@
+using DataStructure;
 using NetworkFunctionality;
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
@@ -142,6 +144,61 @@ public static class UtilitiesToolbox
         {
             UnityEngine.GameObject.Destroy(MultiplayerGameManager.instance.gameObject);
         }
+    }
+    #endregion
+
+    #region Data collections
+    /// <summary>
+    /// Generic method, which copy the elements of given List to new Array of chosen type
+    /// </summary>
+    /// <typeparam name="T">List type</typeparam>
+    /// <param name="list">List object, which elements you want to copy</param>
+    /// <returns>New array containing the elements of given list</returns>
+    public static T[] ListToArray<T>(List<T> list)
+    {
+        T[] array = new T[list.Count];
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            array[i] = list[i];
+        }
+
+        return array;
+    }
+
+    /// <summary>
+    /// Generic method, which copy the elements of given Array to new List of chosen type
+    /// </summary>
+    /// <typeparam name="T">Array type</typeparam>
+    /// <param name="array">Array object, which elements you want to copy</param>
+    /// <returns>New list containing the elements of given array</returns>
+    public static List<T> ArrayToList<T>(T[] array)
+    {
+        List<T> list = new List<T>();
+
+        foreach (T item in array)
+        {
+            list.Add(item);
+        }
+
+        return list;
+    }
+
+    /// <summary>
+    /// Method copying items of given Network List (PlayerGameData type) to new List (PlayerGameData type)
+    /// </summary>
+    /// <param name="networkList">Network List, which items you want to copy</param>
+    /// <returns>New list containing the elements of given collection</returns>
+    public static List<PlayerGameData> NetworkListPGDToListPGD(NetworkList<PlayerGameData> networkList)
+    {
+        List<PlayerGameData> list = new List<PlayerGameData>();
+
+        foreach (PlayerGameData item in networkList)
+        {
+            list.Add(item);
+        }
+
+        return list;
     }
     #endregion
 }
