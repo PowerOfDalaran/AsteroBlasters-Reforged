@@ -961,13 +961,9 @@ MonoBehaviour:
   joinGameButton: {fileID: 589968365}
   createGameButton: {fileID: 612730174}
   returnToMenuButton: {fileID: 1248469517}
-  setPlayerNameButton: {fileID: 0}
   lobbyCodeInputField: {fileID: 425118537}
   maxPlayersSlider: {fileID: 1295946889}
   lobbyNameInputField: {fileID: 928595133}
-  playerNameInputField: {fileID: 0}
-  CreateJoinScreen: {fileID: 2103956912}
-  EnterNameScreen: {fileID: 0}
 --- !u!1 &589968362
 GameObject:
   m_ObjectHideFlags: 0

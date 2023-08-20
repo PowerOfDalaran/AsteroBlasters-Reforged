@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -12,44 +11,31 @@ namespace GameManager
     /// <summary>
     /// Singleton class managing the game mechanics in deathmatch game mode (does not move between scenes)
     /// </summary>
-    public class DeathmatchGameManager : NetworkBehaviour
+    public class DeathmatchGameManager : GameModeManager
     {
         public static DeathmatchGameManager instance;
 
-        [SerializeField]
-        GameObject matchDataPrefab;
-
-        private NetworkList<int> playersKillCount;
-        private float timeLimit;
         public NetworkVariable<float> timeLeft;
-
-        public event EventHandler OnPlayersKillCountNetworkListChanged;
-
-        private bool gameActive = true;
+        private float timeLimit;
 
         #region Build-in methods
-        private void Awake()
+        protected override void Awake()
         {
-            instance = this;
+            base.Awake();
 
-            playersKillCount = new NetworkList<int>();
+            instance = this;
             timeLeft = new NetworkVariable<float>();
         }
 
-        private void Start()
+        protected override void Start()
         {
-            // Setting up the playersKillCount (Network List) and (Network Variable) timeLeft
-            if (IsHost)
-            {
-                foreach (PlayerData playerData in MultiplayerGameManager.instance.playerDataNetworkList)
-                {
-                    playersKillCount.Add(0);
-                }
+            base.Start();
 
+            // Setting up the timer
+            if (NetworkManager.IsHost)
+            {
                 timeLeft.Value = 45f;
             }
-
-            playersKillCount.OnListChanged += PlayersKillCount_OnListChanged;
             timeLimit = timeLeft.Value;
         }
 
@@ -62,51 +48,8 @@ namespace GameManager
 
                 if (timeLeft.Value <= 0)
                 {
-                    EndGameClientRpc();
+                    EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
                 }
-            }
-        }
-        #endregion
-
-        #region KillCount Array
-        /// <summary>
-        /// Method, which acts as an connection between an <c>OnPlayersKillCountNetworkListChanged</c> event and other methods.
-        /// </summary>
-        /// <param name="changeEvent"></param>
-        private void PlayersKillCount_OnListChanged(NetworkListEvent<int> changeEvent)
-        {
-            OnPlayersKillCountNetworkListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Method returning <c>playerKillCount</c> Network List object in form of standard List.
-        /// </summary>
-        /// <returns><c>playerKillCount</c> as List object</returns>
-        public List<int> GetPlayersKillCount()
-        {
-            List<int> resultArray = new List<int>();
-
-            foreach (int i in playersKillCount)
-            {
-                resultArray.Add(i);
-            }
-
-            return resultArray;
-        }
-
-        /// <summary>
-        /// Server Rpc method adding one point to the player with given id.
-        /// </summary>
-        /// <param name="playerIndex">Id of player, which scored the point</param>
-        [ServerRpc]
-        public void AddKillCountServerRpc(int playerIndex)
-        {
-            playersKillCount[playerIndex] += 1;
-
-            if (playersKillCount[playerIndex] == 2 && gameActive)
-            {
-
-                EndGameClientRpc();
             }
         }
         #endregion
@@ -117,7 +60,7 @@ namespace GameManager
         /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
         public int[] OrderThePlayers()
         {
-            List<int> newList = GetPlayersKillCount();
+            List<int> newList = GetPlayersKillCountList();
             int[] orderedPlayers = new int[newList.Count];
 
             for (int i = 0; i < newList.Count; i++)
@@ -133,22 +76,46 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Client Rpc method, which activated on every client executes endgame mechanics
+        /// Method ordering the players by their score. This overload however, instead of using this client <c>playersGameDataList</c>, uses passed down array of <c>playerGameData</c> objects.
         /// </summary>
-        [ClientRpc]
-        void EndGameClientRpc()
+        /// <param name="gameResult">Array of <c>playerGameData</c> objects. The name origins from the fact that this overloaded method is being used only when the game is ending.</param>
+        /// <returns>The array, in which every index corresponds to player index and value is equal to their correct order.</returns>
+        public int[] OrderThePlayers(PlayerGameData[] gameResult)
         {
+            List<int> playersKillCountList = GetPlayersKillCountList(gameResult);
+            int[] orderedPlayers = new int[playersKillCountList.Count];
+
+            for (int i = 0; i < playersKillCountList.Count; i++)
+            {
+                int highestValue = playersKillCountList.Max();
+                int highestValueIndex = playersKillCountList.IndexOf(highestValue);
+
+                orderedPlayers[highestValueIndex] = i;
+                playersKillCountList[highestValueIndex] = -1;
+            }
+
+            return orderedPlayers;
+        }
+
+        /// <summary>
+        /// Client Rpc method, which activated on every client executes endgame mechanics.
+        /// </summary>
+        /// <param name="gameResult">The array of <c>PlayerGameData</c> objects, passed by host to every client</param>
+        [ClientRpc]
+        protected override void EndGameClientRpc(PlayerGameData[] gameResult)
+        {
+            // Turning gameActive bools off
             gameActive = false;
             MultiplayerGameManager.instance.gameActive = false;
 
             // Creating the player data array and getting the proper order of players
             object[][] playerDataArray = new object[MultiplayerGameManager.instance.playerDataNetworkList.Count][];
-            int[] playersRanking = OrderThePlayers();
+            int[] playersRanking = OrderThePlayers(gameResult);
 
             // For each player in the game, creating new entry in the data object and assinging values to it
             for (int i = 0; i < MultiplayerGameManager.instance.playerDataNetworkList.Count; i++)
             {
-                PlayerData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
+                PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
 
                 object[] playerSubArray = new object[3];
                 playerSubArray[0] = playerData.playerName.ToString();
