@@ -67,7 +67,7 @@ namespace UserInterface
         }
 
         /// <summary>
-        /// Method being called everytime the playersKillCount list changes.
+        /// Method being called everytime the Players Game Data List changes.
         /// It clears current player scores and creates new ones
         /// </summary>
         private void UpdateScoreBoard()

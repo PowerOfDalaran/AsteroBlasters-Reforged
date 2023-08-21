@@ -225,6 +225,27 @@ namespace NetworkFunctionality
         }
 
         /// <summary>
+        /// Client Rpc method removing all connected players from the lobby they're currently in
+        /// </summary>
+        [ClientRpc]
+        public async void LeaveLobbyClientRpc()
+        {
+            try
+            {
+                if (joinedLobby != null)
+                {
+                    await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+                    joinedLobby = null;
+                    hostedLobby = null;
+                }
+            }
+            catch (LobbyServiceException exception)
+            {
+                Debug.Log(exception);
+            }
+        }
+
+        /// <summary>
         /// Method deleting the lobby from Unity Services and removing its references.
         /// FOR HOST ONLY!
         /// </summary>
