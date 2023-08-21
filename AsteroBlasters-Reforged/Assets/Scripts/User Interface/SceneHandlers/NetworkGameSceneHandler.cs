@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using NetworkFunctionality;
 using GameManager;
+using System.Data;
 
 namespace UserInterface
 {
@@ -29,6 +30,7 @@ namespace UserInterface
                 ChangeButtonsState(false);
                 // Logging out of services and leaving scene
                 MultiplayerGameManager.instance.RemoveMeServerRpc(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
+                UpdateScoreBoard();
             });
         }
 
@@ -67,7 +69,7 @@ namespace UserInterface
         }
 
         /// <summary>
-        /// Method being called everytime the playersKillCount list changes.
+        /// Method being called everytime the Players Game Data List changes.
         /// It clears current player scores and creates new ones
         /// </summary>
         private void UpdateScoreBoard()

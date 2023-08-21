@@ -33,7 +33,7 @@ namespace UserInterface
             {
                 ChangeButtonsState(false);
                 LevelManager.instance.NetworkLoadScene("NetworkGameScene");
-                LobbyManager.instance.DestroyLobby();
+                LobbyManager.instance.LeaveLobbyClientRpc();
             });
 
             leaveLobbyButton.onClick.AddListener(() =>
