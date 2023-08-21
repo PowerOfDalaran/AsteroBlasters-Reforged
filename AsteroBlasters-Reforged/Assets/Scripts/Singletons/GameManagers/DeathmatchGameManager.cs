@@ -16,7 +16,6 @@ namespace GameManager
         public static DeathmatchGameManager instance;
 
         public NetworkVariable<float> timeLeft;
-        private float timeLimit;
 
         #region Build-in methods
         protected override void Awake()
@@ -34,9 +33,8 @@ namespace GameManager
             // Setting up the timer
             if (NetworkManager.IsHost)
             {
-                timeLeft.Value = 45f;
+                timeLeft.Value = MultiplayerGameManager.instance.timeLimit.Value;
             }
-            timeLimit = timeLeft.Value;
         }
 
         private void FixedUpdate()
@@ -130,7 +128,7 @@ namespace GameManager
 
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);
-            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, timeLimit.ToString());
+            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString());
             LevelManager.instance.LoadScene("MatchResultScene");
         }
     }
