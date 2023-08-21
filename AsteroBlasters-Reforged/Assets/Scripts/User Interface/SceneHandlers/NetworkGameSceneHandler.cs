@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using NetworkFunctionality;
 using GameManager;
+using System.Data;
 
 namespace UserInterface
 {
@@ -29,6 +30,7 @@ namespace UserInterface
                 ChangeButtonsState(false);
                 // Logging out of services and leaving scene
                 MultiplayerGameManager.instance.RemoveMeServerRpc(MultiplayerGameManager.instance.GetCurrentPlayerData().clientId);
+                UpdateScoreBoard();
             });
         }
 
