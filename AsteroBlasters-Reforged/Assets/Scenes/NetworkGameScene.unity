@@ -755,7 +755,6 @@ MonoBehaviour:
   - {fileID: 1595787114}
   - {fileID: 1649287266}
   - {fileID: 163275502}
-  DeathmatchGameManagerPrefab: {fileID: 1018751913936990365, guid: d0e95c5d6b396ea4795e7a52e13b15a0, type: 3}
 --- !u!1 &708874007
 GameObject:
   m_ObjectHideFlags: 0
