@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
-  rotationSpeed: 6
+  rotationSpeed: 5.15
   playerIndex: 0
   maxHealth:
     m_InternalValue: 0

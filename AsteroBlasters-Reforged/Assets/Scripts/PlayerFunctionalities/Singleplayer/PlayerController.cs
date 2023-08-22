@@ -15,7 +15,7 @@ namespace PlayerFunctionality
         [SerializeField]
         float movementSpeed = 3f;
         [SerializeField]
-        float rotationSpeed = 720;
+        float rotationSpeed = 5.15f;
         public int maxHealth = 3;
         public int currentHealth;
 

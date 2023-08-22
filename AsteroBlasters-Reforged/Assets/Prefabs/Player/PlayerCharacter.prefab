@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
-  rotationSpeed: 6
+  rotationSpeed: 5.15
   maxHealth: 3
   currentHealth: 0
 --- !u!1 &7501930579323001307
