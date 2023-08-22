@@ -6,6 +6,9 @@ using SceneManagment;
 
 namespace UserInterface
 {
+    /// <summary>
+    /// Class responsible for managing the UI in <c>EndGame</c> scene.
+    /// </summary>
     public class EndGameSceneHandler : SceneButtonHandler
     {
         // Buttons
@@ -42,16 +45,19 @@ namespace UserInterface
             //Creating score board
             for (int i = 0; i < MatchData.instance.numberOfPlayers; i++)
             {
+                // Getting the data about current player
                 object[] currentPlayerData = MatchData.instance.GetPlayerOnPosition(i);
 
+                // Converting the drawn data to proper data types
                 Color playerColor = UtilitiesToolbox.GetColorFromString(currentPlayerData[2].ToString());
                 string playerName = currentPlayerData[0].ToString();
                 int playerKills = Convert.ToInt32(currentPlayerData[3]); 
                 int playerDeaths = Convert.ToInt32(currentPlayerData[4]);
 
+                // Instantiating player score object and assigning its properties
                 GameObject newPlayerScore = Instantiate(playerScoreUIPrefab);
-                newPlayerScore.GetComponent<PlayerScoreEndGame>().SetPlayerScoreData(playerColor, playerName, playerKills, playerDeaths, i == 0);
 
+                newPlayerScore.GetComponent<PlayerScoreEndGame>().SetPlayerScoreData(playerColor, playerName, playerKills, playerDeaths, i == 0);
                 newPlayerScore.transform.SetParent(scoreboardPanel.transform);
                 newPlayerScore.transform.position = playerScoresPositions[i].transform.position;
             }
