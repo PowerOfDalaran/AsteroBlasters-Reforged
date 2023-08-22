@@ -19,7 +19,7 @@ namespace PlayerFunctionality
         NetworkWeapon myWeapon;
 
         [SerializeField] float movementSpeed = 3f;
-        [SerializeField] float rotationSpeed = 720f;
+        [SerializeField] float rotationSpeed = 5.15f;
         public int playerIndex;
 
         public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
