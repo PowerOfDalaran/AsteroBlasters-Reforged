@@ -10,6 +10,14 @@ namespace DataStructure
     {
         public static MatchData instance;
 
+        /// <summary>
+        /// Nested array, holding data about players.
+        /// First object is that player's name (string).
+        /// Second object is that player's ranking (int).
+        /// Third object is that player's color saved as string (string).
+        /// Fourth object is that player's kill count (int).
+        /// Fifth object is tht players' death count (int).
+        /// </summary>
         object[][] playersData;
         public string timeLimit;
         public int numberOfPlayers;
@@ -40,14 +48,17 @@ namespace DataStructure
         /// <returns>Array of player data (null if player wasn't found)</returns>
         public object[] GetPlayerOnPosition(int position)
         {
-            object[] resultArray = new object[2];
+            object[] resultArray = new object[5];
 
             for (int i = 0; i < playersData.Length; i++)
             {
                 if (Convert.ToInt32(playersData[i][1]) == position)
                 {
                     resultArray[0] = Convert.ToString(playersData[i][0]);
-                    resultArray[1] = Convert.ToString(playersData[i][2]);
+                    resultArray[1] = Convert.ToInt32(playersData[i][1]);
+                    resultArray[2] = Convert.ToString(playersData[i][2]);
+                    resultArray[3] = Convert.ToInt32(playersData[i][3]);
+                    resultArray[4] = Convert.ToInt32(playersData[i][4]);
 
                     return resultArray;
                 }

@@ -115,10 +115,13 @@ namespace GameManager
             {
                 PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
 
-                object[] playerSubArray = new object[3];
+                object[] playerSubArray = new object[5];
                 playerSubArray[0] = playerData.playerName.ToString();
                 playerSubArray[1] = playersRanking[i];
                 playerSubArray[2] = UtilitiesToolbox.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
+                playerSubArray[3] = playersGameDataList[i].killCount;
+                playerSubArray[4] = playersGameDataList[i].deathCount;
+
 
                 playerDataArray[i] = playerSubArray;
             }
@@ -129,7 +132,7 @@ namespace GameManager
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);
             newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString());
-            LevelManager.instance.LoadScene("MatchResultScene");
+            LevelManager.instance.LoadScene("EndGameScene");
         }
     }
 }
