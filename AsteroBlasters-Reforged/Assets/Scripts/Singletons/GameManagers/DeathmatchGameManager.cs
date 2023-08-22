@@ -46,6 +46,8 @@ namespace GameManager
 
                 if (timeLeft.Value <= 0)
                 {
+                    Debug.Log(playersGameDataList[0].killCount);
+                    Debug.Log(playersGameDataList[1].killCount);
                     EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
                 }
             }
@@ -119,8 +121,8 @@ namespace GameManager
                 playerSubArray[0] = playerData.playerName.ToString();
                 playerSubArray[1] = playersRanking[i];
                 playerSubArray[2] = UtilitiesToolbox.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
-                playerSubArray[3] = playersGameDataList[i].killCount;
-                playerSubArray[4] = playersGameDataList[i].deathCount;
+                playerSubArray[3] = gameResult[i].killCount;
+                playerSubArray[4] = gameResult[i].deathCount;
 
 
                 playerDataArray[i] = playerSubArray;

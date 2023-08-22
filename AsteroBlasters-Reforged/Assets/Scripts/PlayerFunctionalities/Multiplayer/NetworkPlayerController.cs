@@ -223,7 +223,7 @@ namespace PlayerFunctionality
         public void Die(ulong killerPlayerId = ulong.MaxValue)
         {
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
-
+            currentHealth = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
         }
