@@ -217,7 +217,7 @@ namespace PlayerFunctionality
 
         #region Player Death
         /// <summary>
-        /// Method handling the player (on host)
+        /// Method handling the player death (on host)
         /// </summary>
         /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
         public void Die(ulong killerPlayerId = ulong.MaxValue)

@@ -28,6 +28,7 @@ namespace UserInterface
 
         private void Awake()
         {
+            // Checking whether there is a winner to display or was there a draw
             if (MatchData.instance.isDraw)
             {
                 DrawPanel.SetActive(true);

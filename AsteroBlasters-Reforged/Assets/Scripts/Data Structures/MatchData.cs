@@ -47,7 +47,14 @@ namespace DataStructure
         /// Method returning the player with given position from playersData array
         /// </summary>
         /// <param name="position">Position the player took in the match</param>
-        /// <returns>Array of player data (null if player wasn't found)</returns>
+        /// 
+        /// <returns>Array of player data (null if player wasn't found).
+        /// First object is that player's name (string).
+        /// Second object is that player's ranking (int).
+        /// Third object is that player's color saved as string (string).
+        /// Fourth object is that player's kill count (int).
+        /// Fifth object is tht players' death count (int).
+        /// </returns>
         public object[] GetPlayerOnPosition(int position)
         {
             object[] resultArray = new object[5];

@@ -73,6 +73,11 @@ namespace GameManager
             return orderedPlayers;
         }
 
+        /// <summary>
+        /// Method checking if in the game, there is actually a single player with highest score.
+        /// </summary>
+        /// <param name="gameResult">Array of <c>playerGameData</c> objects. The name origins from the fact that this method is being used only when the game is ending.</param>
+        /// <returns>Whether there is a single winner, or there is a draw</returns>
         bool isDraw(PlayerGameData[] gameResult)
         {
             int highestScore = -1;
