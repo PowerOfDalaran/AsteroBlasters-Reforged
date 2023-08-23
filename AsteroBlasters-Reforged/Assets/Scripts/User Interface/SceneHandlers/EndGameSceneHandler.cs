@@ -19,20 +19,32 @@ namespace UserInterface
         [SerializeField]  Text winnerNameText;
         [SerializeField] GameObject winnerImage;
 
+        [SerializeField] GameObject WinnerPanel;
+        [SerializeField] GameObject DrawPanel;
+
         [SerializeField] GameObject scoreboardPanel;
         [SerializeField] GameObject[] playerScoresPositions;
         [SerializeField] GameObject playerScoreUIPrefab;
 
         private void Awake()
         {
-            // Setting up the texts
-            winnerNameText.text = MatchData.instance.GetPlayerOnPosition(0)[0].ToString();
+            if (MatchData.instance.isDraw)
+            {
+                DrawPanel.SetActive(true);
+            }
+            else
+            {
+                WinnerPanel.SetActive(true);
 
-            //Changing the player visual color
-            string winnerColorAsString = MatchData.instance.GetPlayerOnPosition(0)[2].ToString();
-            Color winnerColor = UtilitiesToolbox.GetColorFromString(winnerColorAsString);
+                // Setting up the texts
+                winnerNameText.text = MatchData.instance.GetPlayerOnPosition(0)[0].ToString();
 
-            winnerImage.GetComponent<Image>().color = winnerColor;
+                //Changing the player visual color
+                string winnerColorAsString = MatchData.instance.GetPlayerOnPosition(0)[2].ToString();
+                Color winnerColor = UtilitiesToolbox.GetColorFromString(winnerColorAsString);
+
+                winnerImage.GetComponent<Image>().color = winnerColor;
+            }
 
             // Adding functionalities to the buttons
             returnButton.onClick.AddListener(() =>

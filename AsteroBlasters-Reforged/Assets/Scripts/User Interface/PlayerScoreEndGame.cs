@@ -1,3 +1,4 @@
+using DataStructure;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,7 @@ namespace UserInterface
             playerKills.text = PlayerKills.ToString();
             playerDeaths.text = PlayerDeaths.ToString();
 
-            if (!isWinner)
+            if (!isWinner || MatchData.instance.isDraw)
             {
                 winnerStar.gameObject.SetActive(false);
             }

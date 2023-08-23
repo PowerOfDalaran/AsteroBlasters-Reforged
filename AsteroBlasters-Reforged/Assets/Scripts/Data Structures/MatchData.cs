@@ -21,6 +21,7 @@ namespace DataStructure
         object[][] playersData;
         public string timeLimit;
         public int numberOfPlayers;
+        public bool isDraw;
 
         void Awake()
         {
@@ -34,11 +35,12 @@ namespace DataStructure
         /// </summary>
         /// <param name="PlayersData">Special array containing the data of the players</param>
         /// <param name="TimeLimit">Starting time for the game</param>
-        public void SetData(object[][] PlayersData, string TimeLimit)
+        public void SetData(object[][] PlayersData, string TimeLimit, bool IsDraw)
         {
             playersData = PlayersData;
             timeLimit = TimeLimit;
             numberOfPlayers = PlayersData.Length;
+            isDraw = IsDraw;
         }
 
         /// <summary>

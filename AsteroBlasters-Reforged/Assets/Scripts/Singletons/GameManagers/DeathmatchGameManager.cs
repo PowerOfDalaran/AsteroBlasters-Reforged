@@ -46,8 +46,6 @@ namespace GameManager
 
                 if (timeLeft.Value <= 0)
                 {
-                    Debug.Log(playersGameDataList[0].killCount);
-                    Debug.Log(playersGameDataList[1].killCount);
                     EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
                 }
             }
@@ -73,6 +71,32 @@ namespace GameManager
             }
 
             return orderedPlayers;
+        }
+
+        bool isDraw(PlayerGameData[] gameResult)
+        {
+            int highestScore = -1;
+            int highestScoreIndex = -1;
+
+            for (int i = 0; i < gameResult.Length; i++)
+            {
+                if (gameResult[i].killCount > highestScore)
+                {
+                    highestScore = gameResult[i].killCount;
+                    highestScoreIndex = i;
+                }
+                else if (gameResult[i].killCount == highestScore && gameResult[i].deathCount < gameResult[highestScoreIndex].deathCount)
+                {
+                    highestScore = gameResult[i].killCount;
+                    highestScoreIndex = i;
+                }
+                else if (gameResult[i].killCount == highestScore && gameResult[i].deathCount == gameResult[highestScoreIndex].deathCount)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -129,11 +153,11 @@ namespace GameManager
             }
 
             // Turning off and destroying game objects responsible for network connections etc.
-            UtilitiesToolbox.DeleteNetworkConnections(true, true, true, true);
+            UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
 
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);
-            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString());
+            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString(), isDraw(gameResult));
             LevelManager.instance.LoadScene("EndGameScene");
         }
     }
