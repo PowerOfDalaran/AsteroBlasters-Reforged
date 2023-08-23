@@ -74,6 +74,37 @@ namespace GameManager
         }
 
         /// <summary>
+        /// Method checking if in the game, there is actually a single player with highest score.
+        /// </summary>
+        /// <param name="gameResult">Array of <c>playerGameData</c> objects. The name origins from the fact that this method is being used only when the game is ending.</param>
+        /// <returns>Whether there is a single winner, or there is a draw</returns>
+        bool isDraw(PlayerGameData[] gameResult)
+        {
+            int highestScore = -1;
+            int highestScoreIndex = -1;
+
+            for (int i = 0; i < gameResult.Length; i++)
+            {
+                if (gameResult[i].killCount > highestScore)
+                {
+                    highestScore = gameResult[i].killCount;
+                    highestScoreIndex = i;
+                }
+                else if (gameResult[i].killCount == highestScore && gameResult[i].deathCount < gameResult[highestScoreIndex].deathCount)
+                {
+                    highestScore = gameResult[i].killCount;
+                    highestScoreIndex = i;
+                }
+                else if (gameResult[i].killCount == highestScore && gameResult[i].deathCount == gameResult[highestScoreIndex].deathCount)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Method ordering the players by their score. This overload however, instead of using this client <c>playersGameDataList</c>, uses passed down array of <c>playerGameData</c> objects.
         /// </summary>
         /// <param name="gameResult">Array of <c>playerGameData</c> objects. The name origins from the fact that this overloaded method is being used only when the game is ending.</param>
@@ -115,21 +146,24 @@ namespace GameManager
             {
                 PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(i);
 
-                object[] playerSubArray = new object[3];
+                object[] playerSubArray = new object[5];
                 playerSubArray[0] = playerData.playerName.ToString();
                 playerSubArray[1] = playersRanking[i];
                 playerSubArray[2] = UtilitiesToolbox.GetStringFromColor(MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId));
+                playerSubArray[3] = gameResult[i].killCount;
+                playerSubArray[4] = gameResult[i].deathCount;
+
 
                 playerDataArray[i] = playerSubArray;
             }
 
             // Turning off and destroying game objects responsible for network connections etc.
-            UtilitiesToolbox.DeleteNetworkConnections(true, true, true, true);
+            UtilitiesToolbox.DeleteNetworkConnections(false, true, false, true);
 
             // Creating data object, assiging values to it and loading new scene.
             GameObject newMatchData = Instantiate(matchDataPrefab);
-            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString());
-            LevelManager.instance.LoadScene("MatchResultScene");
+            newMatchData.GetComponent<MatchData>().SetData(playerDataArray, MultiplayerGameManager.instance.timeLimit.Value.ToString(), isDraw(gameResult));
+            LevelManager.instance.LoadScene("EndGameScene");
         }
     }
 }

@@ -3,18 +3,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using DataStructure;
 using SceneManagment;
+using UserInterface;
 
-namespace UserInterface
+namespace Archive
 {
     /// <summary>
     /// Class responsible for managing buttons and other UI elements of <c>MatchResultScene</c> scene.
     /// </summary>
     public class MatchResultSceneHandler : SceneButtonHandler
     {
-        [SerializeField]
-        Text TimeLimitText;
-        [SerializeField]
-        Text NumberOfPlayersText;
+        [SerializeField] Text TimeLimitText;
+        [SerializeField] Text NumberOfPlayersText;
 
         [SerializeField]
         Button returnToMenuButton;
