@@ -27,6 +27,7 @@ namespace PlayerFunctionality
 
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
+        public NetworkVariable<Vector3> spawnPosition = new NetworkVariable<Vector3>();
 
         #region Build-in methods
         void Awake()
@@ -235,7 +236,7 @@ namespace PlayerFunctionality
         [ClientRpc]
         public void DieClientRpc()
         {
-            myRigidbody2D.position = new Vector3(0f, 0f, 0f);
+            myRigidbody2D.position = spawnPosition.Value;
             myRigidbody2D.velocity = Vector2.zero;
         }
         #endregion
