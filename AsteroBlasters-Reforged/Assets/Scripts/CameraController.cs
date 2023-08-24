@@ -1,5 +1,6 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Others
 {
@@ -28,6 +29,11 @@ namespace Others
             cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
         }
 
+        private void OnEnable()
+        {
+            SceneManager.activeSceneChanged += SetCameraConfiner;
+        }
+
         /// <summary>
         /// Method setting the virtual camera parameter "Follow" to given transform.
         /// </summary>
@@ -35,6 +41,16 @@ namespace Others
         public void FollowPlayer(Transform transform)
         {
             cinemachineVirtualCamera.Follow = transform;
+        }
+
+        void SetCameraConfiner(Scene scene0, Scene scene1)
+        {
+            GameObject cameraConfiner = GameObject.FindGameObjectWithTag("CameraConfiner");
+
+            if (cameraConfiner != null)
+            {
+                gameObject.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = cameraConfiner.GetComponent<PolygonCollider2D>();
+            }
         }
     }
 }

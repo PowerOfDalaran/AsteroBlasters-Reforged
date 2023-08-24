@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NoImpactDamage
   - LoadingScreen
+  - CameraConfiner
   layers:
   - Default
   - TransparentFX
