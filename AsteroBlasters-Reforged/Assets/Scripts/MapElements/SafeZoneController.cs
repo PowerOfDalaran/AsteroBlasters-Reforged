@@ -10,7 +10,12 @@ namespace GameMapElements
         public void SetUpSafeZone(ulong zoneOwner)
         {
             NetworkObject.ChangeOwnership(zoneOwner);
+            UpdateSafeZoneClientRpc();
+        }
 
+        [ClientRpc]
+        void UpdateSafeZoneClientRpc()
+        {
             if (IsOwner)
             {
                 gameObject.GetComponent<SpriteRenderer>().color = new Color(0f, 1f, 0f, 0.5f);
