@@ -7,6 +7,7 @@ using DataStructure;
 using PlayerFunctionality;
 using SceneManagment;
 using GameManager;
+using GameMapElements;
 
 namespace NetworkFunctionality
 {
@@ -157,15 +158,17 @@ namespace NetworkFunctionality
                 for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
                     PlayerNetworkData playerData = playerDataNetworkList[i];
+
+                    gameModeManager.spawnPoints[i].GetComponent<SafeZoneController>().SetUpSafeZone(playerData.clientId);
+
                     GameObject newPlayer = Instantiate(playerPrefab, gameModeManager.spawnPoints[i].transform.position, Quaternion.LookRotation(new Vector3(0, 0, 0)));
                     NetworkPlayerController newPlayerController = newPlayer.GetComponent<NetworkPlayerController>();
 
-                    // Assigning proper player index to every play character ON HOST and setting up his respawn position
+                    // Assigning proper player index to every play character ON HOST
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
 
                     newPlayerController.playerIndex = playerDataNetworkList.IndexOf(playerData);
                     newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
-
 
                     // Assigning proper player index to every play character ON CLIENT
                     newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
