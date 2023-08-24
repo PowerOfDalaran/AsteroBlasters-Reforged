@@ -157,21 +157,22 @@ namespace NetworkFunctionality
             {
                 for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
+                    // Drawing data about current player
                     PlayerNetworkData playerData = playerDataNetworkList[i];
 
+                    // Setting up zone meant for current player
                     gameModeManager.spawnPoints[i].GetComponent<SafeZoneController>().SetUpSafeZone(playerData.clientId);
 
+                    // Creating new player object and accessing its network player controller
                     GameObject newPlayer = Instantiate(playerPrefab, gameModeManager.spawnPoints[i].transform.position, Quaternion.LookRotation(new Vector3(0, 0, 0)));
                     NetworkPlayerController newPlayerController = newPlayer.GetComponent<NetworkPlayerController>();
 
-                    // Assigning proper player index to every play character ON HOST
+                    // Spawning the player in the network
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
 
-                    newPlayerController.playerIndex = playerDataNetworkList.IndexOf(playerData);
+                    // Assigning the player index and his starting position
+                    newPlayerController.SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
                     newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
-
-                    // Assigning proper player index to every play character ON CLIENT
-                    newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
                 }
             }
         }

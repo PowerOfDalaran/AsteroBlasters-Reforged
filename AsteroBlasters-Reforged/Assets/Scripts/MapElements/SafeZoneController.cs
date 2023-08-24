@@ -1,18 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace GameMapElements
 {
+    /// <summary>
+    /// Class managing the Safe Zone game object behaviour 
+    /// </summary>
     public class SafeZoneController : NetworkBehaviour
     {
-        public void SetUpSafeZone(ulong zoneOwner)
+        /// <summary>
+        /// Method assigning given id to OwnerId property of NetworkObject and activating the update method
+        /// </summary>
+        /// <param name="zoneOwnerId">Id of player, this zone is supposed to be own by</param>
+        public void SetUpSafeZone(ulong zoneOwnerId)
         {
-            NetworkObject.ChangeOwnership(zoneOwner);
+            NetworkObject.ChangeOwnership(zoneOwnerId);
             UpdateSafeZoneClientRpc();
         }
 
+        /// <summary>
+        /// Method activating on every connected player, which updates its layer and changes the color (if the activating client owns this zone)
+        /// </summary>
         [ClientRpc]
         void UpdateSafeZoneClientRpc()
         {
