@@ -17,6 +17,8 @@ namespace GameManager
 
         public NetworkList<PlayerGameData> playersGameDataList;
 
+        public GameObject[] spawnPoints;
+
         public event EventHandler OnPlayersGameDataListNetworkListChanged;
 
         protected bool gameActive = true;

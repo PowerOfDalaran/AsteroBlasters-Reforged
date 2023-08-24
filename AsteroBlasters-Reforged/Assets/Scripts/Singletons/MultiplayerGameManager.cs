@@ -7,6 +7,7 @@ using DataStructure;
 using PlayerFunctionality;
 using SceneManagment;
 using GameManager;
+using GameMapElements;
 
 namespace NetworkFunctionality
 {
@@ -156,15 +157,23 @@ namespace NetworkFunctionality
             {
                 for (int i = 0; i < playerDataNetworkList.Count; i++)
                 {
+                    // Drawing data about current player
                     PlayerNetworkData playerData = playerDataNetworkList[i];
-                    GameObject newPlayer = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
-                    // Assigning proper player index to every play character ON HOST
-                    newPlayer.GetComponent<NetworkPlayerController>().playerIndex = playerDataNetworkList.IndexOf(playerData);
+                    // Setting up zone meant for current player
+                    gameModeManager.spawnPoints[i].GetComponent<SafeZoneController>().SetUpSafeZone(playerData.clientId);
+
+                    // Creating new player object and accessing its network player controller
+                    GameObject newPlayer = Instantiate(playerPrefab, gameModeManager.spawnPoints[i].transform.position, Quaternion.identity);
+                    //newPlayer.transform.LookAt(Vector3.zero, Vector3.forward);
+                    NetworkPlayerController newPlayerController = newPlayer.GetComponent<NetworkPlayerController>();
+
+                    // Spawning the player in the network
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
 
-                    // Assigning proper player index to every play character ON CLIENT
-                    newPlayer.GetComponent<NetworkPlayerController>().SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
+                    // Assigning the player index and his starting position
+                    newPlayerController.SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
+                    newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
                 }
             }
         }
