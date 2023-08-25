@@ -53,7 +53,7 @@ namespace NetworkFunctionality
         private void Start()
         {
             // Setting up the timer
-            timeLimit.Value = 45f;
+            timeLimit.Value = 120f;
         }
         #endregion
 
