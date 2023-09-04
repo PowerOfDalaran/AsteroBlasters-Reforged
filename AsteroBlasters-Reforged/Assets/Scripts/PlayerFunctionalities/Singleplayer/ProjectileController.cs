@@ -11,7 +11,7 @@ namespace PlayerFunctionality
         [SerializeField] protected float speed = 20f;
         [SerializeField] protected int damage = 1;
 
-        void Awake()
+        protected virtual void Awake()
         {
             // Assigning values to class properties
             myRigidbody2D = GetComponent<Rigidbody2D>();

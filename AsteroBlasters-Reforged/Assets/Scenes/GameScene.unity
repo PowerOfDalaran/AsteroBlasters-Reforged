@@ -1019,8 +1019,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 734844382}
-  fireCooldown: 0.2
-  projectilePrefab: {fileID: 4715944071043663114, guid: 40494e8c8ec46d4488736c98e4e480ba, type: 3}
+  fireCooldown: 0.1
+  projectilePrefab: {fileID: 4715944071043663114, guid: 83a2cdb6c03836a45994ae3819042914, type: 3}
   overheated: 0
   currentHeat: 0
   maxHeat: 1
