@@ -982,16 +982,48 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCharacter
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5943086929601196749, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1754668765510775113, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 734844383}
   m_SourcePrefab: {fileID: 100100000, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
 --- !u!4 &734844380 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1653876765624900528, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
   m_PrefabInstance: {fileID: 734844379}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &734844381 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1754668765510775113, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+  m_PrefabInstance: {fileID: 734844379}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &734844382 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9213607586930178289, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+  m_PrefabInstance: {fileID: 734844379}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &734844383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734844381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 164ef65978084074088ef2782e31f047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 734844382}
+  fireCooldown: 0.2
+  projectilePrefab: {fileID: 4715944071043663114, guid: 40494e8c8ec46d4488736c98e4e480ba, type: 3}
+  overheated: 0
+  currentHeat: 0
+  maxHeat: 1
 --- !u!1 &765546083
 GameObject:
   m_ObjectHideFlags: 0
