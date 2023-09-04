@@ -8,8 +8,8 @@ namespace PlayerFunctionality
     public class ProjectileController : MonoBehaviour
     {
         Rigidbody2D myRigidbody2D;
-        public float speed = 20f;
-        public int damage = 1;
+        [SerializeField] protected float speed = 20f;
+        [SerializeField] protected int damage = 1;
 
         void Awake()
         {
