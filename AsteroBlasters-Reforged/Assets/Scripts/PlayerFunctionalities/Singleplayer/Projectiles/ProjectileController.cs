@@ -7,7 +7,7 @@ namespace PlayerFunctionality
     /// </summary>
     public class ProjectileController : MonoBehaviour
     {
-        Rigidbody2D myRigidbody2D;
+        protected Rigidbody2D myRigidbody2D;
         [SerializeField] protected float speed = 20f;
         [SerializeField] protected int damage = 1;
 
@@ -34,7 +34,7 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method granting the prefab velocity, to launch it in current direction
         /// </summary>
-        public void Launch()
+        public virtual void Launch()
         {
             myRigidbody2D.velocity = transform.up * speed;
         }

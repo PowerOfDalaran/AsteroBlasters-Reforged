@@ -2,17 +2,27 @@ using PlayerFunctionality;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeatWeaponBar : MonoBehaviour
+namespace UserInterface
 {
-    [SerializeField] Slider slider;
-
-    void Start()
+    /// <summary>
+    /// Class managing the UI slider, displaying the heat level of plasma cannon (weapon)
+    /// </summary>
+    public class HeatWeaponBar : MonoBehaviour
     {
-        PlasmaCannon.onHeatChanged += UpdateHeatbar;
-    }
+        [SerializeField] Slider slider;
 
-    void UpdateHeatbar(float heat)
-    {
-        slider.value = heat;
+        void Start()
+        {
+            PlasmaCannon.onHeatChanged += UpdateHeatbar;
+        }
+
+        /// <summary>
+        /// Method adjusting the slider to proper value
+        /// </summary>
+        /// <param name="heat">Value, which slider should display</param>
+        void UpdateHeatbar(float heat)
+        {
+            slider.value = heat;
+        }
     }
 }

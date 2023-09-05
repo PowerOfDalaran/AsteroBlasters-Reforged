@@ -28,7 +28,7 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
         /// </summary>
-        public virtual void Shoot()
+        public virtual GameObject Shoot()
         {
             if (Time.time > cooldownStatus)
             {
@@ -38,12 +38,15 @@ namespace PlayerFunctionality
                 {
                     GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
                     newProjectile.GetComponent<ProjectileController>().Launch();
+
+                    return newProjectile;
                 }
                 else if(type == WeaponType.RaycastBased) 
                 {
                     // Implement in child classes
                 }
             }
+            return null;
         }
     }
 }

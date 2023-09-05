@@ -12,6 +12,9 @@ namespace PlayerFunctionality
         [SerializeField] float currentHeat;
         [SerializeField] float maxHeat;
 
+        [SerializeField] float heatLoss;
+        [SerializeField] float heatGain;
+
         public delegate void OnHeatChanged(float heat);
         public static OnHeatChanged onHeatChanged;
 
@@ -24,6 +27,9 @@ namespace PlayerFunctionality
             overheated = false;
             currentHeat = 0f;
             maxHeat = 1f;
+
+            heatLoss = 0.005f;
+            heatGain = 0.125f;
         }
 
         private void FixedUpdate()
@@ -31,8 +37,8 @@ namespace PlayerFunctionality
             // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
             if (overheated)
             {
-                // Decreasing current heat
-                currentHeat -= 0.005f;
+                // Decreasing current heat and running the event
+                currentHeat -= heatLoss;
                 onHeatChanged?.Invoke(currentHeat);
 
                 // Checking if weapon should still be overheated 
@@ -48,22 +54,27 @@ namespace PlayerFunctionality
             }
             else if (currentHeat > 0)
             {
-                // Decreasing current heat
-                currentHeat -= 0.005f;
+                // Decreasing current heat and running the event
+                currentHeat -= heatLoss;
                 onHeatChanged?.Invoke(currentHeat);
             }
         }
 
-        public override void Shoot()
+        public override GameObject Shoot()
         {
             // Firing the weapon if it's not overheated
             if (!overheated)
             {
-                base.Shoot();
+                GameObject newPlasmaBurst = base.Shoot();
 
-                currentHeat += 0.125f;
+                // Increasing current heat and running the event
+                currentHeat += heatGain;
                 onHeatChanged?.Invoke(currentHeat);
+
+                return newPlasmaBurst;
             }
+
+            return null;
         }
     }
 }
