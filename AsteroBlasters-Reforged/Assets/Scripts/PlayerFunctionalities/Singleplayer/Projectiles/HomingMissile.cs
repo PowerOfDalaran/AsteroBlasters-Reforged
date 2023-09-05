@@ -28,7 +28,6 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            Debug.Log("Pocisk: " + target);
             if (target != null)
             {
                 myRigidbody2D.AddForce(target.position * speed);

@@ -9,15 +9,13 @@ namespace PlayerFunctionality
         int maxAmmo;
         int currentAmmo;
 
-        [SerializeField] float scanningPositionOffsetY = 9f;
-
-        [SerializeField] float scanningSizeX = 13f;
-        [SerializeField] float scanningSizeY = 14f;
+        [SerializeField] BoxCollider2D targetingZone;
 
         public delegate void OnTargetSwitch(Transform targetTransform);
         public static OnTargetSwitch onTargetSwitch;
 
-        GameObject targetedEnemy;
+        public GameObject targetedEnemy;
+        public bool hadTarget;
 
         public MissileLauncher()
         {
@@ -27,6 +25,7 @@ namespace PlayerFunctionality
 
             maxAmmo = 3;
             currentAmmo = maxAmmo;
+            hadTarget = false;
         }
 
         private void FixedUpdate()
@@ -38,30 +37,46 @@ namespace PlayerFunctionality
             //    DiscardWeapon(plasmaCannon);
             //}
 
-            // Targeting system
-            Vector2 scanningPositions = new Vector2(transform.position.x, transform.position.y + scanningPositionOffsetY);
-            Vector2 scanningSize = new Vector2(scanningSizeX, scanningSizeY);
-
-            Collider2D[] detectedColliders = Physics2D.OverlapBoxAll(scanningPositions, scanningSize, 0);
-            foreach (Collider2D collider2D in detectedColliders)
+            if (targetedEnemy == null && hadTarget)
             {
-
-                IHealthSystem healthSystem = collider2D.gameObject.GetComponent<IHealthSystem>();
-                if (healthSystem != null)
-                {
-                    if(targetedEnemy != collider2D.gameObject)
-                    {
-                        targetedEnemy = collider2D.gameObject;
-                        onTargetSwitch?.Invoke(targetedEnemy.transform);
-                    }
-                    break;
-                }
-            }
-
-            if (detectedColliders.Length == 0)
-            {
-                targetedEnemy = null;
                 onTargetSwitch?.Invoke(null);
+                hadTarget = false;
+                FindNewTargetInRange();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+
+            if (targetedEnemy == null && healthSystem != null)
+            {
+                hadTarget = true;
+                targetedEnemy = collision.gameObject;
+                onTargetSwitch?.Invoke(targetedEnemy.transform);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (targetedEnemy == collision.gameObject)
+            {
+                hadTarget = true;
+                targetedEnemy = null; 
+                onTargetSwitch?.Invoke(null);
+            }
+        }
+
+        void FindNewTargetInRange()
+        {
+            List<Collider2D> possibleTargets = new List<Collider2D>();
+            ContactFilter2D contactFilter = new ContactFilter2D();
+
+            GetComponent<BoxCollider2D>().OverlapCollider(contactFilter, possibleTargets);
+            if (possibleTargets.Count > 0)
+            {
+                targetedEnemy = possibleTargets[0].gameObject;
+                onTargetSwitch?.Invoke(targetedEnemy.transform);
             }
         }
 
@@ -71,14 +86,21 @@ namespace PlayerFunctionality
             if (currentAmmo > 0)
             {
                 GameObject newMissile =  base.Shoot();
-                Debug.Log("Broñ: " + targetedEnemy);
-                newMissile.GetComponent<HomingMissile>().target = targetedEnemy.transform;
+                if (newMissile != null)
+                {
+                    if (targetedEnemy == null)
+                    {
+                        newMissile.GetComponent<HomingMissile>().target = null;
+                    }
+                    else
+                    {
+                        newMissile.GetComponent<HomingMissile>().target = targetedEnemy.transform;
+                    }
+                    currentAmmo -= 1;
 
-                currentAmmo -= 1;
-
-                return newMissile;
+                    return newMissile;
+                }
             }
-
             return null;
         }
 
