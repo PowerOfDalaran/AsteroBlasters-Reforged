@@ -7,10 +7,13 @@ namespace PlayerFunctionality
     /// </summary>
     public class PlasmaCannon : Weapon
     {
-        [SerializeField]  bool overheated;
+        [SerializeField] bool overheated;
 
         [SerializeField] float currentHeat;
         [SerializeField] float maxHeat;
+
+        public delegate void OnHeatChanged(float heat);
+        public static OnHeatChanged onHeatChanged;
 
         public PlasmaCannon() 
         {
@@ -30,6 +33,7 @@ namespace PlayerFunctionality
             {
                 // Decreasing current heat
                 currentHeat -= 0.005f;
+                onHeatChanged?.Invoke(currentHeat);
 
                 // Checking if weapon should still be overheated 
                 if (currentHeat <= 0f) 
@@ -46,6 +50,7 @@ namespace PlayerFunctionality
             {
                 // Decreasing current heat
                 currentHeat -= 0.005f;
+                onHeatChanged?.Invoke(currentHeat);
             }
         }
 
@@ -55,7 +60,9 @@ namespace PlayerFunctionality
             if (!overheated)
             {
                 base.Shoot();
+
                 currentHeat += 0.125f;
+                onHeatChanged?.Invoke(currentHeat);
             }
         }
     }

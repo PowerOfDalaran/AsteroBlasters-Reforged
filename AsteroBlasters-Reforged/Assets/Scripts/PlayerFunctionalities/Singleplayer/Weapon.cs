@@ -20,6 +20,9 @@ namespace PlayerFunctionality
         [SerializeField] protected float fireCooldown = 1;
         protected float cooldownStatus = 0;
 
+        public delegate void OnWeaponChanged(GameObject thisGameObject);
+        public static event OnWeaponChanged onWeaponChanged;
+
         [SerializeField] protected GameObject projectilePrefab;
 
         /// <summary>
