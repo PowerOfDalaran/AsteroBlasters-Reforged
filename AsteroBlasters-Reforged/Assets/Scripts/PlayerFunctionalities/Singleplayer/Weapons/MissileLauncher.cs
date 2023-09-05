@@ -1,19 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace PlayerFunctionality
 {
+    /// <summary>
+    /// Class managing the functionalities of the missile launcher weapon
+    /// </summary>
     public class MissileLauncher : Weapon
     {
         int maxAmmo;
         int currentAmmo;
 
-        [SerializeField] BoxCollider2D targetingZone;
-
         public delegate void OnTargetSwitch(Transform targetTransform);
         public static OnTargetSwitch onTargetSwitch;
 
+
+        public List<Collider2D> possibleTargets = new List<Collider2D>();
         public GameObject targetedEnemy;
         public bool hadTarget;
 
@@ -27,6 +29,21 @@ namespace PlayerFunctionality
             currentAmmo = maxAmmo;
             hadTarget = false;
         }
+        #region Adding and removing targeting zone
+        private void Start()
+        {
+            BoxCollider2D targetingZone = gameObject.AddComponent<BoxCollider2D>();
+
+            targetingZone.isTrigger = true;
+            targetingZone.offset = new Vector2(0, 2);
+            targetingZone.size = new Vector2(9, 3);
+        }
+
+        private void OnDestroy()
+        {
+            Destroy(gameObject.GetComponent<BoxCollider2D>());
+        }
+        #endregion
 
         private void FixedUpdate()
         {
@@ -37,6 +54,7 @@ namespace PlayerFunctionality
             //    DiscardWeapon(plasmaCannon);
             //}
 
+            // Checking if the current target was removed from targeting zone without leaving it
             if (targetedEnemy == null && hadTarget)
             {
                 onTargetSwitch?.Invoke(null);
@@ -47,18 +65,30 @@ namespace PlayerFunctionality
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            // Checking if detected collider is an proper target and adding it to targets list
             IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
 
-            if (targetedEnemy == null && healthSystem != null)
+            if (healthSystem != null)
             {
-                hadTarget = true;
-                targetedEnemy = collision.gameObject;
-                onTargetSwitch?.Invoke(targetedEnemy.transform);
+                possibleTargets.Add(collision);
+
+                if (targetedEnemy == null)
+                {
+                    hadTarget = true;
+                    targetedEnemy = collision.gameObject;
+                    onTargetSwitch?.Invoke(targetedEnemy.transform);
+                }
             }
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
+
+            if (possibleTargets.Contains(collision))
+            {
+                possibleTargets.Remove(collision);
+            }
+
             if (targetedEnemy == collision.gameObject)
             {
                 hadTarget = true;
@@ -69,10 +99,6 @@ namespace PlayerFunctionality
 
         void FindNewTargetInRange()
         {
-            List<Collider2D> possibleTargets = new List<Collider2D>();
-            ContactFilter2D contactFilter = new ContactFilter2D();
-
-            GetComponent<BoxCollider2D>().OverlapCollider(contactFilter, possibleTargets);
             if (possibleTargets.Count > 0)
             {
                 targetedEnemy = possibleTargets[0].gameObject;

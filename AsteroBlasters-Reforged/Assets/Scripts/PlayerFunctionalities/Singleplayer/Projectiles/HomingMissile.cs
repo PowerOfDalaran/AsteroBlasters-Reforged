@@ -4,14 +4,17 @@ using UnityEngine;
 
 namespace PlayerFunctionality
 {
+    /// <summary>
+    /// Class managing the functionalities of homing missile projectile
+    /// </summary>
     public class HomingMissile : ProjectileController
     {
         public Transform target;
 
-        public Transform Target { 
-            get { return target; } 
-            set { target = Target; } 
-        }
+        //public Transform Target { 
+        //    get { return target; } 
+        //    set { target = Target; } 
+        //}
 
         bool lostTarget;
 
@@ -28,6 +31,7 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
+            // Checking if target should still be pursued or the missile should just be launched ahead
             if (target != null)
             {
                 myRigidbody2D.AddForce(target.position * speed);
@@ -41,7 +45,7 @@ namespace PlayerFunctionality
 
         public override void Launch()
         {
-            // Ignore
+            // Ignoring the Launch method to prevent missile from being fired at spawn
         }
     }
 }
