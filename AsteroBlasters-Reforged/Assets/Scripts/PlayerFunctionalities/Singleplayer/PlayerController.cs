@@ -19,6 +19,10 @@ namespace PlayerFunctionality
         public int maxHealth = 3;
         public int currentHealth;
 
+        [SerializeField] float currentCharge;
+        [SerializeField] float maxCharge = 10f;
+        [SerializeField] float chargingSpeed = 1f;
+
         void Awake()
         {
             // Assigning values to properties
@@ -27,6 +31,7 @@ namespace PlayerFunctionality
             myWeapon = GetComponent<Weapon>();
 
             currentHealth = maxHealth;
+            currentCharge = maxCharge;
         }
 
         void OnEnable()
@@ -85,12 +90,20 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method activating the current weapon in order to fire.
-        /// Is added to the "PlayerActions.Move.performed" delegate.
+        /// Is added to the "PlayerActions.Shoot.performed" delegate.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
         void Shoot(InputAction.CallbackContext context)
         {
-            myWeapon.Shoot();
+            if (context.phase == InputActionPhase.Started && currentCharge < maxCharge)
+            {
+                currentCharge += Time.deltaTime * chargingSpeed;
+            }
+            else
+            {
+                myWeapon.Shoot(currentCharge);
+                currentCharge = 0;
+            }
         }
 
         /// <summary>

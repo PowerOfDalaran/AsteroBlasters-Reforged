@@ -30,7 +30,7 @@ namespace PlayerFunctionality
         /// If weapon is Raycast based, the method currently don't do anything.
         /// </summary>
         /// <returns>Created projectile (null if the weapon is on cooldown or raycast based)</returns>
-        public virtual GameObject Shoot()
+        public virtual GameObject Shoot(float charge)
         {
             if (Time.time > cooldownStatus)
             {
@@ -45,7 +45,15 @@ namespace PlayerFunctionality
                 }
                 else if(type == WeaponType.RaycastBased) 
                 {
-                    // Implement in child classes
+                    RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
+                    if (hitInfo)
+                    {
+                        IHealthSystem healthSystem = hitInfo.transform.gameObject.GetComponent<IHealthSystem>();
+                        if (healthSystem != null)
+                        {
+                            return hitInfo.transform.gameObject;
+                        }
+                    }
                 }
             }
             return null;

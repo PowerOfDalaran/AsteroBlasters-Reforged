@@ -60,12 +60,12 @@ namespace PlayerFunctionality
             }
         }
 
-        public override GameObject Shoot()
+        public override GameObject Shoot(float charge)
         {
             // Firing the weapon if it's not overheated
             if (!overheated)
             {
-                GameObject newPlasmaBurst = base.Shoot();
+                GameObject newPlasmaBurst = base.Shoot(charge);
 
                 // Increasing current heat and running the event
                 currentHeat += heatGain;

@@ -112,12 +112,12 @@ namespace PlayerFunctionality
             }
         }
 
-        public override GameObject Shoot()
+        public override GameObject Shoot(float charge)
         {
             // Checking if player can shoot
             if (currentAmmo > 0)
             {
-                GameObject newMissile =  base.Shoot();
+                GameObject newMissile =  base.Shoot(charge);
 
                 // If the missile was created and the player has target, it is assigned to the homing missile
                 if (newMissile != null)
