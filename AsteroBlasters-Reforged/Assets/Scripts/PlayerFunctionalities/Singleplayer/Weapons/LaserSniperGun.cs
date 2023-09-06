@@ -9,7 +9,7 @@ namespace PlayerFunctionality
         int maxAmmo;
         int currentAmmo;
 
-        public GameObject raycastLaserPrefab;
+        [SerializeField] GameObject raycastLaserPrefab;
         LineRenderer raycastLaser;
 
         public LaserSniperGun()

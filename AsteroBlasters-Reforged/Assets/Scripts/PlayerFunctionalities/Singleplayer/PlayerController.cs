@@ -21,7 +21,7 @@ namespace PlayerFunctionality
 
         [SerializeField] float currentCharge;
         [SerializeField] float maxCharge = 10f;
-        [SerializeField] float chargingSpeed = 1f;
+        [SerializeField] float chargingSpeed = 10f;
 
         void Awake()
         {
@@ -31,21 +31,45 @@ namespace PlayerFunctionality
             myWeapon = GetComponent<Weapon>();
 
             currentHealth = maxHealth;
-            currentCharge = maxCharge;
+            currentCharge = 0;
         }
 
         void OnEnable()
         {
-            // Adding methods to PlayerControls delegates and activating it
             myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.Shoot.performed += Shoot;
+
+            // Adding methods to PlayerControls delegates and activating it
+            // Currently disabled, since shooting now allows to channel the attack (the charge value is being used by few weapons)
+            //myPlayerControls.PlayerActions.Shoot.started += ShootPressed;
+            //myPlayerControls.PlayerActions.Shoot.performed += ShootReleased;
         }
 
         void OnDisable()
         {
-            // Removing methods from PlayerControls delegates and deactivating it
             myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
+
+            // Removing methods from PlayerControls delegates and deactivating it
+            // Currently disabled, since shooting now allows to channel the attack (the charge value is being used by few weapons)
+            //myPlayerControls.PlayerActions.Shoot. -= ShootPressed;
+            //myPlayerControls.PlayerActions.Shoot.performed -= ShootReleased;
+        }
+
+        void Update()
+        {
+            if (currentCharge >= maxCharge)
+            {
+                myWeapon.Shoot(currentCharge);
+                currentCharge = 0;
+            }
+            else if (myPlayerControls.PlayerActions.Shoot.inProgress)
+            {
+                currentCharge += Time.deltaTime * chargingSpeed;
+            }
+            else if (myPlayerControls.PlayerActions.Shoot.WasReleasedThisFrame())
+            {
+                myWeapon.Shoot(currentCharge);
+                currentCharge = 0;
+            }
         }
 
         private void FixedUpdate()
@@ -95,6 +119,7 @@ namespace PlayerFunctionality
         /// <param name="context">Value gathered by input system</param>
         void Shoot(InputAction.CallbackContext context)
         {
+            Debug.Log(context.phase);
             if (context.phase == InputActionPhase.Started && currentCharge < maxCharge)
             {
                 currentCharge += Time.deltaTime * chargingSpeed;
@@ -104,6 +129,17 @@ namespace PlayerFunctionality
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
             }
+        }
+
+        void ShootPressed(InputAction.CallbackContext context)
+        {
+            currentCharge += Time.deltaTime * chargingSpeed;
+        }
+
+        void ShootReleased(InputAction.CallbackContext context)
+        {
+            myWeapon.Shoot(currentCharge);
+            currentCharge = 0;
         }
 
         /// <summary>
