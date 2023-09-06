@@ -45,7 +45,7 @@ namespace PlayerFunctionality
 
         public override void Launch()
         {
-            // Ignoring the Launch method to prevent missile from being fired at spawn
+            // Ignoring the Launch method to prevent missile from being blindly fired at spawn
         }
     }
 }

@@ -27,7 +27,9 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
+        /// If weapon is Raycast based, the method currently don't do anything.
         /// </summary>
+        /// <returns>Created projectile (null if the weapon is on cooldown or raycast based)</returns>
         public virtual GameObject Shoot()
         {
             if (Time.time > cooldownStatus)

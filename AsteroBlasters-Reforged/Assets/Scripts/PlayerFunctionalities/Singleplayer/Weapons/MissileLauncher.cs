@@ -47,7 +47,7 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            // Checking if there's any ammo left
+            // Checking if there's any ammo left, and discarding the weapon if not
             //if (currentAmmo <= 0) 
             //{
             //    PlasmaCannon plasmaCannon = GetComponent<PlasmaCannon>();
@@ -97,6 +97,9 @@ namespace PlayerFunctionality
             }
         }
 
+        /// <summary>
+        /// Method looking for another target, which has already entered the targeting zone
+        /// </summary>
         void FindNewTargetInRange()
         {
             if (possibleTargets.Count > 0)
@@ -112,6 +115,8 @@ namespace PlayerFunctionality
             if (currentAmmo > 0)
             {
                 GameObject newMissile =  base.Shoot();
+
+                // If the missile was created and the player has target, it is assigned to the homing missile
                 if (newMissile != null)
                 {
                     if (targetedEnemy == null)
