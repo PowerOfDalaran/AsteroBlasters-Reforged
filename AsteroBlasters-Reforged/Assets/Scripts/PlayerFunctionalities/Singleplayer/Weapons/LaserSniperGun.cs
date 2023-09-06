@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PlayerFunctionality
@@ -58,6 +59,23 @@ namespace PlayerFunctionality
                 StartCoroutine(DrawRaycastLaser(hitTarget));
 
                 // Deal damage based on charged energy
+                if (hitTarget != null)
+                {
+                    IHealthSystem healthSystem = hitTarget.GetComponent<IHealthSystem>();
+
+                    if (charge <= 6)
+                    {
+                        healthSystem.TakeDamage(1);
+                    }
+                    else if (charge < 10)
+                    {
+                        healthSystem.TakeDamage(2);
+                    }
+                    else
+                    {
+                        healthSystem.TakeDamage(3);
+                    }
+                }
             }
 
             return null;
@@ -67,10 +85,18 @@ namespace PlayerFunctionality
         {
             raycastLaser.enabled = true;
 
-            raycastLaser.SetPosition(0, firePoint.position);
-            raycastLaser.SetPosition(1, firePoint.position + firePoint.up * 100);
+            if (hitTarget != null)
+            {
+                raycastLaser.SetPosition(0, firePoint.position);
+                raycastLaser.SetPosition(1, firePoint.position + firePoint.up * Vector2.Distance(firePoint.position, hitTarget.transform.position));
+            }
+            else
+            {
+                raycastLaser.SetPosition(0, firePoint.position);
+                raycastLaser.SetPosition(1, firePoint.position + firePoint.up * 100);
+            }
 
-            yield return new WaitForSeconds(0.04f);
+            yield return new WaitForSeconds(0.12f);
 
             raycastLaser.enabled = false;
         }
