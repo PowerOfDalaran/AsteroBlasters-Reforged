@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4279383443543621637}
   - component: {fileID: 8063954670447188469}
   - component: {fileID: 3272504290898849958}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HomingMissilePrefab
   m_TagString: NoImpactDamage
   m_Icon: {fileID: 0}
@@ -173,3 +173,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   damage: 2
+  target: {fileID: 0}

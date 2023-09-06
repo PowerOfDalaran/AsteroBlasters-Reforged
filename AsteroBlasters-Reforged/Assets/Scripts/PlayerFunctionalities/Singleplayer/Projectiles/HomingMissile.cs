@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PlayerFunctionality
 {
@@ -9,13 +11,16 @@ namespace PlayerFunctionality
     /// </summary>
     public class HomingMissile : ProjectileController
     {
-        public Transform target;
+        Transform target;
 
-        //public Transform Target { 
-        //    get { return target; } 
-        //    set { target = Target; } 
-        //}
+        public Transform Target
+        {
+            get { return target; }
+            set { target = value; }
+        }
 
+        float rotationSpeed;
+        float homingSpeed;
         bool lostTarget;
 
         protected override void Awake()
@@ -23,9 +28,11 @@ namespace PlayerFunctionality
             base.Awake();
 
             // Assigning the values to the properties
-            speed = 15f;
+            speed = 8f;
             damage = 2;
 
+            rotationSpeed = 10f;
+            homingSpeed = 5f;
             lostTarget = false;
         }
 
@@ -34,18 +41,26 @@ namespace PlayerFunctionality
             // Checking if target should still be pursued or the missile should just be launched ahead
             if (target != null)
             {
-                myRigidbody2D.AddForce(target.position * speed);
+                myRigidbody2D.AddForce((target.position - transform.position) * homingSpeed);
             }
             else if (!lostTarget)
             {
                 lostTarget = true;
                 base.Launch();
             }
+
+            // Rotating the missile
+            Rotate();
         }
 
-        public override void Launch()
+        /// <summary>
+        /// Method rotating the game object in direction its flying towards
+        /// </summary>
+        private void Rotate()
         {
-            // Ignoring the Launch method to prevent missile from being blindly fired at spawn
+            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, myRigidbody2D.velocity);
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+            gameObject.transform.rotation = newRotation;
         }
     }
 }

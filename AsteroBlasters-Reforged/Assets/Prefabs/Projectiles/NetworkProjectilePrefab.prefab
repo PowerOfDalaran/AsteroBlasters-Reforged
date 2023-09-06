@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7488995536426954375}
   - component: {fileID: -8053046276172326923}
   - component: {fileID: 8758479333282301432}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: NetworkProjectilePrefab
   m_TagString: NoImpactDamage
   m_Icon: {fileID: 0}

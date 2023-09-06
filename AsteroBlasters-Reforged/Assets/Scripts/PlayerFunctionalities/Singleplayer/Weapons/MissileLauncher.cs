@@ -15,9 +15,9 @@ namespace PlayerFunctionality
         public static OnTargetSwitch onTargetSwitch;
 
 
-        public List<Collider2D> possibleTargets = new List<Collider2D>();
-        public GameObject targetedEnemy;
-        public bool hadTarget;
+        List<Collider2D> possibleTargets = new List<Collider2D>();
+        GameObject targetedEnemy;
+        bool hadTarget;
 
         public MissileLauncher()
         {
@@ -25,11 +25,13 @@ namespace PlayerFunctionality
             type = WeaponType.ProjectileBased;
             fireCooldown = 2f;
 
-            maxAmmo = 3;
+            maxAmmo = 10;
             currentAmmo = maxAmmo;
             hadTarget = false;
         }
+
         #region Adding and removing targeting zone
+
         private void Start()
         {
             BoxCollider2D targetingZone = gameObject.AddComponent<BoxCollider2D>();
@@ -37,6 +39,7 @@ namespace PlayerFunctionality
             targetingZone.isTrigger = true;
             targetingZone.offset = new Vector2(0, 2);
             targetingZone.size = new Vector2(9, 3);
+            targetingZone.gameObject.layer = 8;
         }
 
         private void OnDestroy()
@@ -121,11 +124,11 @@ namespace PlayerFunctionality
                 {
                     if (targetedEnemy == null)
                     {
-                        newMissile.GetComponent<HomingMissile>().target = null;
+                        newMissile.GetComponent<HomingMissile>().Target = null;
                     }
                     else
                     {
-                        newMissile.GetComponent<HomingMissile>().target = targetedEnemy.transform;
+                        newMissile.GetComponent<HomingMissile>().Target = targetedEnemy.transform;
                     }
                     currentAmmo -= 1;
 
