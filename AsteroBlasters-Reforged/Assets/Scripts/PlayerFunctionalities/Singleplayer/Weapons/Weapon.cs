@@ -26,10 +26,16 @@ namespace PlayerFunctionality
         [SerializeField] protected GameObject projectilePrefab;
 
         /// <summary>
-        /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
-        /// If weapon is Raycast based, the method currently don't do anything.
+        /// Temporary solution for the problem with passing the value of raycast length to children classes
         /// </summary>
-        /// <returns>Created projectile (null if the weapon is on cooldown or raycast based)</returns>
+        protected float raycastDistance;
+
+        /// <summary>
+        /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
+        /// If weapon is Raycast based, the method fires the raycast in upwards and returns the gameobject, which one of components implement the IHealthSystem interface
+        /// </summary>
+        /// <param name="charge">The float value (0 - 10) representing how long the fire button was pressed</param>
+        /// <returns>Created projectile (null if the weapon is on cooldown)</returns>
         public virtual GameObject Shoot(float charge)
         {
             if (Time.time > cooldownStatus)
@@ -38,6 +44,7 @@ namespace PlayerFunctionality
 
                 if (type  == WeaponType.ProjectileBased)
                 {
+                    // Creating the projectile and returning the created object 
                     GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
                     newProjectile.GetComponent<ProjectileController>().Launch();
 
@@ -45,14 +52,12 @@ namespace PlayerFunctionality
                 }
                 else if(type == WeaponType.RaycastBased) 
                 {
+                    // Casting the Raycast and returning the hit object
                     RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
                     if (hitInfo)
                     {
-                        IHealthSystem healthSystem = hitInfo.transform.gameObject.GetComponent<IHealthSystem>();
-                        if (healthSystem != null)
-                        {
-                            return hitInfo.transform.gameObject;
-                        }
+                        raycastDistance = hitInfo.distance;
+                        return hitInfo.transform.gameObject;
                     }
                 }
             }

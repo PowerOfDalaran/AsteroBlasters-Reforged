@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PlayerFunctionality
@@ -15,6 +13,7 @@ namespace PlayerFunctionality
 
         public LaserSniperGun()
         {
+            // Assigning the values to the properties
             type = WeaponType.RaycastBased;
             fireCooldown = 1.5f;
 
@@ -26,6 +25,7 @@ namespace PlayerFunctionality
 
         private void Start()
         {
+            // Setting up the line renderer prefab
             GameObject createdRaycastLaser = Instantiate(raycastLaserPrefab);
             createdRaycastLaser.transform.parent = transform;
 
@@ -53,27 +53,33 @@ namespace PlayerFunctionality
 
         public override GameObject Shoot(float charge)
         {
+            // Checking if the shot can be taken
             if (currentAmmo > 0 && Time.time > cooldownStatus)
             {
+                // Activating the raycast in the parent class and displaying the laser on screen
                 GameObject hitTarget = base.Shoot(charge);
                 StartCoroutine(DrawRaycastLaser(hitTarget));
 
-                // Deal damage based on charged energy
                 if (hitTarget != null)
                 {
+                    // Checking if hit target is a proper enemy
                     IHealthSystem healthSystem = hitTarget.GetComponent<IHealthSystem>();
 
-                    if (charge <= 6)
+                    if (healthSystem != null)
                     {
-                        healthSystem.TakeDamage(1);
-                    }
-                    else if (charge < 10)
-                    {
-                        healthSystem.TakeDamage(2);
-                    }
-                    else
-                    {
-                        healthSystem.TakeDamage(3);
+                        // Deal damage based on charged energy
+                        if (charge <= 6)
+                        {
+                            healthSystem.TakeDamage(1);
+                        }
+                        else if (charge < 10)
+                        {
+                            healthSystem.TakeDamage(2);
+                        }
+                        else
+                        {
+                            healthSystem.TakeDamage(3);
+                        }
                     }
                 }
             }
@@ -81,17 +87,24 @@ namespace PlayerFunctionality
             return null;
         }
 
+        /// <summary>
+        /// IEnumerator drawing showing and placing correctly the line of laser to display the fired shot
+        /// </summary>
+        /// <param name="hitTarget">Game object of hit target</param>
+        /// <returns></returns>
         IEnumerator DrawRaycastLaser(GameObject hitTarget)
         {
             raycastLaser.enabled = true;
 
             if (hitTarget != null)
             {
+                // Setting the laser to reach the hit enemy
                 raycastLaser.SetPosition(0, firePoint.position);
-                raycastLaser.SetPosition(1, firePoint.position + firePoint.up * Vector2.Distance(firePoint.position, hitTarget.transform.position));
+                raycastLaser.SetPosition(1, firePoint.position + firePoint.up * raycastDistance);
             }
             else
             {
+                // Setting the laser to reach some distance before vanishing
                 raycastLaser.SetPosition(0, firePoint.position);
                 raycastLaser.SetPosition(1, firePoint.position + firePoint.up * 100);
             }

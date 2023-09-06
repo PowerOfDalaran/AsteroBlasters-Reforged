@@ -56,6 +56,8 @@ namespace PlayerFunctionality
 
         void Update()
         {
+            // Shooting functionality - player can hold and load the attack. 
+            // In some weapons by doing so, the player can increase damage dealt to opponent
             if (currentCharge >= maxCharge)
             {
                 myWeapon.Shoot(currentCharge);

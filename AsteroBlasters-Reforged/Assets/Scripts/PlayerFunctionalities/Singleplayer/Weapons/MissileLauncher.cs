@@ -86,12 +86,13 @@ namespace PlayerFunctionality
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-
+            // Checking if leaving object was on targets list, if so - removing it
             if (possibleTargets.Contains(collision))
             {
                 possibleTargets.Remove(collision);
             }
 
+            // Checking if leaving object was current target
             if (targetedEnemy == collision.gameObject)
             {
                 hadTarget = true;
