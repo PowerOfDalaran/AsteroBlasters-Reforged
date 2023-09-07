@@ -16,7 +16,16 @@ namespace UserInterface
         {
             // Turning the visibility of tag off and adding the update method to the delegate
             gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 0);
+        }
+
+        private void OnEnable()
+        {
             MissileLauncher.onTargetSwitch += SwitchTarget;
+        }
+
+        private void OnDisable()
+        {
+            MissileLauncher.onTargetSwitch -= SwitchTarget;
         }
 
         void Update()

@@ -11,12 +11,12 @@ namespace UserInterface
     {
         [SerializeField] Slider slider;
 
-        void Start()
+        void OnEnable()
         {
             PlasmaCannon.onHeatChanged += UpdateHeatbar;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             PlasmaCannon.onHeatChanged -= UpdateHeatbar;
         }

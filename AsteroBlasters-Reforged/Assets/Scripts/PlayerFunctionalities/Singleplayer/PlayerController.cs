@@ -37,7 +37,7 @@ namespace PlayerFunctionality
         public bool isChargingWeapon = false;
 
         public delegate void OnChargeValueChanged(float value);
-        public static OnChargeValueChanged onChargeValueChanged;
+        public static event OnChargeValueChanged onChargeValueChanged;
 
         void Awake()
         {
@@ -69,19 +69,20 @@ namespace PlayerFunctionality
                 isChargingWeapon = false;
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
+                onChargeValueChanged?.Invoke(currentCharge);
             }
             else if (myPlayerControls.PlayerActions.Shoot.inProgress)
             {
                 isChargingWeapon = true;
                 currentCharge += Time.deltaTime * chargingSpeed;
-                onChargeValueChanged(currentCharge);
+                onChargeValueChanged?.Invoke(currentCharge);
             }
             else if (myPlayerControls.PlayerActions.Shoot.WasReleasedThisFrame())
             {
                 isChargingWeapon = false;
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
-                onChargeValueChanged(currentCharge);
+                onChargeValueChanged?.Invoke(currentCharge);
             }
         }
 

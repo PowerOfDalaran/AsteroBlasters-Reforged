@@ -1014,17 +1014,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 734844381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c75a31312eef564cbc56af197f51415, type: 3}
+  m_Script: {fileID: 11500000, guid: 164ef65978084074088ef2782e31f047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePoint: {fileID: 734844383}
-  fireCooldown: 0.35
-  projectilePrefab: {fileID: 4715944071043663114, guid: 5c4d8419d41e95e419931c372e444f27, type: 3}
---- !u!4 &734844383 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9213607586930178289, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
-  m_PrefabInstance: {fileID: 734844379}
-  m_PrefabAsset: {fileID: 0}
+  fireCooldown: 0.25
+  projectilePrefab: {fileID: 4715944071043663114, guid: b1692b811a1cb3d48849a096f2940a3e, type: 3}
+  overheated: 0
+  currentHeat: 0
+  maxHeat: 1
+  heatLoss: 0.0085
+  heatGain: 0.2
 --- !u!1 &765546083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2787,7 +2786,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 478734896756680011, guid: 497157f3ac6c50a4aa406abab13b8093, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2285901469582268132, guid: 497157f3ac6c50a4aa406abab13b8093, type: 3}
       propertyPath: m_Pivot.x
@@ -2883,7 +2882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9162262216434621959, guid: 497157f3ac6c50a4aa406abab13b8093, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3273,11 +3272,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1807623758987585544, guid: a762eb71b5702b5458a58ea1bb69bbf8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2707410740037533039, guid: a762eb71b5702b5458a58ea1bb69bbf8, type: 3}
       propertyPath: m_Name
       value: ChargeStatusBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707410740037533039, guid: a762eb71b5702b5458a58ea1bb69bbf8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

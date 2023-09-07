@@ -16,7 +16,7 @@ namespace WeaponSystem
         [SerializeField] float heatGain;
 
         public delegate void OnHeatChanged(float heat);
-        public static OnHeatChanged onHeatChanged;
+        public static event OnHeatChanged onHeatChanged;
 
         public PlasmaCannon() 
         {

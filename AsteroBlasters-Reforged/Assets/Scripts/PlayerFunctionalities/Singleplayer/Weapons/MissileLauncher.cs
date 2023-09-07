@@ -13,7 +13,7 @@ namespace WeaponSystem
         int currentAmmo;
 
         public delegate void OnTargetSwitch(Transform targetTransform);
-        public static OnTargetSwitch onTargetSwitch;
+        public static event OnTargetSwitch onTargetSwitch;
 
 
         List<Collider2D> possibleTargets = new List<Collider2D>();
