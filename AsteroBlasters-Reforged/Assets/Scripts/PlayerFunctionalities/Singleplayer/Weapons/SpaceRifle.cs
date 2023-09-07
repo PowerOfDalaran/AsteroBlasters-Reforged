@@ -1,4 +1,4 @@
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     public class SpaceRifle : Weapon
     {

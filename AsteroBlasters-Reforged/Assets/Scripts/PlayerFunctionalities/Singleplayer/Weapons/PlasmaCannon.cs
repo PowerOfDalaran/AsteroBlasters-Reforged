@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Child class managing the functionalities of plasma cannon weapon

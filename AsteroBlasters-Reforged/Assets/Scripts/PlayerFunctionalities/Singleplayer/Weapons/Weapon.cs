@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     public enum WeaponType
     {
@@ -13,8 +13,7 @@ namespace PlayerFunctionality
     /// </summary>
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] protected Transform firePoint;
-
+        protected Transform firePoint;
         protected WeaponType type;
 
         [SerializeField] protected float fireCooldown = 1;
@@ -29,6 +28,11 @@ namespace PlayerFunctionality
         /// Temporary solution for the problem with passing the value of raycast length to children classes
         /// </summary>
         protected float raycastDistance;
+
+        private void Awake()
+        {
+            firePoint = gameObject.transform.Find("FirePoint");
+        }
 
         /// <summary>
         /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.

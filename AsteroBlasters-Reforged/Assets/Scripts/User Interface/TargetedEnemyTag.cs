@@ -1,6 +1,7 @@
 using PlayerFunctionality;
 using UnityEngine;
 using UnityEngine.UI;
+using WeaponSystem;
 
 namespace UserInterface
 {

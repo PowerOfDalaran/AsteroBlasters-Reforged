@@ -1,7 +1,8 @@
+using PlayerFunctionality;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Class managing the functionalities of the missile launcher weapon

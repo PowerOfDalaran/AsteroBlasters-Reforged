@@ -1,6 +1,7 @@
+using PlayerFunctionality;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Class managing the projectile's functionalities.

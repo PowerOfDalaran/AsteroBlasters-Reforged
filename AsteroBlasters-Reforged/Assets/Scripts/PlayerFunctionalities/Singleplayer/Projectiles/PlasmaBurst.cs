@@ -1,4 +1,4 @@
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Child class responsible for managing the Plasma Burst projectiles

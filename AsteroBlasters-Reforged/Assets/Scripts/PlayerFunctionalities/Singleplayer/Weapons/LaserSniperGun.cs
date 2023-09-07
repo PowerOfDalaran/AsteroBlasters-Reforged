@@ -1,7 +1,8 @@
+using PlayerFunctionality;
 using System.Collections;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     public class LaserSniperGun : Weapon
     {
