@@ -9,6 +9,7 @@ namespace PlayerFunctionality
         int currentAmmo;
 
         [SerializeField] GameObject raycastLaserPrefab;
+        [SerializeField] float chargingSlow;
         LineRenderer raycastLaser;
 
         public LaserSniperGun()
@@ -16,7 +17,8 @@ namespace PlayerFunctionality
             // Assigning the values to the properties
             type = WeaponType.RaycastBased;
             fireCooldown = 1.5f;
-
+            
+            chargingSlow = 0.64f;
             maxAmmo = 10;
             currentAmmo = maxAmmo;
         }
@@ -43,6 +45,10 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
+            // Slowing layer down, while he's charging the shot
+            PlayerController playerController = GetComponent<PlayerController>();
+            playerController.SpeedModifier = playerController.isChargingWeapon ? chargingSlow : 1f;
+
             // Checking if there's any ammo left, and discarding the weapon if not
             //if (currentAmmo <= 0) 
             //{

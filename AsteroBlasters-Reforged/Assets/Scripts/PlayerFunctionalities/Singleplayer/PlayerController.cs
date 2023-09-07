@@ -14,12 +14,26 @@ namespace PlayerFunctionality
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
+
+        /// <summary>
+        /// Parameter being used to apply some temporary slowing of fasting effects without affecting the base speed values.
+        /// </summary>
+        float speedModifier = 1f;
+        public float SpeedModifier
+        {
+            get { return speedModifier; }
+            set { speedModifier = value; }
+        }
+
+
         public int maxHealth = 3;
         public int currentHealth;
 
         [SerializeField] float currentCharge;
         [SerializeField] float maxCharge = 10f;
         [SerializeField] float chargingSpeed = 10f;
+
+        public bool isChargingWeapon = false;
 
         public delegate void OnChargeValueChanged(float value);
         public static OnChargeValueChanged onChargeValueChanged;
@@ -38,21 +52,11 @@ namespace PlayerFunctionality
         void OnEnable()
         {
             myPlayerControls.Enable();
-
-            // Adding methods to PlayerControls delegates and activating it
-            // Currently disabled, since shooting now allows to channel the attack (the charge value is being used by few weapons)
-            //myPlayerControls.PlayerActions.Shoot.started += ShootPressed;
-            //myPlayerControls.PlayerActions.Shoot.performed += ShootReleased;
         }
 
         void OnDisable()
         {
             myPlayerControls.Disable();
-
-            // Removing methods from PlayerControls delegates and deactivating it
-            // Currently disabled, since shooting now allows to channel the attack (the charge value is being used by few weapons)
-            //myPlayerControls.PlayerActions.Shoot. -= ShootPressed;
-            //myPlayerControls.PlayerActions.Shoot.performed -= ShootReleased;
         }
 
         void Update()
@@ -61,16 +65,19 @@ namespace PlayerFunctionality
             // In some weapons by doing so, the player can increase damage dealt to opponent
             if (currentCharge >= maxCharge)
             {
+                isChargingWeapon = false;
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
             }
             else if (myPlayerControls.PlayerActions.Shoot.inProgress)
             {
+                isChargingWeapon = true;
                 currentCharge += Time.deltaTime * chargingSpeed;
                 onChargeValueChanged(currentCharge);
             }
             else if (myPlayerControls.PlayerActions.Shoot.WasReleasedThisFrame())
             {
+                isChargingWeapon = false;
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
                 onChargeValueChanged(currentCharge);
@@ -154,7 +161,7 @@ namespace PlayerFunctionality
         /// <param name="context">Value gathered by input system</param>
         void Movement(Vector2 movementVector)
         {
-            myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
+            myRigidbody2D.AddForce(movementVector * movementSpeed * speedModifier, ForceMode2D.Force);
         }
 
         /// <summary>
@@ -166,7 +173,7 @@ namespace PlayerFunctionality
         void Rotate(Vector2 movementVector)
         {
             Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
             gameObject.transform.rotation = newRotation;
         }
 
