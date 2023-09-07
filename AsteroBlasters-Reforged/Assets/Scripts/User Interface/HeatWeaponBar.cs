@@ -16,6 +16,11 @@ namespace UserInterface
             PlasmaCannon.onHeatChanged += UpdateHeatbar;
         }
 
+        private void OnDestroy()
+        {
+            PlasmaCannon.onHeatChanged -= UpdateHeatbar;
+        }
+
         /// <summary>
         /// Method adjusting the slider to proper value
         /// </summary>

@@ -12,16 +12,17 @@ namespace PlayerFunctionality
         PlayerControls myPlayerControls;
         Weapon myWeapon;
 
-        [SerializeField]
-        float movementSpeed = 3f;
-        [SerializeField]
-        float rotationSpeed = 5.15f;
+        [SerializeField] float movementSpeed = 3f;
+        [SerializeField] float rotationSpeed = 5.15f;
         public int maxHealth = 3;
         public int currentHealth;
 
         [SerializeField] float currentCharge;
         [SerializeField] float maxCharge = 10f;
         [SerializeField] float chargingSpeed = 10f;
+
+        public delegate void OnChargeValueChanged(float value);
+        public static OnChargeValueChanged onChargeValueChanged;
 
         void Awake()
         {
@@ -66,11 +67,13 @@ namespace PlayerFunctionality
             else if (myPlayerControls.PlayerActions.Shoot.inProgress)
             {
                 currentCharge += Time.deltaTime * chargingSpeed;
+                onChargeValueChanged(currentCharge);
             }
             else if (myPlayerControls.PlayerActions.Shoot.WasReleasedThisFrame())
             {
                 myWeapon.Shoot(currentCharge);
                 currentCharge = 0;
+                onChargeValueChanged(currentCharge);
             }
         }
 
