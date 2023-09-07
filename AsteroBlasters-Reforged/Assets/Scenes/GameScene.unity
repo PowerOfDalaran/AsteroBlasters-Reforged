@@ -1014,13 +1014,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 734844381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d48cd3aabbbe14c92bdd4634654bd9, type: 3}
+  m_Script: {fileID: 11500000, guid: 83f381a2feca4cf4b92217bab9fa9c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 734844383}
-  fireCooldown: 1.5
-  projectilePrefab: {fileID: 0}
-  raycastLaserPrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
+  fireCooldown: 2
+  projectilePrefab: {fileID: 4715944071043663114, guid: 3034469794fed8442a0330716a8f42f9, type: 3}
 --- !u!4 &734844383 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9213607586930178289, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
@@ -3019,6 +3018,10 @@ PrefabInstance:
     - target: {fileID: 4897675378145042462, guid: 55bc3b45744c89544a69de800ae5f991, type: 3}
       propertyPath: m_Name
       value: TargetedEnemyTag
+      objectReference: {fileID: 0}
+    - target: {fileID: 4897675378145042462, guid: 55bc3b45744c89544a69de800ae5f991, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7308283756462295520, guid: 55bc3b45744c89544a69de800ae5f991, type: 3}
       propertyPath: m_Pivot.x
