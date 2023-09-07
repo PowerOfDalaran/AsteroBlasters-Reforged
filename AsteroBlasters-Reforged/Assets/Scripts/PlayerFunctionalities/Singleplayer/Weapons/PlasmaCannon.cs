@@ -22,6 +22,7 @@ namespace WeaponSystem
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
+            weaponClass = WeaponClass.PlasmaCannon;
             fireCooldown = 0.25f;
 
             overheated = false;

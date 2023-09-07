@@ -9,6 +9,9 @@ namespace WeaponSystem
         int maxAmmo;
         int currentAmmo;
 
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public static event OnAmmoValueChange onAmmoValueChange;
+
         [SerializeField] GameObject raycastLaserPrefab;
         [SerializeField] float chargingSlow;
         LineRenderer raycastLaser;
@@ -17,6 +20,7 @@ namespace WeaponSystem
         {
             // Assigning the values to the properties
             type = WeaponType.RaycastBased;
+            weaponClass = WeaponClass.LaserSniperGun;
             fireCooldown = 1.5f;
             
             chargingSlow = 0.64f;
@@ -28,6 +32,9 @@ namespace WeaponSystem
 
         private void Start()
         {
+            // Activating the event
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
             // Setting up the line renderer prefab
             GameObject createdRaycastLaser = Instantiate(raycastLaserPrefab);
             createdRaycastLaser.transform.parent = transform;
@@ -63,6 +70,11 @@ namespace WeaponSystem
             // Checking if the shot can be taken
             if (currentAmmo > 0 && Time.time > cooldownStatus)
             {
+                currentAmmo -= 1;
+
+                // Activating the event
+                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
                 // Activating the raycast in the parent class and displaying the laser on screen
                 GameObject hitTarget = base.Shoot(charge);
                 StartCoroutine(DrawRaycastLaser(hitTarget));

@@ -37,9 +37,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""ShootFirstWeapon"",
                     ""type"": ""Button"",
                     ""id"": ""33edbbca-4659-4f30-8c18-c8daafc57e43"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShootSecondaryWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a8b57e3-a800-4ba6-8886-ea7e418c64ac"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -54,7 +63,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""ShootFirstWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -65,7 +74,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""ShootFirstWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -134,6 +143,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ac57315-3999-4818-a02f-87e757442416"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ShootSecondaryWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75f356a4-9dee-4911-a744-f707c914e825"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ShootSecondaryWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,7 +197,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // PlayerActions
         m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
         m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
-        m_PlayerActions_Shoot = m_PlayerActions.FindAction("Shoot", throwIfNotFound: true);
+        m_PlayerActions_ShootFirstWeapon = m_PlayerActions.FindAction("ShootFirstWeapon", throwIfNotFound: true);
+        m_PlayerActions_ShootSecondaryWeapon = m_PlayerActions.FindAction("ShootSecondaryWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,13 +261,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerActions;
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_Move;
-    private readonly InputAction m_PlayerActions_Shoot;
+    private readonly InputAction m_PlayerActions_ShootFirstWeapon;
+    private readonly InputAction m_PlayerActions_ShootSecondaryWeapon;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
-        public InputAction @Shoot => m_Wrapper.m_PlayerActions_Shoot;
+        public InputAction @ShootFirstWeapon => m_Wrapper.m_PlayerActions_ShootFirstWeapon;
+        public InputAction @ShootSecondaryWeapon => m_Wrapper.m_PlayerActions_ShootSecondaryWeapon;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -248,9 +282,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
-            @Shoot.started += instance.OnShoot;
-            @Shoot.performed += instance.OnShoot;
-            @Shoot.canceled += instance.OnShoot;
+            @ShootFirstWeapon.started += instance.OnShootFirstWeapon;
+            @ShootFirstWeapon.performed += instance.OnShootFirstWeapon;
+            @ShootFirstWeapon.canceled += instance.OnShootFirstWeapon;
+            @ShootSecondaryWeapon.started += instance.OnShootSecondaryWeapon;
+            @ShootSecondaryWeapon.performed += instance.OnShootSecondaryWeapon;
+            @ShootSecondaryWeapon.canceled += instance.OnShootSecondaryWeapon;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -258,9 +295,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
-            @Shoot.started -= instance.OnShoot;
-            @Shoot.performed -= instance.OnShoot;
-            @Shoot.canceled -= instance.OnShoot;
+            @ShootFirstWeapon.started -= instance.OnShootFirstWeapon;
+            @ShootFirstWeapon.performed -= instance.OnShootFirstWeapon;
+            @ShootFirstWeapon.canceled -= instance.OnShootFirstWeapon;
+            @ShootSecondaryWeapon.started -= instance.OnShootSecondaryWeapon;
+            @ShootSecondaryWeapon.performed -= instance.OnShootSecondaryWeapon;
+            @ShootSecondaryWeapon.canceled -= instance.OnShootSecondaryWeapon;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -299,6 +339,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IPlayerActionsActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnShoot(InputAction.CallbackContext context);
+        void OnShootFirstWeapon(InputAction.CallbackContext context);
+        void OnShootSecondaryWeapon(InputAction.CallbackContext context);
     }
 }

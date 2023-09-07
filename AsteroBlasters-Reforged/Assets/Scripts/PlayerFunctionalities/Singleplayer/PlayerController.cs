@@ -11,7 +11,9 @@ namespace PlayerFunctionality
     {
         Rigidbody2D myRigidbody2D;
         PlayerControls myPlayerControls;
-        Weapon myWeapon;
+
+        Weapon firstWeapon;
+        Weapon secondaryWeapon;
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
@@ -44,7 +46,7 @@ namespace PlayerFunctionality
             // Assigning values to properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
             myPlayerControls = new PlayerControls();
-            myWeapon = GetComponent<Weapon>();
+            firstWeapon = GetComponent<Weapon>();
 
             currentHealth = maxHealth;
             currentCharge = 0;
@@ -67,20 +69,20 @@ namespace PlayerFunctionality
             if (currentCharge >= maxCharge)
             {
                 isChargingWeapon = false;
-                myWeapon.Shoot(currentCharge);
+                firstWeapon.Shoot(currentCharge);
                 currentCharge = 0;
                 onChargeValueChanged?.Invoke(currentCharge);
             }
-            else if (myPlayerControls.PlayerActions.Shoot.inProgress)
+            else if (myPlayerControls.PlayerActions.ShootFirstWeapon.inProgress)
             {
                 isChargingWeapon = true;
                 currentCharge += Time.deltaTime * chargingSpeed;
                 onChargeValueChanged?.Invoke(currentCharge);
             }
-            else if (myPlayerControls.PlayerActions.Shoot.WasReleasedThisFrame())
+            else if (myPlayerControls.PlayerActions.ShootFirstWeapon.WasReleasedThisFrame())
             {
                 isChargingWeapon = false;
-                myWeapon.Shoot(currentCharge);
+                firstWeapon.Shoot(currentCharge);
                 currentCharge = 0;
                 onChargeValueChanged?.Invoke(currentCharge);
             }
@@ -140,7 +142,7 @@ namespace PlayerFunctionality
             }
             else
             {
-                myWeapon.Shoot(currentCharge);
+                firstWeapon.Shoot(currentCharge);
                 currentCharge = 0;
             }
         }
@@ -152,7 +154,7 @@ namespace PlayerFunctionality
 
         void ShootReleased(InputAction.CallbackContext context)
         {
-            myWeapon.Shoot(currentCharge);
+            firstWeapon.Shoot(currentCharge);
             currentCharge = 0;
         }
 

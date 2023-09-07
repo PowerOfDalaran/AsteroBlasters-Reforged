@@ -2,6 +2,14 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    public enum WeaponClass
+    {
+        SpaceRifle,
+        PlasmaCannon,
+        MissileLauncher,
+        LaserSniperGun,
+    }
+
     public enum WeaponType
     {
         RaycastBased,
@@ -14,13 +22,12 @@ namespace WeaponSystem
     public class Weapon : MonoBehaviour
     {
         protected Transform firePoint;
+
         protected WeaponType type;
+        protected WeaponClass weaponClass;
 
         [SerializeField] protected float fireCooldown = 1;
         protected float cooldownStatus = 0;
-
-        public delegate void OnWeaponChanged(GameObject thisGameObject);
-        public static event OnWeaponChanged onWeaponChanged;
 
         [SerializeField] protected GameObject projectilePrefab;
 

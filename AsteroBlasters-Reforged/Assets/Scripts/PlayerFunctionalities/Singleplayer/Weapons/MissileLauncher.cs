@@ -15,6 +15,8 @@ namespace WeaponSystem
         public delegate void OnTargetSwitch(Transform targetTransform);
         public static event OnTargetSwitch onTargetSwitch;
 
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public static event OnAmmoValueChange onAmmoValueChange;
 
         List<Collider2D> possibleTargets = new List<Collider2D>();
         GameObject targetedEnemy;
@@ -24,6 +26,7 @@ namespace WeaponSystem
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
+            weaponClass = WeaponClass.MissileLauncher;
             fireCooldown = 2f;
 
             maxAmmo = 10;
@@ -35,6 +38,9 @@ namespace WeaponSystem
 
         private void Start()
         {
+            // Activating the event
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
             BoxCollider2D targetingZone = gameObject.AddComponent<BoxCollider2D>();
 
             targetingZone.isTrigger = true;
@@ -120,6 +126,9 @@ namespace WeaponSystem
             if (currentAmmo > 0)
             {
                 GameObject newMissile =  base.Shoot(charge);
+
+                // Activating the event
+                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
                 // If the missile was created and the player has target, it is assigned to the homing missile
                 if (newMissile != null)
