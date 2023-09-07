@@ -1014,13 +1014,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 734844381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d48cd3aabbbe14c92bdd4634654bd9, type: 3}
+  m_Script: {fileID: 11500000, guid: 164ef65978084074088ef2782e31f047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 734844383}
-  fireCooldown: 1.5
-  projectilePrefab: {fileID: 0}
-  raycastLaserPrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
+  fireCooldown: 0.25
+  projectilePrefab: {fileID: 4715944071043663114, guid: 83a2cdb6c03836a45994ae3819042914, type: 3}
+  overheated: 0
+  currentHeat: 0
+  maxHeat: 1
+  heatLoss: 0.0085
+  heatGain: 0.2
 --- !u!4 &734844383 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9213607586930178289, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}

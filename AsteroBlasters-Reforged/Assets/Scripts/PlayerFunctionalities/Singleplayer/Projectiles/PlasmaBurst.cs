@@ -10,8 +10,8 @@ namespace PlayerFunctionality
             base.Awake();
 
             // Assigning the values to the properties
-            speed = 25f;
-            damage = 1;
+            speed = 17.5f;
+            damage = 2;
         }
     }
 }

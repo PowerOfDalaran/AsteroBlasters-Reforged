@@ -22,14 +22,14 @@ namespace PlayerFunctionality
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
-            fireCooldown = 0.1f;
+            fireCooldown = 0.25f;
 
             overheated = false;
             currentHeat = 0f;
             maxHeat = 1f;
 
-            heatLoss = 0.005f;
-            heatGain = 0.125f;
+            heatLoss = 0.0085f;
+            heatGain = 0.2f;
         }
 
         private void FixedUpdate()
