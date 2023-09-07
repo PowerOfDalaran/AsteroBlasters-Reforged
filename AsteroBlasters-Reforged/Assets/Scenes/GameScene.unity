@@ -1014,13 +1014,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 734844381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d48cd3aabbbe14c92bdd4634654bd9, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c75a31312eef564cbc56af197f51415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 734844383}
-  fireCooldown: 1.5
-  projectilePrefab: {fileID: 0}
-  raycastLaserPrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
+  fireCooldown: 0.35
+  projectilePrefab: {fileID: 4715944071043663114, guid: 5c4d8419d41e95e419931c372e444f27, type: 3}
 --- !u!4 &734844383 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9213607586930178289, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
