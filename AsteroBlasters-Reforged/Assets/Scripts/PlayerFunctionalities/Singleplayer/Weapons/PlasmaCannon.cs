@@ -45,6 +45,7 @@ namespace WeaponSystem
 
         private void Start()
         {
+            // Activating the event
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
@@ -84,7 +85,7 @@ namespace WeaponSystem
 
         public override GameObject Shoot(float charge)
         {
-            // Firing the weapon if it's not overheated
+            // Firing the weapon if it's not overheated and ammunition didn't run out
             if (!overheated && currentAmmo > 0)
             {
                 currentAmmo -= 1;

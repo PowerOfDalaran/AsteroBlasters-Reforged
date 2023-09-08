@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Enumerator representing all the classes of weapon, which can be equipped (None representing the weapon being removed)
+    /// </summary>
     public enum WeaponClass
     {
         None,
@@ -11,6 +14,9 @@ namespace WeaponSystem
         LaserSniperGun,
     }
 
+    /// <summary>
+    /// Enumerator representing whether the weapon deals with shooting by creating the projectile or by firing the raycast
+    /// </summary>
     public enum WeaponType
     {
         RaycastBased,
