@@ -41,7 +41,7 @@ namespace WeaponSystem
             heatLoss = 0.0085f;
             heatGain = 0.2f;
 
-            maxAmmo = 16;
+            maxAmmo = 14;
             currentAmmo = maxAmmo;
         }
 
