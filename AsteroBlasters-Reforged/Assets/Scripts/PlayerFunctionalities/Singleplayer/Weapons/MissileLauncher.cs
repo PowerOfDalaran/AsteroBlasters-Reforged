@@ -22,12 +22,14 @@ namespace WeaponSystem
         GameObject targetedEnemy;
         bool hadTarget;
 
-        public MissileLauncher()
+        public override void InstantiateWeapon(GameObject projectile)
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.MissileLauncher;
             fireCooldown = 2f;
+            projectilePrefab = projectile;
+
 
             maxAmmo = 3;
             currentAmmo = maxAmmo;
@@ -46,7 +48,6 @@ namespace WeaponSystem
             targetingZone.isTrigger = true;
             targetingZone.offset = new Vector2(0, 2);
             targetingZone.size = new Vector2(9, 3);
-            targetingZone.gameObject.layer = 8;
         }
 
         private void OnDestroy()
@@ -126,9 +127,6 @@ namespace WeaponSystem
             {
                 GameObject newMissile =  base.Shoot(charge);
 
-                // Activating the event
-                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
-
                 // If the missile was created and the player has target, it is assigned to the homing missile
                 if (newMissile != null)
                 {
@@ -140,7 +138,9 @@ namespace WeaponSystem
                     {
                         newMissile.GetComponent<HomingMissile>().Target = targetedEnemy.transform;
                     }
+
                     currentAmmo -= 1;
+                    onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
                     return newMissile;
                 }

@@ -48,6 +48,11 @@ namespace WeaponSystem
             firePoint = gameObject.transform.Find("FirePoint");
         }
 
+        public virtual void InstantiateWeapon(GameObject projectile = null)
+        { 
+            // Implement in child classes
+        }
+
         /// <summary>
         /// Method creating new projectile with certain position and rotation, if fire cooldown has passed.
         /// If weapon is Raycast based, the method fires the raycast in upwards and returns the gameobject, which one of components implement the IHealthSystem interface

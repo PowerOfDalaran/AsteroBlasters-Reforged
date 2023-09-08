@@ -23,13 +23,25 @@ namespace WeaponSystem
 
             // Checking if colliding object implement health system, if yes, dealing damage to it
             IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
-            if (healthSystem != null)
+            if (healthSystem != null && playerController != null && collision is not BoxCollider2D) 
             {
+                // Jeœli gracz dosta³ w statek
                 healthSystem.TakeDamage(damage);
+                Destroy(gameObject);
             }
-
-            Destroy(gameObject);
+            else if (healthSystem != null && playerController == null)
+            {
+                // Jeœli obiekt ze zdrowiem dosta³ 
+                healthSystem.TakeDamage(damage);
+                Destroy(gameObject);
+            }
+            else if (healthSystem == null && playerController == null) 
+            {
+                // Jeœli dosta³o cokolwiek innego
+                Destroy(gameObject);
+            }
         }
 
         /// <summary>

@@ -25,12 +25,14 @@ namespace WeaponSystem
         public delegate void OnHeatChanged(float heat);
         public static event OnHeatChanged onHeatChanged;
 
-        public PlasmaCannon() 
+        public override void InstantiateWeapon(GameObject projectile)
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.PlasmaCannon;
             fireCooldown = 0.25f;
+            projectilePrefab = projectile;
+            Debug.Log(projectile);
 
             overheated = false;
             currentHeat = 0f;
@@ -39,7 +41,7 @@ namespace WeaponSystem
             heatLoss = 0.0085f;
             heatGain = 0.2f;
 
-            maxAmmo = 15;
+            maxAmmo = 16;
             currentAmmo = maxAmmo;
         }
 

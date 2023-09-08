@@ -10,12 +10,13 @@ namespace UserInterface
     /// </summary>
     public class WeaponUIManager : MonoBehaviour
     {
+        [SerializeField] GameObject secondaryWeaponButton;
         [SerializeField] GameObject heatWeaponBar;
         [SerializeField] GameObject AmmoLeftText;
         [SerializeField] GameObject TargetedEnemyTag;
         [SerializeField] GameObject chargeStatusBar;
 
-        List<GameObject> activatedElements = new List<GameObject>();
+        [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
         void Start()
         {
@@ -36,17 +37,23 @@ namespace UserInterface
             // Checking if the weapon wasn't unequipped - then all the UI elements should be disabled
             if (weaponClass == WeaponClass.None)
             {
-                foreach (GameObject weapon in activatedElements)
+                for (int i = 0; i < activatedElements.Count; i++)
                 {
-                    weapon.SetActive(false);
-                    AmmoLeftText.SetActive(true);
-                    activatedElements.Remove(weapon);
-                };
+                    GameObject currentWeaponUI = activatedElements[i];
+
+                    currentWeaponUI.SetActive(false);
+                    AmmoLeftText.SetActive(false);
+                    secondaryWeaponButton.SetActive(false);
+                    activatedElements.Remove(currentWeaponUI);
+                }
+
                 return;
             }
 
             // Activating the ammo left element and other depending on equipped gun
             AmmoLeftText.SetActive(true);
+            secondaryWeaponButton.SetActive(true);
+
 
             switch (weaponClass)
             {

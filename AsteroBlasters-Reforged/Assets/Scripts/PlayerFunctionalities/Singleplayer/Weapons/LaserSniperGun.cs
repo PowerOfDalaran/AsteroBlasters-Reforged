@@ -16,12 +16,13 @@ namespace WeaponSystem
         [SerializeField] float chargingSlow;
         LineRenderer raycastLaser;
 
-        public LaserSniperGun()
+        public override void InstantiateWeapon(GameObject raycastGraphic)
         {
             // Assigning the values to the properties
             type = WeaponType.RaycastBased;
             weaponClass = WeaponClass.LaserSniperGun;
             fireCooldown = 1.5f;
+            raycastLaserPrefab = raycastGraphic;
             
             chargingSlow = 0.64f;
             maxAmmo = 5;

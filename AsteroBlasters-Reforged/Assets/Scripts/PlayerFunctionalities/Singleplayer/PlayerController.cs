@@ -167,20 +167,29 @@ namespace PlayerFunctionality
         /// Method adding proper weapon class to the game object
         /// </summary>
         /// <param name="weaponClass">Special enumerator representing the weapon class</param>
-        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
+        /// <param name="weaponProjectile">The projectile the weapon will be using. Currently added to avoid searching for proper prefab in runtime. Need to find better solution though.</param>
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass, GameObject weaponProjectile)
         {
+            if (secondaryWeapon != null)
+            {
+                DiscardSecondaryWeapon();
+            }
+
             onWeaponChanged?.Invoke(weaponClass);
 
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    gameObject.AddComponent<PlasmaCannon>();
+                    secondaryWeapon = gameObject.AddComponent<PlasmaCannon>();
+                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
                     break;
                 case WeaponClass.MissileLauncher:
-                    gameObject.AddComponent<MissileLauncher>();
+                    secondaryWeapon = gameObject.AddComponent<MissileLauncher>();
+                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
                     break;
                 case WeaponClass.LaserSniperGun:
-                    gameObject.AddComponent<LaserSniperGun>();
+                    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
+                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
                     break;
                 default: 
                     Debug.Log("Unexpected weapon class was given: " +  weaponClass);

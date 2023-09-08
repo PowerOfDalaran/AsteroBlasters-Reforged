@@ -1,8 +1,15 @@
+using UnityEngine;
+
 namespace WeaponSystem
 {
     public class SpaceRifle : Weapon
     {
-        public SpaceRifle()
+        private void Start()
+        {
+            InstantiateWeapon();
+        }
+
+        public override void InstantiateWeapon(GameObject projectile = null)
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
