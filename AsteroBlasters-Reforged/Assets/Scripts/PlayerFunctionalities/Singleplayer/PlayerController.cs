@@ -153,6 +153,9 @@ namespace PlayerFunctionality
             baseWeapon.Shoot(0);
         }
 
+        /// <summary>
+        /// Method discarding the current secondary weapon
+        /// </summary>
         public void DiscardSecondaryWeapon()
         {
             Destroy(secondaryWeapon);
@@ -160,7 +163,11 @@ namespace PlayerFunctionality
             onWeaponChanged?.Invoke(WeaponClass.None);
         }
 
-        public void ChangeWeapon(WeaponClass weaponClass)
+        /// <summary>
+        /// Method adding proper weapon class to the game object
+        /// </summary>
+        /// <param name="weaponClass">Special enumerator representing the weapon class</param>
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             onWeaponChanged?.Invoke(weaponClass);
 
