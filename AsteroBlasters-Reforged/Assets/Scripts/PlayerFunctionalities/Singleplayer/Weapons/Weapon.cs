@@ -4,6 +4,7 @@ namespace WeaponSystem
 {
     public enum WeaponClass
     {
+        None,
         SpaceRifle,
         PlasmaCannon,
         MissileLauncher,

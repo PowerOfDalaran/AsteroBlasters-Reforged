@@ -935,9 +935,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -5497724795567469902, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 734844383}
+    - target: {fileID: -5497724795567469902, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
       propertyPath: chargingSpeed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: -5497724795567469902, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+      propertyPath: secondaryWeapon
+      value: 
+      objectReference: {fileID: 734844382}
     - target: {fileID: 1653876765624900528, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -994,6 +1002,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1754668765510775113, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
       insertIndex: -1
       addedObject: {fileID: 734844382}
+    - targetCorrespondingSourceObject: {fileID: 1754668765510775113, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 734844383}
   m_SourcePrefab: {fileID: 100100000, guid: 3967824e8424b9042b7fc98aae096f74, type: 3}
 --- !u!4 &734844380 stripped
 Transform:
@@ -1021,6 +1032,20 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   raycastLaserPrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
   chargingSlow: 0.64
+--- !u!114 &734844383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734844381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c75a31312eef564cbc56af197f51415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireCooldown: 0.35
+  projectilePrefab: {fileID: 4715944071043663114, guid: f1dbe886a84ef7244a4c300ea8d39510, type: 3}
 --- !u!1 &765546083
 GameObject:
   m_ObjectHideFlags: 0
@@ -3271,6 +3296,10 @@ PrefabInstance:
     - target: {fileID: 8151760770417798554, guid: a136f25d3393abb45934374a06325ad7, type: 3}
       propertyPath: m_Name
       value: AmmoLeftText
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151760770417798554, guid: a136f25d3393abb45934374a06325ad7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

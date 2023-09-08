@@ -12,8 +12,8 @@ namespace PlayerFunctionality
         Rigidbody2D myRigidbody2D;
         PlayerControls myPlayerControls;
 
-        Weapon firstWeapon;
-        Weapon secondaryWeapon;
+        [SerializeField] SpaceRifle baseWeapon;
+        [SerializeField] Weapon secondaryWeapon;
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
@@ -41,12 +41,15 @@ namespace PlayerFunctionality
         public delegate void OnChargeValueChanged(float value);
         public static event OnChargeValueChanged onChargeValueChanged;
 
+        public delegate void OnWeaponChanged(WeaponClass weaponClass);
+        public static event OnWeaponChanged onWeaponChanged;
+
         void Awake()
         {
             // Assigning values to properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
             myPlayerControls = new PlayerControls();
-            firstWeapon = GetComponent<Weapon>();
+            baseWeapon = GetComponent<SpaceRifle>();
 
             currentHealth = maxHealth;
             currentCharge = 0;
@@ -55,37 +58,48 @@ namespace PlayerFunctionality
         void OnEnable()
         {
             myPlayerControls.Enable();
+
+            // Adding the method for using base weapon to the delegate
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
         }
 
         void OnDisable()
         {
             myPlayerControls.Disable();
+
+            // Removing the method for using base weapon from the delegate
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
         }
 
         void Update()
         {
-            // Shooting functionality - player can hold and load the attack. 
-            // In some weapons by doing so, the player can increase damage dealt to opponent
-            if (currentCharge >= maxCharge)
+            // Using the second weapon functionality - player can hold and load the attack. 
+            // Checking if there is any secondary weapon equipped.
+            if (secondaryWeapon != null)
             {
-                isChargingWeapon = false;
-                firstWeapon.Shoot(currentCharge);
-                currentCharge = 0;
-                onChargeValueChanged?.Invoke(currentCharge);
+                // In some weapons by doing so, the player can increase damage dealt to opponent
+                if (currentCharge >= maxCharge)
+                {
+                    isChargingWeapon = false;
+                    secondaryWeapon.Shoot(currentCharge);
+                    currentCharge = 0;
+                    onChargeValueChanged?.Invoke(currentCharge);
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
+                {
+                    isChargingWeapon = true;
+                    currentCharge += Time.deltaTime * chargingSpeed;
+                    onChargeValueChanged?.Invoke(currentCharge);
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.WasReleasedThisFrame())
+                {
+                    isChargingWeapon = false;
+                    secondaryWeapon.Shoot(currentCharge);
+                    currentCharge = 0;
+                    onChargeValueChanged?.Invoke(currentCharge);
+                }
             }
-            else if (myPlayerControls.PlayerActions.ShootFirstWeapon.inProgress)
-            {
-                isChargingWeapon = true;
-                currentCharge += Time.deltaTime * chargingSpeed;
-                onChargeValueChanged?.Invoke(currentCharge);
-            }
-            else if (myPlayerControls.PlayerActions.ShootFirstWeapon.WasReleasedThisFrame())
-            {
-                isChargingWeapon = false;
-                firstWeapon.Shoot(currentCharge);
-                currentCharge = 0;
-                onChargeValueChanged?.Invoke(currentCharge);
-            }
+            
         }
 
         private void FixedUpdate()
@@ -129,33 +143,42 @@ namespace PlayerFunctionality
         }
 
         /// <summary>
-        /// Method activating the current weapon in order to fire.
+        /// Method activating the base weapon in order to fire.
         /// Is added to the "PlayerActions.Shoot.performed" delegate.
+        /// Since the base weapon isn't using any charge mechanics, it passes the argument with value 0.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
-        void Shoot(InputAction.CallbackContext context)
+        void UseBaseWeapon(InputAction.CallbackContext context)
         {
-            Debug.Log(context.phase);
-            if (context.phase == InputActionPhase.Started && currentCharge < maxCharge)
-            {
-                currentCharge += Time.deltaTime * chargingSpeed;
-            }
-            else
-            {
-                firstWeapon.Shoot(currentCharge);
-                currentCharge = 0;
-            }
+            baseWeapon.Shoot(0);
         }
 
-        void ShootPressed(InputAction.CallbackContext context)
+        public void DiscardSecondaryWeapon()
         {
-            currentCharge += Time.deltaTime * chargingSpeed;
+            Destroy(secondaryWeapon);
+            secondaryWeapon = null;
+            onWeaponChanged?.Invoke(WeaponClass.None);
         }
 
-        void ShootReleased(InputAction.CallbackContext context)
+        public void ChangeWeapon(WeaponClass weaponClass)
         {
-            firstWeapon.Shoot(currentCharge);
-            currentCharge = 0;
+            onWeaponChanged?.Invoke(weaponClass);
+
+            switch (weaponClass)
+            {
+                case WeaponClass.PlasmaCannon:
+                    gameObject.AddComponent<PlasmaCannon>();
+                    break;
+                case WeaponClass.MissileLauncher:
+                    gameObject.AddComponent<MissileLauncher>();
+                    break;
+                case WeaponClass.LaserSniperGun:
+                    gameObject.AddComponent<LaserSniperGun>();
+                    break;
+                default: 
+                    Debug.Log("Unexpected weapon class was given: " +  weaponClass);
+                    break;
+            }
         }
 
         /// <summary>

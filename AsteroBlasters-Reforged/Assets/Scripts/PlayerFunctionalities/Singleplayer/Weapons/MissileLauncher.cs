@@ -29,7 +29,7 @@ namespace WeaponSystem
             weaponClass = WeaponClass.MissileLauncher;
             fireCooldown = 2f;
 
-            maxAmmo = 10;
+            maxAmmo = 3;
             currentAmmo = maxAmmo;
             hadTarget = false;
         }
@@ -57,12 +57,11 @@ namespace WeaponSystem
 
         private void FixedUpdate()
         {
-            // Checking if there's any ammo left, and discarding the weapon if not
-            //if (currentAmmo <= 0) 
-            //{
-            //    PlasmaCannon plasmaCannon = GetComponent<PlasmaCannon>();
-            //    DiscardWeapon(plasmaCannon);
-            //}
+            //Checking if there's any ammo left, and discarding the weapon if not
+            if (currentAmmo <= 0)
+            {
+                gameObject.GetComponent<PlayerController>().DiscardSecondaryWeapon();
+            }
 
             // Checking if the current target was removed from targeting zone without leaving it
             if (targetedEnemy == null && hadTarget)
@@ -147,17 +146,6 @@ namespace WeaponSystem
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Method activating removing this script and activating given weapon 
-        /// </summary>
-        /// <param name="weaponToActivate">Script of weapon, player switches to</param>
-        public void DiscardWeapon(Weapon weaponToActivate)
-        {
-            weaponToActivate.enabled = true;
-
-            Destroy(this);
         }
     }
 }

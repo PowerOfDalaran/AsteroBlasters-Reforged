@@ -24,7 +24,7 @@ namespace WeaponSystem
             fireCooldown = 1.5f;
             
             chargingSlow = 0.64f;
-            maxAmmo = 10;
+            maxAmmo = 5;
             currentAmmo = maxAmmo;
         }
 
@@ -47,7 +47,7 @@ namespace WeaponSystem
 
         private void OnDestroy()
         {
-            Destroy(gameObject.transform.Find("RaycastLaser"));
+            Destroy(gameObject.transform.Find("RaycastLaser(Clone)").gameObject);
         }
         #endregion
 
@@ -57,12 +57,11 @@ namespace WeaponSystem
             PlayerController playerController = GetComponent<PlayerController>();
             playerController.SpeedModifier = playerController.isChargingWeapon ? chargingSlow : 1f;
 
-            // Checking if there's any ammo left, and discarding the weapon if not
-            //if (currentAmmo <= 0) 
-            //{
-            //    PlasmaCannon plasmaCannon = GetComponent<PlasmaCannon>();
-            //    DiscardWeapon(plasmaCannon);
-            //}
+            //Checking if there's any ammo left, and discarding the weapon if not
+            if (currentAmmo <= 0)
+            {
+                gameObject.GetComponent<PlayerController>().DiscardSecondaryWeapon();
+            }
         }
 
         public override GameObject Shoot(float charge)

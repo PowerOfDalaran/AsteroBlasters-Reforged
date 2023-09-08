@@ -1,3 +1,4 @@
+using PlayerFunctionality;
 using UnityEngine;
 
 namespace WeaponSystem
@@ -7,13 +8,16 @@ namespace WeaponSystem
     /// </summary>
     public class PlasmaCannon : Weapon
     {
-        [SerializeField] bool overheated;
+        bool overheated;
 
-        [SerializeField] float currentHeat;
-        [SerializeField] float maxHeat;
+        float currentHeat;
+        float maxHeat;
 
-        [SerializeField] float heatLoss;
-        [SerializeField] float heatGain;
+        float heatLoss;
+        float heatGain;
+
+        int maxAmmo;
+        int currentAmmo;
 
         public delegate void OnHeatChanged(float heat);
         public static event OnHeatChanged onHeatChanged;
@@ -31,10 +35,19 @@ namespace WeaponSystem
 
             heatLoss = 0.0085f;
             heatGain = 0.2f;
+
+            maxAmmo = 15;
+            currentAmmo = maxAmmo;
         }
 
         private void FixedUpdate()
         {
+            //Checking if there's any ammo left, and discarding the weapon if not
+            if (currentAmmo <= 0)
+            {
+                gameObject.GetComponent<PlayerController>().DiscardSecondaryWeapon();
+            }
+
             // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
             if (overheated)
             {
