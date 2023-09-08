@@ -12,12 +12,14 @@ namespace UserInterface
         {
             LaserSniperGun.onAmmoValueChange += UpdateText;
             MissileLauncher.onAmmoValueChange += UpdateText;
+            PlasmaCannon.onAmmoValueChange += UpdateText;
         }
 
         private void OnDisable()
         {
             LaserSniperGun.onAmmoValueChange -= UpdateText;
             MissileLauncher.onAmmoValueChange -= UpdateText;
+            PlasmaCannon.onAmmoValueChange -= UpdateText;
         }
 
         void UpdateText(int currentValue, int maxValue)

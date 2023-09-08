@@ -19,6 +19,9 @@ namespace WeaponSystem
         int maxAmmo;
         int currentAmmo;
 
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public static event OnAmmoValueChange onAmmoValueChange;
+
         public delegate void OnHeatChanged(float heat);
         public static event OnHeatChanged onHeatChanged;
 
@@ -38,6 +41,11 @@ namespace WeaponSystem
 
             maxAmmo = 15;
             currentAmmo = maxAmmo;
+        }
+
+        private void Start()
+        {
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
         private void FixedUpdate()
@@ -77,8 +85,11 @@ namespace WeaponSystem
         public override GameObject Shoot(float charge)
         {
             // Firing the weapon if it's not overheated
-            if (!overheated)
+            if (!overheated && currentAmmo > 0)
             {
+                currentAmmo -= 1;
+                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
                 GameObject newPlasmaBurst = base.Shoot(charge);
 
                 // Increasing current heat and running the event
