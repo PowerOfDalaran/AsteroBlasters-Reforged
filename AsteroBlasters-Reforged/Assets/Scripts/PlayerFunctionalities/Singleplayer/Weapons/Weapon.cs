@@ -62,7 +62,7 @@ namespace WeaponSystem
         /// If weapon is Raycast based, the method fires the raycast in upwards and returns the gameobject, which one of components implement the IHealthSystem interface
         /// </summary>
         /// <param name="charge">The float value (0 - 10) representing how long the fire button was pressed</param>
-        /// <returns>Created projectile (null if the weapon is on cooldown)</returns>
+        /// <returns>Created projectile or gameobject hit by the raycast (or null if the weapon is on cooldown)</returns>
         public virtual GameObject Shoot(float charge)
         {
             if (Time.time > cooldownStatus)
