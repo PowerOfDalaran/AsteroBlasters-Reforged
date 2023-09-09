@@ -1,17 +1,18 @@
+using PlayerFunctionality;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Class managing the projectile's functionalities.
     /// </summary>
     public class ProjectileController : MonoBehaviour
     {
-        Rigidbody2D myRigidbody2D;
-        public float speed = 20f;
-        public int damage = 1;
+        protected Rigidbody2D myRigidbody2D;
+        [SerializeField] protected float speed = 20f;
+        [SerializeField] protected int damage = 1;
 
-        void Awake()
+        protected virtual void Awake()
         {
             // Assigning values to class properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -20,8 +21,9 @@ namespace PlayerFunctionality
         private void OnTriggerEnter2D(Collider2D collision)
         {
 
-            // Checking if colliding object implement health system, if yes, dealing damage to it
+            // Checking if colliding object implement health system, and if it's the player character
             IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
             if (healthSystem != null)
             {
@@ -34,7 +36,7 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method granting the prefab velocity, to launch it in current direction
         /// </summary>
-        public void Launch()
+        public virtual void Launch()
         {
             myRigidbody2D.velocity = transform.up * speed;
         }

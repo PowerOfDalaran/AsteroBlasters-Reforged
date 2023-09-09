@@ -1,5 +1,6 @@
 using UnityEngine;
 using PlayerFunctionality;
+using WeaponSystem;
 
 namespace Archive
 {
@@ -17,13 +18,11 @@ namespace Archive
 
         public void Die()
         {
-            Debug.Log("Dummy: I die!");
             Destroy(gameObject);
         }
 
         public void TakeDamage(int damage)
         {
-            Debug.Log("Dummy: I take " + damage + " point of damage!");
             currentHealth -= damage;
         }
 
@@ -44,7 +43,7 @@ namespace Archive
 
             if (myWeapon != null)
             {
-                myWeapon.Shoot();
+                myWeapon.Shoot(0f);
             }
         }
 
@@ -54,7 +53,6 @@ namespace Archive
             if (!collision.gameObject.CompareTag("NoImpactDamage"))
             {
                 float impactVelocity = collision.relativeVelocity.magnitude;
-                Debug.Log("Impact Damage: " + impactVelocity);
 
                 if (impactVelocity > 8)
                 {

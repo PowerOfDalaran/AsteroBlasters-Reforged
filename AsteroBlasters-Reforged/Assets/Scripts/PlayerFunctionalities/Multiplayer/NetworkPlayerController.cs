@@ -103,14 +103,14 @@ namespace PlayerFunctionality
         {
             // Adding methods to PlayerControls delegates and activating it
             myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.Shoot.performed += Shoot;
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += Shoot;
         }
 
         void OnDisable()
         {
             // Removing methods from PlayerControls delegates and deactivating it
             myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.Shoot.performed -= Shoot;
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= Shoot;
         }
         #endregion
 
