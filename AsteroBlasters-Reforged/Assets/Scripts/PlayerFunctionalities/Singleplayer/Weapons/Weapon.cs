@@ -75,8 +75,8 @@ namespace WeaponSystem
                 }
                 else if(type == WeaponType.RaycastBased) 
                 {
-                    // Casting the Raycast and returning the hit object
-                    RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
+                    // Casting the Raycast and returning the hit object (ignoring the "Projectile" layer to not block the shot on flying missiles)
+                    RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up, 100f, 7);
                     if (hitInfo)
                     {
                         raycastDistance = hitInfo.distance;
