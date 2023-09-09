@@ -48,6 +48,10 @@ namespace WeaponSystem
             firePoint = gameObject.transform.Find("FirePoint");
         }
 
+        /// <summary>
+        /// Method instantiating the weapon parameters and assigning it's prefabs
+        /// </summary>
+        /// <param name="projectile"></param>
         public virtual void InstantiateWeapon(GameObject projectile = null)
         { 
             // Implement in child classes

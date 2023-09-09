@@ -19,6 +19,7 @@ namespace WeaponSystem
         public static event OnAmmoValueChange onAmmoValueChange;
 
         List<Collider2D> possibleTargets = new List<Collider2D>();
+        GameObject targetingZoneChild;
         GameObject targetedEnemy;
         bool hadTarget;
 
@@ -36,15 +37,21 @@ namespace WeaponSystem
             hadTarget = false;
         }
 
-        #region Adding and removing targeting zone
+        #region Adding and removing targeting zone (mostly)
 
         private void Start()
         {
             // Activating the event
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
-            BoxCollider2D targetingZone = gameObject.AddComponent<BoxCollider2D>();
+            //Creating new game object, attatching it to playerCharacter, adding the box collider to it and setting it up
+            targetingZoneChild = Instantiate(new GameObject(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), transform);
 
+            targetingZoneChild.name = "targetingZone";
+            targetingZoneChild.transform.localPosition = new Vector3(0, 0, 0);
+            targetingZoneChild.layer = 8;
+
+            BoxCollider2D targetingZone = targetingZoneChild.AddComponent<BoxCollider2D>(); 
             targetingZone.isTrigger = true;
             targetingZone.offset = new Vector2(0, 2);
             targetingZone.size = new Vector2(9, 3);
@@ -52,7 +59,7 @@ namespace WeaponSystem
 
         private void OnDestroy()
         {
-            Destroy(gameObject.GetComponent<BoxCollider2D>());
+            Destroy(targetingZoneChild);
         }
         #endregion
 

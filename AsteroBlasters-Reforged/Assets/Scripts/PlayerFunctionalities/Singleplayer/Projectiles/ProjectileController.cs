@@ -25,26 +25,12 @@ namespace WeaponSystem
             IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
             PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
-            // The script below got much more complicated because of reservation of the Box Collider component for the targeting zone functionality
-            // Therefore it has to be checked if the colliding player wasn't collided with by the targeting zone
-            // Need to somehow upgrade the targeting zone functionality later
-            if (healthSystem != null && playerController != null && collision is not BoxCollider2D) 
+            if (healthSystem != null)
             {
-                // If the player got hit in the space ship
                 healthSystem.TakeDamage(damage);
-                Destroy(gameObject);
             }
-            else if (healthSystem != null && playerController == null)
-            {
-                // If hitten object isn't the player, but can be dealt damage
-                healthSystem.TakeDamage(damage);
-                Destroy(gameObject);
-            }
-            else if (healthSystem == null && playerController == null) 
-            {
-                // If anything else was hit
-                Destroy(gameObject);
-            }
+
+            Destroy(gameObject);
         }
 
         /// <summary>

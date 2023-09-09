@@ -10,9 +10,8 @@ public class PowerUp : MonoBehaviour
     {
         PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
-        // Checking if object that collided with power up is player AND the that collider isn't the Box Collider
-        // That is because the box collider on the player character is reserved for the targeting zone functionality
-        if (playerController != null && collision is not BoxCollider2D)
+        // Checking if object that collided with power up is player
+        if (playerController != null)
         {
             BuffPlayer(playerController);
         }
