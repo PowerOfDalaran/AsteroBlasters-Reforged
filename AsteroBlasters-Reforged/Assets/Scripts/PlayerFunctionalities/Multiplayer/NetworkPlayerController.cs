@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using DataStructure;
 using NetworkFunctionality;
 using Others;
+using WeaponSystem;
+using static PlayerFunctionality.PlayerController;
 
 namespace PlayerFunctionality
 {
@@ -16,7 +18,15 @@ namespace PlayerFunctionality
         Rigidbody2D myRigidbody2D;
         SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
-        NetworkWeapon myWeapon;
+
+        [SerializeField] NetworkSpaceRifle baseWeapon;
+        [SerializeField] NetworkWeapon secondaryWeapon;
+
+        [SerializeField] float currentCharge;
+        [SerializeField] float maxCharge;
+
+        [SerializeField] float chargingSpeed;
+        [SerializeField] bool isChargingWeapon;
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
@@ -34,12 +44,26 @@ namespace PlayerFunctionality
         {
             // Assigning values to properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
-            myWeapon = GetComponent<NetworkWeapon>();
+            baseWeapon = GetComponent<NetworkSpaceRifle>();
             mySpriteRenderer = GetComponent<SpriteRenderer>();
             myPlayerControls = new PlayerControls();
 
             maxHealth.Value = 3;
             currentHealth.Value = maxHealth.Value;
+        }
+
+        void OnEnable()
+        {
+            // Adding methods to PlayerControls delegates and activating it
+            myPlayerControls.Enable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
+        }
+
+        void OnDisable()
+        {
+            // Removing methods from PlayerControls delegates and deactivating it
+            myPlayerControls.Disable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= UseBaseWeapon;
         }
 
         void Start()
@@ -68,6 +92,30 @@ namespace PlayerFunctionality
             {
                 Movement(movementVector);
                 Rotate(movementVector);
+            }
+
+            // Using the second weapon functionality - player can hold and load the attack. 
+            // Checking if there is any secondary weapon equipped.
+            if (secondaryWeapon != null)
+            {
+                // In some weapons by doing so, the player can increase damage dealt to opponent
+                if (currentCharge >= maxCharge)
+                {
+                    isChargingWeapon = false;
+                    secondaryWeapon.Shoot(currentCharge);
+                    currentCharge = 0;
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
+                {
+                    isChargingWeapon = true;
+                    currentCharge += Time.deltaTime * chargingSpeed;
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.WasReleasedThisFrame())
+                {
+                    isChargingWeapon = false;
+                    secondaryWeapon.Shoot(currentCharge);
+                    currentCharge = 0;
+                }
             }
         }
 
@@ -98,20 +146,6 @@ namespace PlayerFunctionality
 
             }
         }
-
-        void OnEnable()
-        {
-            // Adding methods to PlayerControls delegates and activating it
-            myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += Shoot;
-        }
-
-        void OnDisable()
-        {
-            // Removing methods from PlayerControls delegates and deactivating it
-            myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= Shoot;
-        }
         #endregion
 
         #region Set Player Data
@@ -132,14 +166,14 @@ namespace PlayerFunctionality
         /// Is added to the "PlayerActions.Move.performed" delegate.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
-        void Shoot(InputAction.CallbackContext context)
+        void UseBaseWeapon(InputAction.CallbackContext context)
         {
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
             }
-            myWeapon.ShootServerRpc();
+            baseWeapon.Shoot(0);
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
+using PlayerFunctionality;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Class managing the projectile's functionalities.
@@ -13,7 +14,7 @@ namespace PlayerFunctionality
         public float speed = 20f;
         public int damage = 1;
 
-        void Awake()
+        protected virtual void Awake()
         {
             // Assigning values to class properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
