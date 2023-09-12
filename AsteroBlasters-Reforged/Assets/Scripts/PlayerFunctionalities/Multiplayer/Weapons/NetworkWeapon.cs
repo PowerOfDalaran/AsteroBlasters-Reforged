@@ -11,7 +11,7 @@ namespace WeaponSystem
     public class NetworkWeapon : NetworkBehaviour
     {
         Transform firePoint;
-        [SerializeField] GameObject projectilePrefab;
+        [SerializeField] protected GameObject projectilePrefab;
 
         protected WeaponType type;
         protected WeaponClass weaponClass;

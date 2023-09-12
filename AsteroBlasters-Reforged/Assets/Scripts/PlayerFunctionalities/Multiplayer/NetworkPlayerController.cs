@@ -50,6 +50,12 @@ namespace PlayerFunctionality
 
             maxHealth.Value = 3;
             currentHealth.Value = maxHealth.Value;
+
+            chargingSpeed = 10f;
+            isChargingWeapon = false;
+
+            maxCharge = 10f;
+            currentCharge = 0f;
         }
 
         void OnEnable()
@@ -74,24 +80,12 @@ namespace PlayerFunctionality
             mySpriteRenderer.color = myColor;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
-            }
-
-            CameraController.instance.FollowPlayer(transform);
-
-
-            // Reading current input value for movement and if it's different than zero activate movement and rotation
-            Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
-
-            if (!movementVector.Equals(new Vector2(0, 0)))
-            {
-                Movement(movementVector);
-                Rotate(movementVector);
             }
 
             // Using the second weapon functionality - player can hold and load the attack. 
@@ -116,6 +110,27 @@ namespace PlayerFunctionality
                     secondaryWeapon.Shoot(currentCharge);
                     currentCharge = 0;
                 }
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            // Deciding whether the rest of method should be activated
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            CameraController.instance.FollowPlayer(transform);
+
+
+            // Reading current input value for movement and if it's different than zero activate movement and rotation
+            Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
+
+            if (!movementVector.Equals(new Vector2(0, 0)))
+            {
+                Movement(movementVector);
+                Rotate(movementVector);
             }
         }
 
@@ -174,6 +189,12 @@ namespace PlayerFunctionality
                 return;
             }
             baseWeapon.Shoot(0);
+        }
+
+        public void DiscardSecondaryWeapon()
+        {
+            Destroy(secondaryWeapon);
+            secondaryWeapon = null;
         }
 
         /// <summary>
