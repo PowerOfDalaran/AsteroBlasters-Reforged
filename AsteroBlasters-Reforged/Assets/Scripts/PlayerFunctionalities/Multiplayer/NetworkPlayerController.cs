@@ -19,6 +19,8 @@ namespace PlayerFunctionality
         SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
 
+        [SerializeField] NetworkWeapon[] weaponArray = new NetworkWeapon[3];
+
         [SerializeField] NetworkSpaceRifle baseWeapon;
         [SerializeField] NetworkWeapon secondaryWeapon;
 
@@ -193,8 +195,36 @@ namespace PlayerFunctionality
 
         public void DiscardSecondaryWeapon()
         {
-            Destroy(secondaryWeapon);
+            secondaryWeapon.enabled = false;
             secondaryWeapon = null;
+        }
+
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass, GameObject weaponProjectile)
+        {
+            if (secondaryWeapon != null)
+            {
+                DiscardSecondaryWeapon();
+            }
+
+            switch (weaponClass)
+            {
+                case WeaponClass.PlasmaCannon:
+                    secondaryWeapon = weaponArray[0];
+                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    secondaryWeapon.enabled = true;
+                    break;
+                //case WeaponClass.MissileLauncher:
+                //    secondaryWeapon = gameObject.AddComponent<MissileLauncher>();
+                //    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                //    break;
+                //case WeaponClass.LaserSniperGun:
+                //    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
+                //    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                //    break;
+                default:
+                    Debug.Log("Unexpected weapon class was given: " + weaponClass);
+                    break;
+            }
         }
 
         /// <summary>

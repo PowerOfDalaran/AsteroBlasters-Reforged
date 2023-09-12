@@ -5,16 +5,16 @@ namespace WeaponSystem
 {
     public class NetworkPlasmaCannon : NetworkWeapon
     {
-        bool overheated;
+        [SerializeField] bool overheated;
 
-        float currentHeat;
-        float maxHeat;
+        [SerializeField] float currentHeat;
+        [SerializeField] float maxHeat;
 
         float heatLoss;
         float heatGain;
 
-        int maxAmmo;
-        int currentAmmo;
+        [SerializeField] int maxAmmo;
+        [SerializeField] int currentAmmo;
 
         private void Start()
         {
@@ -42,6 +42,7 @@ namespace WeaponSystem
 
         private void FixedUpdate()
         {
+            // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
