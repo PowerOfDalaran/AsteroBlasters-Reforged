@@ -61,7 +61,7 @@ namespace WeaponSystem
             }
         }
 
-        protected override void AccessHitObject(GameObject hitObject, float charge)
+        protected override void AccessHitObject(GameObject hitObject, float charge, ulong accessingPlayerId)
         {
             // Checking if hit target is a proper enemy
             NetworkPlayerController playerController = hitObject.GetComponent<NetworkPlayerController>();
@@ -71,15 +71,15 @@ namespace WeaponSystem
                 // Deal damage based on charged energy
                 if (charge <= 6)
                 {
-                    playerController.TakeDamage(1);
+                    playerController.TakeDamage(1, accessingPlayerId);
                 }
                 else if (charge < 10)
                 {
-                    playerController.TakeDamage(2);
+                    playerController.TakeDamage(2, accessingPlayerId);
                 }
                 else
                 {
-                    playerController.TakeDamage(3);
+                    playerController.TakeDamage(3, accessingPlayerId);
                 }
             }
         }

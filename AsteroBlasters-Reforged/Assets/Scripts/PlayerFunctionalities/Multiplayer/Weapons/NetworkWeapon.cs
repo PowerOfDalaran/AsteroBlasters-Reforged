@@ -54,7 +54,7 @@ namespace WeaponSystem
             // Implement in child classes
         }
 
-        protected virtual void AccessHitObject(GameObject hitObject, float charge)
+        protected virtual void AccessHitObject(GameObject hitObject, float charge, ulong accessingPlayerId)
         {
             // Implement in child classes
         }
@@ -65,7 +65,7 @@ namespace WeaponSystem
         [ServerRpc]
         private void ShootServerRpc(float charge, ServerRpcParams serverRpcParams = default)
         {
-            ulong projectileOwner = serverRpcParams.Receive.SenderClientId;
+            ulong callerId = serverRpcParams.Receive.SenderClientId;
 
             if (type == WeaponType.ProjectileBased)
             {
@@ -73,7 +73,7 @@ namespace WeaponSystem
 
                 AccessCreatedProjectile(newProjectile);
 
-                newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(projectileOwner);
+                newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(callerId);
                 newProjectile.GetComponent<NetworkProjectileController>().Launch();
             }
             else if (type == WeaponType.RaycastBased)
@@ -83,7 +83,7 @@ namespace WeaponSystem
                 if (hitInfo)
                 {
                     raycastDistance = hitInfo.distance;
-                    AccessHitObject(hitInfo.transform.gameObject, charge);
+                    AccessHitObject(hitInfo.transform.gameObject, charge, callerId);
                 }
                 else
                 {
