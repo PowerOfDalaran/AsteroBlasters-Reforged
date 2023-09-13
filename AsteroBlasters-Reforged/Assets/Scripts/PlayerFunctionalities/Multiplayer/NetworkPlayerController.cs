@@ -201,43 +201,30 @@ namespace PlayerFunctionality
             baseWeapon.Shoot(0);
         }
 
-        public void DiscardSecondaryWeaponLocally()
+        [ClientRpc]
+        public void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
             secondaryWeapon.enabled = false;
             secondaryWeapon = null;
-        }
-
-        [ServerRpc]
-        public void DiscardSecondaryWeaponOnHostServerRpc(ServerRpcParams serverRpcParams = default)
-        {
-            if (!IsHost)
-            {
-                secondaryWeapon.enabled = false;
-                secondaryWeapon = null;
-            }
         }
 
         public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             if (secondaryWeapon != null)
             {
-                DiscardSecondaryWeaponLocally();
-                DiscardSecondaryWeaponOnHostServerRpc();
+                DiscardSecondaryWeaponClientRpc();
             }
 
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    ChangeWeaponLocally(0);
-                    ChangeWeaponOnHostServerRpc(0);
+                    ChangeSecondaryWeaponClientRpc(0);
                     break;
                 case WeaponClass.MissileLauncher:
-                    ChangeWeaponLocally(1);
-                    ChangeWeaponOnHostServerRpc(1);
+                    ChangeSecondaryWeaponClientRpc(1);
                     break;
                 case WeaponClass.LaserSniperGun:
-                    ChangeWeaponLocally(2);
-                    ChangeWeaponOnHostServerRpc(2);
+                    ChangeSecondaryWeaponClientRpc(2);
                     break;
                 default:
                     Debug.Log("Unexpected weapon class was given: " + weaponClass);
@@ -245,15 +232,8 @@ namespace PlayerFunctionality
             }
         }
 
-        void ChangeWeaponLocally(int weaponId)
-        {
-            secondaryWeapon = weaponArray[weaponId];
-            secondaryWeapon.InstantiateWeapon();
-            secondaryWeapon.enabled = true;
-        }
-
-        [ServerRpc]
-        void ChangeWeaponOnHostServerRpc(int weaponId, ServerRpcParams serverRpcParams = default)
+        [ClientRpc]
+        void ChangeSecondaryWeaponClientRpc(int weaponId, ClientRpcParams clientRpcParams = default)
         {
             secondaryWeapon = weaponArray[weaponId];
             secondaryWeapon.InstantiateWeapon();

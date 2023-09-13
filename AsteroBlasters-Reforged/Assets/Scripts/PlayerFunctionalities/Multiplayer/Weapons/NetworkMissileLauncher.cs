@@ -59,9 +59,7 @@ namespace WeaponSystem
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponLocally();
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponOnHostServerRpc();
-
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponClientRpc();
             }
 
             // Checking if the current target was removed from targeting zone without leaving it

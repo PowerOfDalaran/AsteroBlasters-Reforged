@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace WeaponSystem
@@ -56,8 +57,7 @@ namespace WeaponSystem
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0 && !coroutineActive)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponLocally();
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponOnHostServerRpc();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponClientRpc();
             }
         }
 
@@ -92,7 +92,7 @@ namespace WeaponSystem
 
                 if (weaponFired)
                 {
-                    Coroutine coroutine = StartCoroutine(DrawRaycastLaser());
+                    DrawRaycastLaserClientRpc();
                     currentAmmo -= 1;
                     return true;
                 }
@@ -100,6 +100,12 @@ namespace WeaponSystem
                 return false;
             }
             return false;
+        }
+
+        [ClientRpc]
+        void DrawRaycastLaserClientRpc()
+        {
+            StartCoroutine(DrawRaycastLaser());
         }
         
         IEnumerator DrawRaycastLaser()
