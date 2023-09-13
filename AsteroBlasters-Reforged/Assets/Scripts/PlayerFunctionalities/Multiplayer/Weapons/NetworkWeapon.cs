@@ -26,12 +26,18 @@ namespace WeaponSystem
             firePoint = gameObject.transform.Find("FirePoint");
         }
 
-        public virtual void InstantiateWeapon(GameObject projectile = null)
+        public virtual void InstantiateWeapon()
         {
             // Implement in child classes
         }
 
-        public virtual void Shoot(float charge)
+        [ServerRpc]
+        public void InstantiateWeaponServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+
+        }
+
+        public virtual bool Shoot(float charge)
         {
             if (Time.time > cooldownStatus)
             {
@@ -40,8 +46,15 @@ namespace WeaponSystem
                 if (type == WeaponType.ProjectileBased) 
                 {
                     ShootServerRpc(charge);
+                    return true;
                 }
             }
+            return false;
+        }
+
+        protected virtual void AccessCreatedProjectile(GameObject projectile)
+        {
+            // Implement in child classes
         }
 
         /// <summary>
@@ -53,6 +66,8 @@ namespace WeaponSystem
             ulong projectileOwner = serverRpcParams.Receive.SenderClientId;
 
             GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+
+            AccessCreatedProjectile(newProjectile);
 
             newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(projectileOwner);
             newProjectile.GetComponent<NetworkProjectileController>().Launch();

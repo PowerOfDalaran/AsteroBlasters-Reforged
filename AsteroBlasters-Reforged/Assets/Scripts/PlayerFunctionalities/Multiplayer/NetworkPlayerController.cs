@@ -193,30 +193,37 @@ namespace PlayerFunctionality
             baseWeapon.Shoot(0);
         }
 
-        public void DiscardSecondaryWeapon()
+        public void DiscardSecondaryWeaponLocally()
         {
             secondaryWeapon.enabled = false;
             secondaryWeapon = null;
         }
 
-        public void PickNewSecondaryWeapon(WeaponClass weaponClass, GameObject weaponProjectile)
+        [ServerRpc]
+        public void DiscardSecondaryWeaponOnHostServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+            secondaryWeapon.enabled = false;
+            secondaryWeapon = null;
+        }
+
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             if (secondaryWeapon != null)
             {
-                DiscardSecondaryWeapon();
+                DiscardSecondaryWeaponLocally();
+                DiscardSecondaryWeaponOnHostServerRpc();
             }
 
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    secondaryWeapon = weaponArray[0];
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
-                    secondaryWeapon.enabled = true;
+                    ChangeWeaponLocally(0);
+                    ChangeWeaponOnHostServerRpc(0);
                     break;
-                //case WeaponClass.MissileLauncher:
-                //    secondaryWeapon = gameObject.AddComponent<MissileLauncher>();
-                //    secondaryWeapon.InstantiateWeapon(weaponProjectile);
-                //    break;
+                case WeaponClass.MissileLauncher:
+                    ChangeWeaponLocally(1);
+                    ChangeWeaponOnHostServerRpc(1);
+                    break;
                 //case WeaponClass.LaserSniperGun:
                 //    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
                 //    secondaryWeapon.InstantiateWeapon(weaponProjectile);
@@ -225,6 +232,21 @@ namespace PlayerFunctionality
                     Debug.Log("Unexpected weapon class was given: " + weaponClass);
                     break;
             }
+        }
+
+        void ChangeWeaponLocally(int weaponId)
+        {
+            secondaryWeapon = weaponArray[weaponId];
+            secondaryWeapon.InstantiateWeapon();
+            secondaryWeapon.enabled = true;
+        }
+
+        [ServerRpc]
+        void ChangeWeaponOnHostServerRpc(int weaponId, ServerRpcParams serverRpcParams = default)
+        {
+            secondaryWeapon = weaponArray[weaponId];
+            secondaryWeapon.InstantiateWeapon();
+            secondaryWeapon.enabled = true;
         }
 
         /// <summary>

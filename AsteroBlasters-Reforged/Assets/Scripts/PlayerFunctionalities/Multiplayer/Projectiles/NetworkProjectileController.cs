@@ -10,7 +10,7 @@ namespace WeaponSystem
     /// </summary>
     public class NetworkProjectileController : NetworkBehaviour
     {
-        Rigidbody2D myRigidbody2D;
+        protected Rigidbody2D myRigidbody2D;
         public float speed = 20f;
         public int damage = 1;
 

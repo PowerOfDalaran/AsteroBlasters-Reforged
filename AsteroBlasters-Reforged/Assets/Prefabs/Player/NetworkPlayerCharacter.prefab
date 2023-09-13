@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 6684660739794455990}
   - component: {fileID: -3528635485336061181}
   - component: {fileID: 1129618845695241633}
+  - component: {fileID: 8798171710794697629}
   m_Layer: 0
   m_Name: NetworkPlayerCharacter
   m_TagString: Untagged
@@ -283,7 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponArray:
   - {fileID: 1129618845695241633}
-  - {fileID: 0}
+  - {fileID: 8798171710794697629}
   - {fileID: 0}
   baseWeapon: {fileID: 0}
   secondaryWeapon: {fileID: 0}
@@ -476,3 +477,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 4715944071043663114, guid: 5f5e86cef5303b8429d2e36497764f5e, type: 3}
   fireCooldown: 1
+  overheated: 0
+  currentHeat: 0
+  maxHeat: 0
+  maxAmmo: 0
+  currentAmmo: 0
+--- !u!114 &8798171710794697629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e30cd41b5622ca4f90d93db9b51859a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4715944071043663114, guid: a80569429f85e6e4e96441834e61e8bc, type: 3}
+  fireCooldown: 1
+  targetedEnemy: {fileID: 0}
+  targetingZoneChild: {fileID: 0}
+  possibleTargets: []

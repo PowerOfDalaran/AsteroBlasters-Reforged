@@ -16,18 +16,12 @@ namespace WeaponSystem
         [SerializeField] int maxAmmo;
         [SerializeField] int currentAmmo;
 
-        private void Start()
-        {
-            InstantiateWeapon(projectilePrefab);
-        }
-
-        public override void InstantiateWeapon(GameObject projectile)
+        public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.PlasmaCannon;
             fireCooldown = 0.25f;
-            projectilePrefab = projectile;
 
             overheated = false;
             currentHeat = 0f;
@@ -51,7 +45,8 @@ namespace WeaponSystem
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponLocally();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponOnHostServerRpc();
             }
 
             // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
@@ -78,18 +73,24 @@ namespace WeaponSystem
             }
         }
 
-        public override void Shoot(float charge)
+        public override bool Shoot(float charge)
         {
             if (!overheated && currentAmmo > 0)
             {
-                currentAmmo -= 1;
+                bool weaponFired = base.Shoot(charge);
 
-                base.Shoot(charge);
-
-                // Increasing current heat and running the event
-                currentHeat += heatGain;
-
+                if (weaponFired)
+                {
+                    currentAmmo -= 1;
+                    currentHeat += heatGain;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
+            return false;
         }
     }
 }

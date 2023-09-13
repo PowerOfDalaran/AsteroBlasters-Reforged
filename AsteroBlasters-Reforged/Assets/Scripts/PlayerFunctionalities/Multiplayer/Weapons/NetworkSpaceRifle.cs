@@ -9,7 +9,7 @@ namespace WeaponSystem
             InstantiateWeapon();
         }
 
-        public override void InstantiateWeapon(GameObject projectile = null)
+        public override void InstantiateWeapon()
         {
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.SpaceRifle;
