@@ -140,10 +140,8 @@ namespace WeaponSystem
                     currentAmmo -= 1;
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
+
             }
             return false;
         }

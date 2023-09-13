@@ -10,7 +10,7 @@ namespace WeaponSystem
     /// </summary>
     public class NetworkWeapon : NetworkBehaviour
     {
-        Transform firePoint;
+        protected Transform firePoint;
         [SerializeField] protected GameObject projectilePrefab;
 
         protected WeaponType type;
@@ -34,7 +34,7 @@ namespace WeaponSystem
         [ServerRpc]
         public void InstantiateWeaponServerRpc(ServerRpcParams serverRpcParams = default)
         {
-
+            InstantiateWeapon();
         }
 
         public virtual bool Shoot(float charge)
@@ -43,16 +43,18 @@ namespace WeaponSystem
             {
                 cooldownStatus = Time.time + fireCooldown;
 
-                if (type == WeaponType.ProjectileBased) 
-                {
-                    ShootServerRpc(charge);
-                    return true;
-                }
+                ShootServerRpc(charge);
+                return true;
             }
             return false;
         }
 
         protected virtual void AccessCreatedProjectile(GameObject projectile)
+        {
+            // Implement in child classes
+        }
+
+        protected virtual void AccessHitObject(GameObject hitObject, float charge)
         {
             // Implement in child classes
         }
@@ -65,12 +67,29 @@ namespace WeaponSystem
         {
             ulong projectileOwner = serverRpcParams.Receive.SenderClientId;
 
-            GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            if (type == WeaponType.ProjectileBased)
+            {
+                GameObject newProjectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 
-            AccessCreatedProjectile(newProjectile);
+                AccessCreatedProjectile(newProjectile);
 
-            newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(projectileOwner);
-            newProjectile.GetComponent<NetworkProjectileController>().Launch();
+                newProjectile.GetComponent<NetworkObject>().SpawnWithOwnership(projectileOwner);
+                newProjectile.GetComponent<NetworkProjectileController>().Launch();
+            }
+            else if (type == WeaponType.RaycastBased)
+            {
+                RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up, 100f, 7);
+                
+                if (hitInfo)
+                {
+                    raycastDistance = hitInfo.distance;
+                    AccessHitObject(hitInfo.transform.gameObject, charge);
+                }
+                else
+                {
+                    raycastDistance = -1f;
+                }
+            }
         }
     }
 }

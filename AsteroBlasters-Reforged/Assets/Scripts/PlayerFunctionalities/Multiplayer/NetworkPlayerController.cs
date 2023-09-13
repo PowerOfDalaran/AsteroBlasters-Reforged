@@ -28,10 +28,18 @@ namespace PlayerFunctionality
         [SerializeField] float maxCharge;
 
         [SerializeField] float chargingSpeed;
-        [SerializeField] bool isChargingWeapon;
+        [SerializeField] public bool isChargingWeapon;
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
+
+        float speedModifier = 1f;
+        public float SpeedModifier
+        {
+            get { return speedModifier; }
+            set { speedModifier = value; }
+        }
+
         public int playerIndex;
 
         public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
@@ -202,8 +210,11 @@ namespace PlayerFunctionality
         [ServerRpc]
         public void DiscardSecondaryWeaponOnHostServerRpc(ServerRpcParams serverRpcParams = default)
         {
-            secondaryWeapon.enabled = false;
-            secondaryWeapon = null;
+            if (!IsHost)
+            {
+                secondaryWeapon.enabled = false;
+                secondaryWeapon = null;
+            }
         }
 
         public void PickNewSecondaryWeapon(WeaponClass weaponClass)
@@ -224,10 +235,10 @@ namespace PlayerFunctionality
                     ChangeWeaponLocally(1);
                     ChangeWeaponOnHostServerRpc(1);
                     break;
-                //case WeaponClass.LaserSniperGun:
-                //    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
-                //    secondaryWeapon.InstantiateWeapon(weaponProjectile);
-                //    break;
+                case WeaponClass.LaserSniperGun:
+                    ChangeWeaponLocally(2);
+                    ChangeWeaponOnHostServerRpc(2);
+                    break;
                 default:
                     Debug.Log("Unexpected weapon class was given: " + weaponClass);
                     break;
@@ -256,7 +267,7 @@ namespace PlayerFunctionality
         /// <param name="context">Value gathered by input system</param>
         void Movement(Vector2 movementVector)
         {
-            myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
+            myRigidbody2D.AddForce(movementVector * movementSpeed * speedModifier, ForceMode2D.Force);
         }
 
         /// <summary>
@@ -268,7 +279,7 @@ namespace PlayerFunctionality
         void Rotate(Vector2 movementVector)
         {
             Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
             gameObject.transform.rotation = newRotation;
         }
         #endregion
