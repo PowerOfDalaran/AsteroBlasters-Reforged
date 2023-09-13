@@ -13,10 +13,10 @@ namespace WeaponSystem
         int currentAmmo;
 
         public delegate void OnTargetSwitch(Transform targetTransform);
-        public static event OnTargetSwitch onTargetSwitch;
+        public event OnTargetSwitch onTargetSwitch;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
-        public static event OnAmmoValueChange onAmmoValueChange;
+        public event OnAmmoValueChange onAmmoValueChange;
 
         List<Collider2D> possibleTargets = new List<Collider2D>();
         GameObject targetingZoneChild;

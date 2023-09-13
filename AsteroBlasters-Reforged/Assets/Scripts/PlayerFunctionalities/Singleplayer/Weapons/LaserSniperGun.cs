@@ -10,7 +10,7 @@ namespace WeaponSystem
         int currentAmmo;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
-        public static event OnAmmoValueChange onAmmoValueChange;
+        public event OnAmmoValueChange onAmmoValueChange;
 
         [SerializeField] GameObject raycastLaserPrefab;
         [SerializeField] float chargingSlow;

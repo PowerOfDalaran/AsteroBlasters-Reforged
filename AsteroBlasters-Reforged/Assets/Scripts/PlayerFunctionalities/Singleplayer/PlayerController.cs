@@ -39,10 +39,10 @@ namespace PlayerFunctionality
         public bool isChargingWeapon = false;
 
         public delegate void OnChargeValueChanged(float value);
-        public static event OnChargeValueChanged onChargeValueChanged;
+        public event OnChargeValueChanged onChargeValueChanged;
 
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
-        public static event OnWeaponChanged onWeaponChanged;
+        public event OnWeaponChanged onWeaponChanged;
 
         void Awake()
         {

@@ -45,6 +45,12 @@ namespace PlayerFunctionality
         public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
         public static event OnPlayerDeath onPlayerDeath;
 
+        public delegate void OnChargeValueChanged(float value);
+        public event OnChargeValueChanged onChargeValueChanged;
+
+        public delegate void OnWeaponChanged(WeaponClass weaponClass);
+        public event OnWeaponChanged onWeaponChanged;
+
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
         public NetworkVariable<Vector3> spawnPosition = new NetworkVariable<Vector3>();
@@ -108,17 +114,20 @@ namespace PlayerFunctionality
                     isChargingWeapon = false;
                     secondaryWeapon.Shoot(currentCharge);
                     currentCharge = 0;
+                    onChargeValueChanged?.Invoke(currentCharge);
                 }
                 else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
                 {
                     isChargingWeapon = true;
                     currentCharge += Time.deltaTime * chargingSpeed;
+                    onChargeValueChanged?.Invoke(currentCharge);
                 }
                 else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.WasReleasedThisFrame())
                 {
                     isChargingWeapon = false;
                     secondaryWeapon.Shoot(currentCharge);
                     currentCharge = 0;
+                    onChargeValueChanged?.Invoke(currentCharge);
                 }
             }
         }
@@ -201,8 +210,14 @@ namespace PlayerFunctionality
             baseWeapon.Shoot(0);
         }
 
+        public void DiscardSecondaryWeapon()
+        {
+            onWeaponChanged?.Invoke(WeaponClass.None);
+            DiscardSecondaryWeaponClientRpc();
+        }
+
         [ClientRpc]
-        public void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
+        private void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
             secondaryWeapon.enabled = false;
             secondaryWeapon = null;
@@ -214,6 +229,8 @@ namespace PlayerFunctionality
             {
                 DiscardSecondaryWeaponClientRpc();
             }
+
+            onWeaponChanged?.Invoke(weaponClass);
 
             switch (weaponClass)
             {

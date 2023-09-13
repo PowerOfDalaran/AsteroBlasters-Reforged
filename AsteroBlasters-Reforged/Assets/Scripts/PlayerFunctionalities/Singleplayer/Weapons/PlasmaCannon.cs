@@ -20,10 +20,10 @@ namespace WeaponSystem
         int currentAmmo;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
-        public static event OnAmmoValueChange onAmmoValueChange;
+        public event OnAmmoValueChange onAmmoValueChange;
 
         public delegate void OnHeatChanged(float heat);
-        public static event OnHeatChanged onHeatChanged;
+        public event OnHeatChanged onHeatChanged;
 
         public override void InstantiateWeapon(GameObject projectile)
         {

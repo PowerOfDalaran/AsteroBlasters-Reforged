@@ -10,15 +10,33 @@ namespace UserInterface
     public class ChargeStatusBar : MonoBehaviour
     {
         [SerializeField] Slider slider;
+        [SerializeField] public GameObject playerCharacter;
+        [SerializeField] public GameObject networkPlayerCharacter;
 
-        void Start()
+        void OnEnable()
         {
-            PlayerController.onChargeValueChanged += UpdateChargeBar;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlayerController>().onChargeValueChanged += UpdateChargeBar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                playerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged += UpdateChargeBar;
+            }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            PlayerController.onChargeValueChanged -= UpdateChargeBar;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlayerController>().onChargeValueChanged -= UpdateChargeBar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                playerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged -= UpdateChargeBar;
+            }
         }
 
         /// <summary>

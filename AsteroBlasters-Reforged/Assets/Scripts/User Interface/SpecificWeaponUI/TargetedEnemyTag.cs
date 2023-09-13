@@ -11,6 +11,9 @@ namespace UserInterface
     {
         Transform currentTarget;
 
+        [SerializeField] public GameObject playerCharacter;
+        [SerializeField] public GameObject networkPlayerCharacter;
+
         void Start()
         {
             // Turning the visibility of tag off and adding the update method to the delegate
@@ -19,12 +22,28 @@ namespace UserInterface
 
         private void OnEnable()
         {
-            MissileLauncher.onTargetSwitch += SwitchTarget;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<MissileLauncher>().onTargetSwitch += SwitchTarget;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onTargetSwitch += SwitchTarget;
+            }
         }
 
         private void OnDisable()
         {
-            MissileLauncher.onTargetSwitch -= SwitchTarget;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<MissileLauncher>().onTargetSwitch -= SwitchTarget;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onTargetSwitch -= SwitchTarget;
+            }
         }
 
         void Update()

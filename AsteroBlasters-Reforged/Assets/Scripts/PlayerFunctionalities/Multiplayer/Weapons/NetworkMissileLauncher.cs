@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static WeaponSystem.MissileLauncher;
+using static WeaponSystem.NetworkMissileLauncher;
 
 namespace WeaponSystem
 {
@@ -12,6 +13,13 @@ namespace WeaponSystem
         int currentAmmo;
 
         bool hadTarget;
+
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public event OnAmmoValueChange onAmmoValueChange;
+
+        public delegate void OnTargetSwitch(Transform targetTransform);
+        public event OnTargetSwitch onTargetSwitch;
+
         [SerializeField] GameObject targetedEnemy;
         [SerializeField] GameObject targetingZoneChild;
         [SerializeField] List<Collider2D> possibleTargets;
@@ -54,17 +62,23 @@ namespace WeaponSystem
             Destroy(targetingZoneChild);
         }
 
+        private void Start()
+        {
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+        }
+
         private void FixedUpdate()
         {
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponClientRpc();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
 
             // Checking if the current target was removed from targeting zone without leaving it
             if (targetedEnemy == null && hadTarget)
             {
+                onTargetSwitch?.Invoke(null);
                 hadTarget = false;
                 FindNewTargetInRange();
             }
@@ -83,6 +97,7 @@ namespace WeaponSystem
                 {
                     hadTarget = true;
                     targetedEnemy = collision.gameObject;
+                    onTargetSwitch?.Invoke(targetedEnemy.transform);
                 }
             }
         }
@@ -100,6 +115,7 @@ namespace WeaponSystem
             {
                 hadTarget = true;
                 targetedEnemy = null;
+                onTargetSwitch?.Invoke(null);
             }
         }
 
@@ -108,6 +124,7 @@ namespace WeaponSystem
             if (possibleTargets.Count > 0)
             {
                 targetedEnemy = possibleTargets[0].gameObject;
+                onTargetSwitch?.Invoke(targetedEnemy.transform);
             }
         }
 
@@ -121,8 +138,6 @@ namespace WeaponSystem
             {
                 projectile.GetComponent<NetworkHomingMissile>().Target = targetedEnemy.transform;
             }
-
-            Debug.Log(projectile.GetComponent<NetworkHomingMissile>().Target);
         }
 
         public override bool Shoot(float charge)
@@ -136,6 +151,7 @@ namespace WeaponSystem
                 if (weaponFired)
                 {
                     currentAmmo -= 1;
+                    onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
                     return true;
                 }
                 return false;

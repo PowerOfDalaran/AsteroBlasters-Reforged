@@ -18,6 +18,9 @@ namespace WeaponSystem
 
         bool coroutineActive;
 
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public event OnAmmoValueChange onAmmoValueChange;
+
         public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
@@ -43,6 +46,11 @@ namespace WeaponSystem
             raycastLaserLineRenderer.enabled = false;
         }
 
+        private void Start()
+        {
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+        }
+
         private void OnDisable()
         {
             Destroy(gameObject.transform.Find("RaycastLaser(Clone)").gameObject);
@@ -57,7 +65,7 @@ namespace WeaponSystem
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0 && !coroutineActive)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponClientRpc();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
         }
 
@@ -94,6 +102,7 @@ namespace WeaponSystem
                 {
                     DrawRaycastLaserClientRpc();
                     currentAmmo -= 1;
+                    onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
                     return true;
                 }
 

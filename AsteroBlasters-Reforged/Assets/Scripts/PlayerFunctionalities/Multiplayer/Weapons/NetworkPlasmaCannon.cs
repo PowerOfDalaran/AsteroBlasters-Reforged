@@ -16,6 +16,9 @@ namespace WeaponSystem
         [SerializeField] int maxAmmo;
         [SerializeField] int currentAmmo;
 
+        public delegate void OnAmmoValueChange(int current, int maximum);
+        public event OnAmmoValueChange onAmmoValueChange;
+
         public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
@@ -34,6 +37,11 @@ namespace WeaponSystem
             currentAmmo = maxAmmo;
         }
 
+        private void Start()
+        {
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+        }
+
         private void FixedUpdate()
         {
             // Deciding whether the rest of method should be activated
@@ -45,7 +53,7 @@ namespace WeaponSystem
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeaponClientRpc();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
 
             // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
@@ -82,6 +90,8 @@ namespace WeaponSystem
                 {
                     currentAmmo -= 1;
                     currentHeat += heatGain;
+                    onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
                     return true;
                 }
                 else
