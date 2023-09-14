@@ -9,7 +9,7 @@ namespace WeaponSystem
             InstantiateWeapon();
         }
 
-        public override void InstantiateWeapon(GameObject projectile = null)
+        public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;

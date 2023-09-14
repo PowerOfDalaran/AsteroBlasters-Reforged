@@ -25,13 +25,12 @@ namespace WeaponSystem
         public delegate void OnHeatChanged(float heat);
         public event OnHeatChanged onHeatChanged;
 
-        public override void InstantiateWeapon(GameObject projectile)
+        public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.PlasmaCannon;
             fireCooldown = 0.25f;
-            projectilePrefab = projectile;
 
             overheated = false;
             currentHeat = 0f;

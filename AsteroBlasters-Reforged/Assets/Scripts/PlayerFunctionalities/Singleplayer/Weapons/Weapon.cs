@@ -52,7 +52,7 @@ namespace WeaponSystem
         /// Method instantiating the weapon parameters and assigning it's prefabs
         /// </summary>
         /// <param name="projectile"></param>
-        public virtual void InstantiateWeapon(GameObject projectile = null)
+        public virtual void InstantiateWeapon()
         { 
             // Implement in child classes
         }

@@ -23,11 +23,11 @@ namespace UserInterface
         void Start()
         {
             playerCharacter.GetComponent<PlayerController>().onWeaponChanged += UpdateVisibility;
-        }
 
-        private void OnDestroy()
-        {
-            playerCharacter.GetComponent<PlayerController>().onWeaponChanged -= UpdateVisibility;
+            AmmoLeftText.GetComponent<AmmoLeftText>().playerCharacter = playerCharacter;
+            heatWeaponBar.GetComponent<HeatWeaponBar>().playerCharacter = playerCharacter;
+            TargetedEnemyTag.GetComponent<TargetedEnemyTag>().playerCharacter = playerCharacter;
+            chargeStatusBar.GetComponent<ChargeStatusBar>().playerCharacter = playerCharacter;
         }
 
         /// <summary>

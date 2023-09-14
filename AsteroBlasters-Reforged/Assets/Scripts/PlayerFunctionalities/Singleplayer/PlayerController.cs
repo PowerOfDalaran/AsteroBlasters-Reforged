@@ -12,6 +12,8 @@ namespace PlayerFunctionality
         Rigidbody2D myRigidbody2D;
         PlayerControls myPlayerControls;
 
+        [SerializeField] Weapon[] weaponArray = new Weapon[3];
+
         [SerializeField] SpaceRifle baseWeapon;
         [SerializeField] Weapon secondaryWeapon;
 
@@ -158,7 +160,7 @@ namespace PlayerFunctionality
         /// </summary>
         public void DiscardSecondaryWeapon()
         {
-            Destroy(secondaryWeapon);
+            secondaryWeapon.enabled = false;
             secondaryWeapon = null;
             onWeaponChanged?.Invoke(WeaponClass.None);
         }
@@ -180,21 +182,25 @@ namespace PlayerFunctionality
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    secondaryWeapon = gameObject.AddComponent<PlasmaCannon>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(0);
                     break;
                 case WeaponClass.MissileLauncher:
-                    secondaryWeapon = gameObject.AddComponent<MissileLauncher>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(1);
                     break;
                 case WeaponClass.LaserSniperGun:
-                    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(2);
                     break;
                 default: 
                     Debug.Log("Unexpected weapon class was given: " +  weaponClass);
                     break;
             }
+        }
+
+        void ChangeSecondaryWeapon(int weaponId)
+        {
+            secondaryWeapon = weaponArray[weaponId];
+            secondaryWeapon.enabled = true;
+            secondaryWeapon.InstantiateWeapon();
         }
 
         /// <summary>

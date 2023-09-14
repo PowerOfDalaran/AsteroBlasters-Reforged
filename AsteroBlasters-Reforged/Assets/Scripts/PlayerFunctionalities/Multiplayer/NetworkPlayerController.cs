@@ -5,7 +5,6 @@ using DataStructure;
 using NetworkFunctionality;
 using Others;
 using WeaponSystem;
-using static PlayerFunctionality.PlayerController;
 
 namespace PlayerFunctionality
 {

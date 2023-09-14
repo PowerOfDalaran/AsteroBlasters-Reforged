@@ -23,13 +23,12 @@ namespace WeaponSystem
         GameObject targetedEnemy;
         bool hadTarget;
 
-        public override void InstantiateWeapon(GameObject projectile)
+        public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.MissileLauncher;
             fireCooldown = 2f;
-            projectilePrefab = projectile;
 
 
             maxAmmo = 3;
