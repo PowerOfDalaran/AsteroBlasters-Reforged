@@ -110,6 +110,7 @@ namespace PlayerFunctionality
                 // In some weapons by doing so, the player can increase damage dealt to opponent
                 if (currentCharge >= maxCharge)
                 {
+                    // Checking if shot was actually fired, if so the charge counter is set back to 0, otherwise the weapon keeps charging
                     bool shotTaken = secondaryWeapon.Shoot(currentCharge);
                     if (shotTaken)
                     {
@@ -198,8 +199,8 @@ namespace PlayerFunctionality
 
         #region Player Actions
         /// <summary>
-        /// Method activating the current weapon in order to fire.
-        /// Is added to the "PlayerActions.Move.performed" delegate.
+        /// Method activating the base weapon in order to fire.
+        /// Is added to the "PlayerActions.ShootFirstWeapon.performed" delegate.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
         void UseBaseWeapon(InputAction.CallbackContext context)
@@ -212,18 +213,29 @@ namespace PlayerFunctionality
             baseWeapon.Shoot(0);
         }
 
+        /// <summary>
+        /// Method being activated if the current secondary weapon should be discarded.
+        /// Activates the server rpc method and calls an event.
+        /// </summary>
         public void DiscardSecondaryWeapon()
         {
             onWeaponChanged?.Invoke(WeaponClass.None);
             DiscardSecondaryWeaponServerRpc();
         }
 
+        /// <summary>
+        /// Method, which only purpose is firing the Client Rpc method. It exist purely because only host can activate the Client Rpc's.
+        /// </summary>
         [ServerRpc]
         void DiscardSecondaryWeaponServerRpc()
         {
             DiscardSecondaryWeaponClientRpc();
         }
 
+        /// <summary>
+        /// Method launched by every connected player, discarding the weapon from that player character.
+        /// </summary>
+        /// <param name="clientRpcParams"></param>
         [ClientRpc]
         void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
@@ -234,15 +246,22 @@ namespace PlayerFunctionality
             }
         }
 
+        /// <summary>
+        /// Method activating the weapon with given class on the player character.
+        /// </summary>
+        /// <param name="weaponClass">The class of weapon, which is supposed to be equipped</param>
         public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
+            // Checking if old weapon shouldn't be discarded first
             if (secondaryWeapon != null)
             {
                 DiscardSecondaryWeapon();
             }
 
+            // Activating the event
             onWeaponChanged?.Invoke(weaponClass);
 
+            // Changing the secondary weapon based on given class
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
@@ -260,14 +279,22 @@ namespace PlayerFunctionality
             }
         }
 
+        /// <summary>
+        /// Method calling the host to activate the Client Rpc method, since only he can do that :|
+        /// </summary>
+        /// <param name="weaponId"></param>
         [ServerRpc]
         void ChangeSecondaryWeaponServerRpc(int weaponId)
         {
             ChangeSecondaryWeaponClientRpc(weaponId);
         }
 
+        /// <summary>
+        /// Method changing the weapon of this player character to the one with given index.
+        /// </summary>
+        /// <param name="weaponId">Index of weapon in the weapon array</param>
         [ClientRpc]
-        void ChangeSecondaryWeaponClientRpc(int weaponId, ClientRpcParams clientRpcParams = default)
+        void ChangeSecondaryWeaponClientRpc(int weaponId)
         {
             secondaryWeapon = weaponArray[weaponId];
             secondaryWeapon.InstantiateWeapon();

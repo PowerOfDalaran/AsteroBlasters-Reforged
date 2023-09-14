@@ -178,7 +178,7 @@ namespace NetworkFunctionality
                     newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
                 }
 
-                StartGameClientRpc();
+                SetDataOnGameStartClientRpc();
             }
         }
         #endregion
@@ -201,8 +201,12 @@ namespace NetworkFunctionality
             playerDataNetworkList[playerDataIndex] = playerData;
         }
 
+        /// <summary>
+        /// Method assigning the data on every client (host too).
+        /// Activated after starting the game.
+        /// </summary>
         [ClientRpc]
-        private void StartGameClientRpc()
+        private void SetDataOnGameStartClientRpc()
         {
             ownedPlayerCharacter = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
         }
