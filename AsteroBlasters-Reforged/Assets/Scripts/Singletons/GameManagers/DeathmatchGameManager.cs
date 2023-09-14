@@ -15,8 +15,6 @@ namespace GameManager
     {
         public static DeathmatchGameManager instance;
 
-        public NetworkObject ownedPlayerCharacter;
-
         public NetworkVariable<float> timeLeft;
 
         #region Build-in methods
@@ -31,8 +29,6 @@ namespace GameManager
         protected override void Start()
         {
             base.Start();
-
-            ownedPlayerCharacter = NetworkManager.Singleton.LocalClient.PlayerObject;
 
             // Setting up the timer
             if (NetworkManager.IsHost)

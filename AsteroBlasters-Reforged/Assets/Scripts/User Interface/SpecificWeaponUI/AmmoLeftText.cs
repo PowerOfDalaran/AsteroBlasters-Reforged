@@ -26,9 +26,9 @@ namespace UserInterface
 
             if (networkPlayerCharacter != null)
             {
-                playerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange += UpdateText;
-                playerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange += UpdateText;
-                playerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange += UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange += UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange += UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange += UpdateText;
             }
         }
 
@@ -45,9 +45,9 @@ namespace UserInterface
 
             if (networkPlayerCharacter != null)
             {
-                playerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange -= UpdateText;
-                playerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange -= UpdateText;
-                playerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange -= UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange -= UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange -= UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange -= UpdateText;
             }
         }
 

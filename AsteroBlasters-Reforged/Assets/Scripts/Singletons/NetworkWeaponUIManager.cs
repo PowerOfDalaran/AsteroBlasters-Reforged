@@ -1,4 +1,5 @@
 using GameManager;
+using NetworkFunctionality;
 using PlayerFunctionality;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,18 +17,27 @@ namespace UserInterface
 
         [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
-        private void Start()
-        {
-            GameObject networkPlayer = DeathmatchGameManager.instance.ownedPlayerCharacter.gameObject;
-            networkPlayer.GetComponent<NetworkPlayerController>().onWeaponChanged += UpdateVisibility;
+        [SerializeField] GameObject referencedPlayerCharacter;
 
-            AmmoLeftText.GetComponent<AmmoLeftText>().networkPlayerCharacter = networkPlayer;
-            TargetedEnemyTag.GetComponent<TargetedEnemyTag>().networkPlayerCharacter = networkPlayer;
+        private void FixedUpdate()
+        {
+            if (referencedPlayerCharacter == null)
+            {
+                if (MultiplayerGameManager.instance.ownedPlayerCharacter.gameObject != null)
+                {
+                    AddReferences();
+                }
+            }
         }
-
-        private void OnDestroy()
+        void AddReferences()
         {
-            DeathmatchGameManager.instance.ownedPlayerCharacter.GetComponent<NetworkPlayerController>().onWeaponChanged -= UpdateVisibility;
+            referencedPlayerCharacter = MultiplayerGameManager.instance.ownedPlayerCharacter.gameObject;
+            referencedPlayerCharacter.GetComponent<NetworkPlayerController>().onWeaponChanged += UpdateVisibility;
+
+            AmmoLeftText.GetComponent<AmmoLeftText>().networkPlayerCharacter = referencedPlayerCharacter;
+            TargetedEnemyTag.GetComponent<TargetedEnemyTag>().networkPlayerCharacter = referencedPlayerCharacter;
+            heatWeaponBar.GetComponent<HeatWeaponBar>().networkPlayerCharacter = referencedPlayerCharacter;
+            chargeStatusBar.GetComponent<ChargeStatusBar>().networkPlayerCharacter = referencedPlayerCharacter;
         }
 
         private void UpdateVisibility(WeaponClass weaponClass)
@@ -40,11 +50,10 @@ namespace UserInterface
                     GameObject currentWeaponUI = activatedElements[i];
 
                     currentWeaponUI.SetActive(false);
-                    AmmoLeftText.SetActive(false);
-                    secondaryWeaponButton.SetActive(false);
                     activatedElements.Remove(currentWeaponUI);
                 }
-
+                AmmoLeftText.SetActive(false);
+                secondaryWeaponButton.SetActive(false);
                 return;
             }
 

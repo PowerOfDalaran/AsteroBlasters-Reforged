@@ -53,6 +53,9 @@ namespace WeaponSystem
 
         private void OnDisable()
         {
+            NetworkPlayerController playerController = GetComponent<NetworkPlayerController>();
+            playerController.SpeedModifier = 1f;
+
             Destroy(gameObject.transform.Find("RaycastLaser(Clone)").gameObject);
         }
 
@@ -100,7 +103,7 @@ namespace WeaponSystem
 
                 if (weaponFired)
                 {
-                    DrawRaycastLaserClientRpc();
+                    DrawRaycastLaserServerRpc();
                     currentAmmo -= 1;
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
                     return true;
@@ -109,6 +112,12 @@ namespace WeaponSystem
                 return false;
             }
             return false;
+        }
+
+        [ServerRpc]
+        void DrawRaycastLaserServerRpc()
+        {
+            DrawRaycastLaserClientRpc();
         }
 
         [ClientRpc]

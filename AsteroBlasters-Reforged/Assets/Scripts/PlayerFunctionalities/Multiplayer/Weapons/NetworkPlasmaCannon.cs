@@ -19,6 +19,9 @@ namespace WeaponSystem
         public delegate void OnAmmoValueChange(int current, int maximum);
         public event OnAmmoValueChange onAmmoValueChange;
 
+        public delegate void OnHeatChanged(float heat);
+        public event OnHeatChanged onHeatChanged;
+
         public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
@@ -30,8 +33,8 @@ namespace WeaponSystem
             currentHeat = 0f;
             maxHeat = 1f;
 
-            heatLoss = 0.0085f;
-            heatGain = 0.2f;
+            heatLoss = 0.0075f;
+            heatGain = 0.3f;
 
             maxAmmo = 14;
             currentAmmo = maxAmmo;
@@ -61,6 +64,7 @@ namespace WeaponSystem
             {
                 // Decreasing current heat and running the event
                 currentHeat -= heatLoss;
+                onHeatChanged?.Invoke(currentHeat);
 
                 // Checking if weapon should still be overheated 
                 if (currentHeat <= 0f)
@@ -77,6 +81,7 @@ namespace WeaponSystem
             {
                 // Decreasing current heat and running the event
                 currentHeat -= heatLoss;
+                onHeatChanged?.Invoke(currentHeat);
             }
         }
 
@@ -90,14 +95,12 @@ namespace WeaponSystem
                 {
                     currentAmmo -= 1;
                     currentHeat += heatGain;
+                    onHeatChanged?.Invoke(currentHeat);
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
             return false;
         }

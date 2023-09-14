@@ -27,6 +27,8 @@ namespace NetworkFunctionality
 
         public event EventHandler OnPlayerDataNetworkListChanged;
 
+        public GameObject ownedPlayerCharacter;
+
         public bool gameActive = false;
 
         #region Build-in methods
@@ -175,6 +177,8 @@ namespace NetworkFunctionality
                     newPlayerController.SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
                     newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
                 }
+
+                StartGameClientRpc();
             }
         }
         #endregion
@@ -195,6 +199,12 @@ namespace NetworkFunctionality
 
             playerData.playerName = playerName;
             playerDataNetworkList[playerDataIndex] = playerData;
+        }
+
+        [ClientRpc]
+        private void StartGameClientRpc()
+        {
+            ownedPlayerCharacter = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
         }
 
 

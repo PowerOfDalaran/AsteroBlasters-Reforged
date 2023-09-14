@@ -18,14 +18,16 @@ namespace UserInterface
 
         [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
+        [SerializeField] GameObject playerCharacter;
+
         void Start()
         {
-            PlayerController.onWeaponChanged += UpdateVisibility;
+            playerCharacter.GetComponent<PlayerController>().onWeaponChanged += UpdateVisibility;
         }
 
         private void OnDestroy()
         {
-            PlayerController.onWeaponChanged -= UpdateVisibility;
+            playerCharacter.GetComponent<PlayerController>().onWeaponChanged -= UpdateVisibility;
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace PlayerFunctionality
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
 
-        float speedModifier = 1f;
+        [SerializeField] float speedModifier = 1f;
         public float SpeedModifier
         {
             get { return speedModifier; }
@@ -67,7 +67,7 @@ namespace PlayerFunctionality
             maxHealth.Value = 3;
             currentHealth.Value = maxHealth.Value;
 
-            chargingSpeed = 10f;
+            chargingSpeed = 8f;
             isChargingWeapon = false;
 
             maxCharge = 10f;
@@ -111,10 +111,13 @@ namespace PlayerFunctionality
                 // In some weapons by doing so, the player can increase damage dealt to opponent
                 if (currentCharge >= maxCharge)
                 {
-                    isChargingWeapon = false;
-                    secondaryWeapon.Shoot(currentCharge);
-                    currentCharge = 0;
-                    onChargeValueChanged?.Invoke(currentCharge);
+                    bool shotTaken = secondaryWeapon.Shoot(currentCharge);
+                    if (shotTaken)
+                    {
+                        isChargingWeapon = false;
+                        currentCharge = 0;
+                        onChargeValueChanged?.Invoke(currentCharge);
+                    }
                 }
                 else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
                 {
@@ -213,21 +216,30 @@ namespace PlayerFunctionality
         public void DiscardSecondaryWeapon()
         {
             onWeaponChanged?.Invoke(WeaponClass.None);
+            DiscardSecondaryWeaponServerRpc();
+        }
+
+        [ServerRpc]
+        void DiscardSecondaryWeaponServerRpc()
+        {
             DiscardSecondaryWeaponClientRpc();
         }
 
         [ClientRpc]
-        private void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
+        void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
-            secondaryWeapon.enabled = false;
-            secondaryWeapon = null;
+            if (secondaryWeapon != null)
+            {
+                secondaryWeapon.enabled = false;
+                secondaryWeapon = null;
+            }
         }
 
         public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             if (secondaryWeapon != null)
             {
-                DiscardSecondaryWeaponClientRpc();
+                DiscardSecondaryWeapon();
             }
 
             onWeaponChanged?.Invoke(weaponClass);
@@ -235,18 +247,24 @@ namespace PlayerFunctionality
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    ChangeSecondaryWeaponClientRpc(0);
+                    ChangeSecondaryWeaponServerRpc(0);
                     break;
                 case WeaponClass.MissileLauncher:
-                    ChangeSecondaryWeaponClientRpc(1);
+                    ChangeSecondaryWeaponServerRpc(1);
                     break;
                 case WeaponClass.LaserSniperGun:
-                    ChangeSecondaryWeaponClientRpc(2);
+                    ChangeSecondaryWeaponServerRpc(2);
                     break;
                 default:
                     Debug.Log("Unexpected weapon class was given: " + weaponClass);
                     break;
             }
+        }
+
+        [ServerRpc]
+        void ChangeSecondaryWeaponServerRpc(int weaponId)
+        {
+            ChangeSecondaryWeaponClientRpc(weaponId);
         }
 
         [ClientRpc]

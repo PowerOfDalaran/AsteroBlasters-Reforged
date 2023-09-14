@@ -10,15 +10,33 @@ namespace UserInterface
     public class HeatWeaponBar : MonoBehaviour
     {
         [SerializeField] Slider slider;
+        [SerializeField] public GameObject playerCharacter;
+        [SerializeField] public GameObject networkPlayerCharacter;
 
         void OnEnable()
         {
-            PlasmaCannon.onHeatChanged += UpdateHeatbar;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged += UpdateHeatbar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged += UpdateHeatbar;
+            }
         }
 
         private void OnDisable()
         {
-            PlasmaCannon.onHeatChanged -= UpdateHeatbar;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+            }
         }
 
         /// <summary>

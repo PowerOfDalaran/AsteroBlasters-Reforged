@@ -22,7 +22,7 @@ namespace UserInterface
 
             if (networkPlayerCharacter != null)
             {
-                playerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged += UpdateChargeBar;
+                networkPlayerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged += UpdateChargeBar;
             }
         }
 
@@ -35,7 +35,7 @@ namespace UserInterface
 
             if (networkPlayerCharacter != null)
             {
-                playerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged -= UpdateChargeBar;
+                networkPlayerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged -= UpdateChargeBar;
             }
         }
 
