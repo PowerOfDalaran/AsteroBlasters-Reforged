@@ -48,7 +48,7 @@ namespace WeaponSystem
             raycastLaser.enabled = false;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             Destroy(gameObject.transform.Find("RaycastLaser(Clone)").gameObject);
         }
