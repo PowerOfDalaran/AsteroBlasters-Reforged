@@ -18,14 +18,16 @@ namespace UserInterface
 
         [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
+        [SerializeField] GameObject playerCharacter;
+
         void Start()
         {
-            PlayerController.onWeaponChanged += UpdateVisibility;
-        }
+            playerCharacter.GetComponent<PlayerController>().onWeaponChanged += UpdateVisibility;
 
-        private void OnDestroy()
-        {
-            PlayerController.onWeaponChanged -= UpdateVisibility;
+            AmmoLeftText.GetComponent<AmmoLeftText>().playerCharacter = playerCharacter;
+            heatWeaponBar.GetComponent<HeatWeaponBar>().playerCharacter = playerCharacter;
+            TargetedEnemyTag.GetComponent<TargetedEnemyTag>().playerCharacter = playerCharacter;
+            chargeStatusBar.GetComponent<ChargeStatusBar>().playerCharacter = playerCharacter;
         }
 
         /// <summary>

@@ -4,20 +4,20 @@ using UnityEngine;
 namespace WeaponSystem
 {
     /// <summary>
-    /// Class managing the functionalities of plasma cannon weapon
+    /// Class managing the functionalities of secondary weapon - plasma cannon (network version)
     /// </summary>
-    public class PlasmaCannon : Weapon
+    public class NetworkPlasmaCannon : NetworkWeapon
     {
-        bool overheated;
+        [SerializeField] bool overheated;
 
-        float currentHeat;
-        float maxHeat;
+        [SerializeField] float currentHeat;
+        [SerializeField] float maxHeat;
 
         float heatLoss;
         float heatGain;
 
-        int maxAmmo;
-        int currentAmmo;
+        [SerializeField] int maxAmmo;
+        [SerializeField] int currentAmmo;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
         public event OnAmmoValueChange onAmmoValueChange;
@@ -36,8 +36,8 @@ namespace WeaponSystem
             currentHeat = 0f;
             maxHeat = 1f;
 
-            heatLoss = 0.0085f;
-            heatGain = 0.2f;
+            heatLoss = 0.0075f;
+            heatGain = 0.3f;
 
             maxAmmo = 14;
             currentAmmo = maxAmmo;
@@ -45,16 +45,21 @@ namespace WeaponSystem
 
         private void Start()
         {
-            // Activating the event, so that the text box won't display "0/0" on start 
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
         private void FixedUpdate()
         {
+            // Deciding whether the rest of method should be activated
+            if (!IsOwner)
+            {
+                return;
+            }
+
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<PlayerController>().DiscardSecondaryWeapon();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
 
             // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
@@ -65,12 +70,12 @@ namespace WeaponSystem
                 onHeatChanged?.Invoke(currentHeat);
 
                 // Checking if weapon should still be overheated 
-                if (currentHeat <= 0f) 
+                if (currentHeat <= 0f)
                 {
                     overheated = false;
                 }
             }
-            else if (currentHeat >= maxHeat) 
+            else if (currentHeat >= maxHeat)
             {
                 // Turning overheated state to true
                 overheated = true;
@@ -83,24 +88,26 @@ namespace WeaponSystem
             }
         }
 
-        public override GameObject Shoot(float charge)
+        public override bool Shoot(float charge)
         {
-            // Firing the weapon if it's not overheated and ammunition didn't run out
             if (!overheated && currentAmmo > 0)
             {
-                currentAmmo -= 1;
-                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+                bool weaponFired = base.Shoot(charge);
 
-                GameObject newPlasmaBurst = base.Shoot(charge);
+                if (weaponFired)
+                {
+                    // If weapon actually fired, removing ammunition, generating heat and launching the events
+                    currentAmmo -= 1;
+                    currentHeat += heatGain;
 
-                // Increasing current heat and running the event
-                currentHeat += heatGain;
-                onHeatChanged?.Invoke(currentHeat);
+                    onHeatChanged?.Invoke(currentHeat);
+                    onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
-                return newPlasmaBurst;
+                    return true;
+                }
+                return false;
             }
-
-            return null;
+            return false;
         }
     }
 }

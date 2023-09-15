@@ -1,7 +1,8 @@
+using PlayerFunctionality;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace PlayerFunctionality
+namespace WeaponSystem
 {
     /// <summary>
     /// Class managing the projectile's functionalities.
@@ -9,11 +10,11 @@ namespace PlayerFunctionality
     /// </summary>
     public class NetworkProjectileController : NetworkBehaviour
     {
-        Rigidbody2D myRigidbody2D;
+        protected Rigidbody2D myRigidbody2D;
         public float speed = 20f;
         public int damage = 1;
 
-        void Awake()
+        protected virtual void Awake()
         {
             // Assigning values to class properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -21,8 +22,10 @@ namespace PlayerFunctionality
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            // Checking if colliding object is a player character
             NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
+            // If so, dealing damage to him
             if (networkPlayerController != null)
             {
                 networkPlayerController.TakeDamage(damage, gameObject.GetComponent<NetworkObject>().OwnerClientId);

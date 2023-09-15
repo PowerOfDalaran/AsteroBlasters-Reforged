@@ -11,14 +11,41 @@ namespace UserInterface
     {
         [SerializeField] Slider slider;
 
-        void Start()
+        /// <summary>
+        /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject playerCharacter;
+        /// <summary>
+        /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject networkPlayerCharacter;
+
+        void OnEnable()
         {
-            PlayerController.onChargeValueChanged += UpdateChargeBar;
+            // Adding the "UpdateChargeBar" method to the events
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlayerController>().onChargeValueChanged += UpdateChargeBar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged += UpdateChargeBar;
+            }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            PlayerController.onChargeValueChanged -= UpdateChargeBar;
+            // Removing the "UpdateChargeBar" method from the events
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlayerController>().onChargeValueChanged -= UpdateChargeBar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlayerController>().onChargeValueChanged -= UpdateChargeBar;
+            }
         }
 
         /// <summary>

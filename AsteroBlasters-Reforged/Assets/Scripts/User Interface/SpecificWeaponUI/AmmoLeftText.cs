@@ -11,22 +11,51 @@ namespace UserInterface
     {
         [SerializeField] TextMeshProUGUI text;
 
+        /// <summary>
+        /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject playerCharacter;
+        /// <summary>
+        /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject networkPlayerCharacter;
+
         private void OnEnable()
         {
             // Adding the method to the delegates of ALL weapons currently using the ammunition functionality
             // Need to generalize it later
-            LaserSniperGun.onAmmoValueChange += UpdateText;
-            MissileLauncher.onAmmoValueChange += UpdateText;
-            PlasmaCannon.onAmmoValueChange += UpdateText;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<LaserSniperGun>().onAmmoValueChange += UpdateText;
+                playerCharacter.GetComponent<MissileLauncher>().onAmmoValueChange += UpdateText;
+                playerCharacter.GetComponent<PlasmaCannon>().onAmmoValueChange += UpdateText;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange += UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange += UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange += UpdateText;
+            }
         }
 
         private void OnDisable()
         {
             // Removing the method from the delegates of ALL weapons currently using the ammunition functionality
             // Need to generalize it later
-            LaserSniperGun.onAmmoValueChange -= UpdateText;
-            MissileLauncher.onAmmoValueChange -= UpdateText;
-            PlasmaCannon.onAmmoValueChange -= UpdateText;
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<LaserSniperGun>().onAmmoValueChange -= UpdateText;
+                playerCharacter.GetComponent<MissileLauncher>().onAmmoValueChange -= UpdateText;
+                playerCharacter.GetComponent<PlasmaCannon>().onAmmoValueChange -= UpdateText;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkLaserSniperGun>().onAmmoValueChange -= UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkMissileLauncher>().onAmmoValueChange -= UpdateText;
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onAmmoValueChange -= UpdateText;
+            }
         }
 
         /// <summary>

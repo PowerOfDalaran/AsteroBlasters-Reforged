@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using DataStructure;
 using NetworkFunctionality;
 using Others;
+using WeaponSystem;
 
 namespace PlayerFunctionality
 {
@@ -16,14 +17,38 @@ namespace PlayerFunctionality
         Rigidbody2D myRigidbody2D;
         SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
-        NetworkWeapon myWeapon;
+
+        [SerializeField] NetworkWeapon[] weaponArray = new NetworkWeapon[3];
+
+        [SerializeField] NetworkSpaceRifle baseWeapon;
+        [SerializeField] NetworkWeapon secondaryWeapon;
+
+        [SerializeField] float currentCharge;
+        [SerializeField] float maxCharge;
+
+        [SerializeField] float chargingSpeed;
+        [SerializeField] public bool isChargingWeapon;
 
         [SerializeField] float movementSpeed = 3f;
         [SerializeField] float rotationSpeed = 5.15f;
+
+        [SerializeField] float speedModifier = 1f;
+        public float SpeedModifier
+        {
+            get { return speedModifier; }
+            set { speedModifier = value; }
+        }
+
         public int playerIndex;
 
         public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
         public static event OnPlayerDeath onPlayerDeath;
+
+        public delegate void OnChargeValueChanged(float value);
+        public event OnChargeValueChanged onChargeValueChanged;
+
+        public delegate void OnWeaponChanged(WeaponClass weaponClass);
+        public event OnWeaponChanged onWeaponChanged;
 
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
@@ -34,12 +59,32 @@ namespace PlayerFunctionality
         {
             // Assigning values to properties
             myRigidbody2D = GetComponent<Rigidbody2D>();
-            myWeapon = GetComponent<NetworkWeapon>();
+            baseWeapon = GetComponent<NetworkSpaceRifle>();
             mySpriteRenderer = GetComponent<SpriteRenderer>();
             myPlayerControls = new PlayerControls();
 
             maxHealth.Value = 3;
             currentHealth.Value = maxHealth.Value;
+
+            chargingSpeed = 8f;
+            isChargingWeapon = false;
+
+            maxCharge = 10f;
+            currentCharge = 0f;
+        }
+
+        void OnEnable()
+        {
+            // Adding methods to PlayerControls delegates and activating it
+            myPlayerControls.Enable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
+        }
+
+        void OnDisable()
+        {
+            // Removing methods from PlayerControls delegates and deactivating it
+            myPlayerControls.Disable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= UseBaseWeapon;
         }
 
         void Start()
@@ -48,6 +93,49 @@ namespace PlayerFunctionality
             PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
             mySpriteRenderer.color = myColor;
+        }
+
+        private void Update()
+        {
+            // Deciding whether the rest of method should be activated
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            // Using the second weapon functionality - player can hold and load the attack. 
+            // Checking if there is any secondary weapon equipped.
+            if (secondaryWeapon != null)
+            {
+                // In some weapons by doing so, the player can increase damage dealt to opponent
+                if (currentCharge >= maxCharge)
+                {
+                    // IN CASE THE CHARGE METER REACHES MAXIMUM
+                    // Checking if shot was actually fired, if so the charge counter is set back to 0, otherwise the weapon keeps charging
+                    bool shotTaken = secondaryWeapon.Shoot(currentCharge);
+                    if (shotTaken)
+                    {
+                        isChargingWeapon = false;
+                        currentCharge = 0;
+                        onChargeValueChanged?.Invoke(currentCharge);
+                    }
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
+                {
+                    // IN CASE THE SHOOT BUTTON IS STILL HELD
+                    isChargingWeapon = true;
+                    currentCharge += Time.deltaTime * chargingSpeed;
+                    onChargeValueChanged?.Invoke(currentCharge);
+                }
+                else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.WasReleasedThisFrame())
+                {
+                    // IN CASE THE BUTTON WAS RELEASED
+                    isChargingWeapon = false;
+                    secondaryWeapon.Shoot(currentCharge);
+                    currentCharge = 0;
+                    onChargeValueChanged?.Invoke(currentCharge);
+                }
+            }
         }
 
         private void FixedUpdate()
@@ -98,20 +186,6 @@ namespace PlayerFunctionality
 
             }
         }
-
-        void OnEnable()
-        {
-            // Adding methods to PlayerControls delegates and activating it
-            myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += Shoot;
-        }
-
-        void OnDisable()
-        {
-            // Removing methods from PlayerControls delegates and deactivating it
-            myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= Shoot;
-        }
         #endregion
 
         #region Set Player Data
@@ -128,18 +202,106 @@ namespace PlayerFunctionality
 
         #region Player Actions
         /// <summary>
-        /// Method activating the current weapon in order to fire.
-        /// Is added to the "PlayerActions.Move.performed" delegate.
+        /// Method activating the base weapon in order to fire.
+        /// Is added to the "PlayerActions.ShootFirstWeapon.performed" delegate.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
-        void Shoot(InputAction.CallbackContext context)
+        void UseBaseWeapon(InputAction.CallbackContext context)
         {
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
             }
-            myWeapon.ShootServerRpc();
+            baseWeapon.Shoot(0);
+        }
+
+        /// <summary>
+        /// Method being activated if the current secondary weapon should be discarded.
+        /// Activates the server rpc method and calls an event.
+        /// </summary>
+        public void DiscardSecondaryWeapon()
+        {
+            onWeaponChanged?.Invoke(WeaponClass.None);
+            DiscardSecondaryWeaponServerRpc();
+        }
+
+        /// <summary>
+        /// Method, which only purpose is firing the Client Rpc method. It exist purely because only host can activate the Client Rpc's.
+        /// </summary>
+        [ServerRpc]
+        void DiscardSecondaryWeaponServerRpc()
+        {
+            DiscardSecondaryWeaponClientRpc();
+        }
+
+        /// <summary>
+        /// Method launched by every connected player, discarding the weapon from that player character.
+        /// </summary>
+        /// <param name="clientRpcParams"></param>
+        [ClientRpc]
+        void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
+        {
+            if (secondaryWeapon != null)
+            {
+                secondaryWeapon.enabled = false;
+                secondaryWeapon = null;
+            }
+        }
+
+        /// <summary>
+        /// Method activating the weapon with given class on the player character.
+        /// </summary>
+        /// <param name="weaponClass">The class of weapon, which is supposed to be equipped</param>
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
+        {
+            // Checking if old weapon shouldn't be discarded first
+            if (secondaryWeapon != null)
+            {
+                DiscardSecondaryWeapon();
+            }
+
+            // Activating the event
+            onWeaponChanged?.Invoke(weaponClass);
+
+            // Changing the secondary weapon based on given class
+            switch (weaponClass)
+            {
+                case WeaponClass.PlasmaCannon:
+                    ChangeSecondaryWeaponServerRpc(0);
+                    break;
+                case WeaponClass.MissileLauncher:
+                    ChangeSecondaryWeaponServerRpc(1);
+                    break;
+                case WeaponClass.LaserSniperGun:
+                    ChangeSecondaryWeaponServerRpc(2);
+                    break;
+                default:
+                    Debug.Log("Unexpected weapon class was given: " + weaponClass);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Method calling the host to activate the Client Rpc method, since only he can do that :|
+        /// </summary>
+        /// <param name="weaponId"></param>
+        [ServerRpc]
+        void ChangeSecondaryWeaponServerRpc(int weaponId)
+        {
+            ChangeSecondaryWeaponClientRpc(weaponId);
+        }
+
+        /// <summary>
+        /// Method changing the weapon of this player character to the one with given index.
+        /// </summary>
+        /// <param name="weaponId">Index of weapon in the weapon array</param>
+        [ClientRpc]
+        void ChangeSecondaryWeaponClientRpc(int weaponId)
+        {
+            secondaryWeapon = weaponArray[weaponId];
+            secondaryWeapon.InstantiateWeapon();
+            secondaryWeapon.enabled = true;
         }
 
         /// <summary>
@@ -149,7 +311,7 @@ namespace PlayerFunctionality
         /// <param name="context">Value gathered by input system</param>
         void Movement(Vector2 movementVector)
         {
-            myRigidbody2D.AddForce(movementVector * movementSpeed, ForceMode2D.Force);
+            myRigidbody2D.AddForce(movementVector * movementSpeed * speedModifier, ForceMode2D.Force);
         }
 
         /// <summary>
@@ -161,7 +323,7 @@ namespace PlayerFunctionality
         void Rotate(Vector2 movementVector)
         {
             Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
             gameObject.transform.rotation = newRotation;
         }
         #endregion

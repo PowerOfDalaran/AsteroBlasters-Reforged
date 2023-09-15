@@ -12,6 +12,8 @@ namespace PlayerFunctionality
         Rigidbody2D myRigidbody2D;
         PlayerControls myPlayerControls;
 
+        [SerializeField] Weapon[] weaponArray = new Weapon[3];
+
         [SerializeField] SpaceRifle baseWeapon;
         [SerializeField] Weapon secondaryWeapon;
 
@@ -39,10 +41,10 @@ namespace PlayerFunctionality
         public bool isChargingWeapon = false;
 
         public delegate void OnChargeValueChanged(float value);
-        public static event OnChargeValueChanged onChargeValueChanged;
+        public event OnChargeValueChanged onChargeValueChanged;
 
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
-        public static event OnWeaponChanged onWeaponChanged;
+        public event OnWeaponChanged onWeaponChanged;
 
         void Awake()
         {
@@ -158,7 +160,7 @@ namespace PlayerFunctionality
         /// </summary>
         public void DiscardSecondaryWeapon()
         {
-            Destroy(secondaryWeapon);
+            secondaryWeapon.enabled = false;
             secondaryWeapon = null;
             onWeaponChanged?.Invoke(WeaponClass.None);
         }
@@ -168,7 +170,7 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="weaponClass">Special enumerator representing the weapon class</param>
         /// <param name="weaponProjectile">The projectile the weapon will be using. Currently added to avoid searching for proper prefab in runtime. Need to find better solution though.</param>
-        public void PickNewSecondaryWeapon(WeaponClass weaponClass, GameObject weaponProjectile)
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             if (secondaryWeapon != null)
             {
@@ -180,21 +182,25 @@ namespace PlayerFunctionality
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    secondaryWeapon = gameObject.AddComponent<PlasmaCannon>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(0);
                     break;
                 case WeaponClass.MissileLauncher:
-                    secondaryWeapon = gameObject.AddComponent<MissileLauncher>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(1);
                     break;
                 case WeaponClass.LaserSniperGun:
-                    secondaryWeapon = gameObject.AddComponent<LaserSniperGun>();
-                    secondaryWeapon.InstantiateWeapon(weaponProjectile);
+                    ChangeSecondaryWeapon(2);
                     break;
                 default: 
                     Debug.Log("Unexpected weapon class was given: " +  weaponClass);
                     break;
             }
+        }
+
+        void ChangeSecondaryWeapon(int weaponId)
+        {
+            secondaryWeapon = weaponArray[weaponId];
+            secondaryWeapon.enabled = true;
+            secondaryWeapon.InstantiateWeapon();
         }
 
         /// <summary>

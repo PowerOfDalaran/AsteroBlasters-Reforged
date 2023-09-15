@@ -214,8 +214,11 @@ GameObject:
   - component: {fileID: 2421293461411614341}
   - component: {fileID: 4516027465537155275}
   - component: {fileID: 5333661403492931636}
-  - component: {fileID: 6931627993263948179}
   - component: {fileID: 6684660739794455990}
+  - component: {fileID: -3528635485336061181}
+  - component: {fileID: 1129618845695241633}
+  - component: {fileID: 8798171710794697629}
+  - component: {fileID: 1198149724257309463}
   m_Layer: 0
   m_Name: NetworkPlayerCharacter
   m_TagString: Untagged
@@ -280,6 +283,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponArray:
+  - {fileID: 1129618845695241633}
+  - {fileID: 8798171710794697629}
+  - {fileID: 1198149724257309463}
+  baseWeapon: {fileID: 0}
+  secondaryWeapon: {fileID: 0}
+  currentCharge: 0
+  maxCharge: 0
+  chargingSpeed: 0
+  isChargingWeapon: 0
   movementSpeed: 3
   rotationSpeed: 5.15
   playerIndex: 0
@@ -287,6 +300,8 @@ MonoBehaviour:
     m_InternalValue: 0
   currentHealth:
     m_InternalValue: 0
+  spawnPosition:
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!58 &8669993570994774450
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -383,21 +398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6931627993263948179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115823543803121173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59c4f9f50a2fcd44580c62a8e8fa082c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 7915952700532724896}
-  projectilePrefab: {fileID: 4715944071043663114, guid: f70b2cdcc0855394ba6131ebd3d792df, type: 3}
-  fireCooldown: 1
 --- !u!212 &6684660739794455990
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -450,3 +450,68 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-3528635485336061181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3888fa7326307f549b86014acedf5532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4715944071043663114, guid: a5b8a7a1006df184b8e64b0fe756c1cc, type: 3}
+  fireCooldown: 1
+--- !u!114 &1129618845695241633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54df6caec69d8994b83d5a51aaba8981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4715944071043663114, guid: 5f5e86cef5303b8429d2e36497764f5e, type: 3}
+  fireCooldown: 1
+  overheated: 0
+  currentHeat: 0
+  maxHeat: 0
+  maxAmmo: 0
+  currentAmmo: 0
+--- !u!114 &8798171710794697629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e30cd41b5622ca4f90d93db9b51859a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4715944071043663114, guid: a80569429f85e6e4e96441834e61e8bc, type: 3}
+  fireCooldown: 1
+  targetedEnemy: {fileID: 0}
+  targetingZoneChild: {fileID: 0}
+  possibleTargets: []
+--- !u!114 &1198149724257309463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 857c6688c26857841b4dead4c2ff6ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
+  fireCooldown: 1
+  chargingSlow: 0.64

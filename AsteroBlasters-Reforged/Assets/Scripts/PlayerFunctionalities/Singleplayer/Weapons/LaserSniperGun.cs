@@ -4,25 +4,27 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class managing the functionalities of laser sniper gun weapon
+    /// </summary>
     public class LaserSniperGun : Weapon
     {
         int maxAmmo;
         int currentAmmo;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
-        public static event OnAmmoValueChange onAmmoValueChange;
+        public event OnAmmoValueChange onAmmoValueChange;
 
         [SerializeField] GameObject raycastLaserPrefab;
         [SerializeField] float chargingSlow;
         LineRenderer raycastLaser;
 
-        public override void InstantiateWeapon(GameObject raycastGraphic)
+        public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.RaycastBased;
             weaponClass = WeaponClass.LaserSniperGun;
             fireCooldown = 1.5f;
-            raycastLaserPrefab = raycastGraphic;
             
             chargingSlow = 0.64f;
             maxAmmo = 5;
@@ -131,17 +133,6 @@ namespace WeaponSystem
             yield return new WaitForSeconds(0.12f);
 
             raycastLaser.enabled = false;
-        }
-
-        /// <summary>
-        /// Method activating removing this script and activating given weapon 
-        /// </summary>
-        /// <param name="weaponToActivate">Script of weapon, player switches to</param>
-        public void DiscardWeapon(Weapon weaponToActivate)
-        {
-            weaponToActivate.enabled = true;
-
-            Destroy(this);
         }
     }
 }

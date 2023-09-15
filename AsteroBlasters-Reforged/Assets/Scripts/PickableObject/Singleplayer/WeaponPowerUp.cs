@@ -10,14 +10,11 @@ namespace PickableObjects
     public class WeaponPowerUp : PowerUp
     {
         [SerializeField] WeaponClass grantedWeapon;
-        /// <summary>
-        /// Prefab of projectile (or the raycast graphic representation, if weapon is raycast based) used by the given weapon
-        /// </summary>
-        [SerializeField] GameObject projectilePrefab;
+
 
         protected override void BuffPlayer(PlayerController playerController)
         {
-            playerController.PickNewSecondaryWeapon(grantedWeapon, projectilePrefab);
+            playerController.PickNewSecondaryWeapon(grantedWeapon);
             Destroy(gameObject);
         }
     }

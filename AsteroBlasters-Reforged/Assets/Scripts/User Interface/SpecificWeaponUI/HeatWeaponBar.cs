@@ -11,14 +11,41 @@ namespace UserInterface
     {
         [SerializeField] Slider slider;
 
+        /// <summary>
+        /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject playerCharacter;
+        /// <summary>
+        /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
+        /// </summary>
+        [SerializeField] public GameObject networkPlayerCharacter;
+
         void OnEnable()
         {
-            PlasmaCannon.onHeatChanged += UpdateHeatbar;
+            // Adding the "UpdateHeatbar" method to the events
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged += UpdateHeatbar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged += UpdateHeatbar;
+            }
         }
 
         private void OnDisable()
         {
-            PlasmaCannon.onHeatChanged -= UpdateHeatbar;
+            // Removing the "UpdateHeatbar" method from the events
+            if (playerCharacter != null)
+            {
+                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+            }
+
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+            }
         }
 
         /// <summary>

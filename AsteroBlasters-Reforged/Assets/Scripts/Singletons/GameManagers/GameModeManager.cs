@@ -189,6 +189,7 @@ namespace GameManager
         /// </summary>
         /// <param name="matchResult">The array of <c>PlayerGameData</c> objects, passed by host to every client</param>
         [ClientRpc]
-        protected virtual void EndGameClientRpc(PlayerGameData[] matchResult) { }
+        protected virtual void EndGameClientRpc(PlayerGameData[] matchResult)
+        {}
     }
 }

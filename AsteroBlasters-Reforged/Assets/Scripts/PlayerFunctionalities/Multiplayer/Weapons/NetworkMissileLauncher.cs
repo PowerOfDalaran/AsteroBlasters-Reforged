@@ -5,23 +5,24 @@ using UnityEngine;
 namespace WeaponSystem
 {
     /// <summary>
-    /// Class managing the functionalities of the missile launcher weapon
+    /// Class managing the functionalities of the missile launcher weapon (network version) 
     /// </summary>
-    public class MissileLauncher : Weapon
+    public class NetworkMissileLauncher : NetworkWeapon
     {
         int maxAmmo;
         int currentAmmo;
 
-        public delegate void OnTargetSwitch(Transform targetTransform);
-        public event OnTargetSwitch onTargetSwitch;
+        bool hadTarget;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
         public event OnAmmoValueChange onAmmoValueChange;
 
-        List<Collider2D> possibleTargets = new List<Collider2D>();
-        GameObject targetingZoneChild;
-        GameObject targetedEnemy;
-        bool hadTarget;
+        public delegate void OnTargetSwitch(Transform targetTransform);
+        public event OnTargetSwitch onTargetSwitch;
+
+        [SerializeField] GameObject targetedEnemy;
+        [SerializeField] GameObject targetingZoneChild;
+        [SerializeField] List<Collider2D> possibleTargets;
 
         public override void InstantiateWeapon()
         {
@@ -36,38 +37,49 @@ namespace WeaponSystem
             hadTarget = false;
         }
 
-        #region Adding and removing targeting zone (mostly)
-
-        private void Start()
+        private void OnEnable()
         {
-            // Activating the event
-            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
-
             //Creating new game object, attatching it to playerCharacter, adding the box collider to it and setting it up
-            targetingZoneChild = Instantiate(new GameObject(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), transform);
+            targetingZoneChild = new GameObject();
 
+            // Setting up its initial world position, rotation and parent
+            targetingZoneChild.transform.position = new Vector3(0, 0, 0);
+            targetingZoneChild.transform.rotation = new Quaternion(0, 0, 0, 0);
+            targetingZoneChild.transform.parent = transform;
+
+            // Setting up its position and rotation in relation to its parent
             targetingZoneChild.name = "targetingZone";
             targetingZoneChild.transform.localPosition = new Vector3(0, 0, 0);
+            targetingZoneChild.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+            // Changing the layer to the "IgnoreProjectile", so that the projectiles etc. won't destroy themselfs
             targetingZoneChild.layer = 8;
 
-            BoxCollider2D targetingZone = targetingZoneChild.AddComponent<BoxCollider2D>(); 
+            // Adding the box collider and positioning it 
+            BoxCollider2D targetingZone = targetingZoneChild.AddComponent<BoxCollider2D>();
             targetingZone.isTrigger = true;
             targetingZone.offset = new Vector2(0, 2);
             targetingZone.size = new Vector2(9, 3);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
+            // Destroying the created child, if weapon would be uneqipped
             Destroy(targetingZoneChild);
         }
-        #endregion
+
+        private void Start()
+        {
+            // Launching the event on start, so that the text box wouldn't start with "0/0" value
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+        }
 
         private void FixedUpdate()
         {
             //Checking if there's any ammo left, and discarding the weapon if not
             if (currentAmmo <= 0)
             {
-                gameObject.GetComponent<PlayerController>().DiscardSecondaryWeapon();
+                gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
 
             // Checking if the current target was removed from targeting zone without leaving it
@@ -82,9 +94,9 @@ namespace WeaponSystem
         private void OnTriggerEnter2D(Collider2D collision)
         {
             // Checking if detected collider is an proper target and adding it to targets list
-            IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
+            NetworkPlayerController playerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
-            if (healthSystem != null)
+            if (playerController != null)
             {
                 possibleTargets.Add(collision);
 
@@ -109,13 +121,13 @@ namespace WeaponSystem
             if (targetedEnemy == collision.gameObject)
             {
                 hadTarget = true;
-                targetedEnemy = null; 
+                targetedEnemy = null;
                 onTargetSwitch?.Invoke(null);
             }
         }
 
         /// <summary>
-        /// Method looking for another target, which has already entered the targeting zone
+        /// Method finding new target within the box collider and assigning it to "targeted enemy" variable
         /// </summary>
         void FindNewTargetInRange()
         {
@@ -126,32 +138,37 @@ namespace WeaponSystem
             }
         }
 
-        public override GameObject Shoot(float charge)
+        protected override void AccessCreatedProjectile(GameObject projectile)
+        {
+            if (targetedEnemy == null)
+            {
+                projectile.GetComponent<NetworkHomingMissile>().Target = null;
+            }
+            else
+            {
+                projectile.GetComponent<NetworkHomingMissile>().Target = targetedEnemy.transform;
+            }
+        }
+
+        public override bool Shoot(float charge)
         {
             // Checking if player can shoot
             if (currentAmmo > 0)
             {
-                GameObject newMissile =  base.Shoot(charge);
+                bool weaponFired = base.Shoot(charge);
 
                 // If the missile was created and the player has target, it is assigned to the homing missile
-                if (newMissile != null)
+                if (weaponFired)
                 {
-                    if (targetedEnemy == null)
-                    {
-                        newMissile.GetComponent<HomingMissile>().Target = null;
-                    }
-                    else
-                    {
-                        newMissile.GetComponent<HomingMissile>().Target = targetedEnemy.transform;
-                    }
-
                     currentAmmo -= 1;
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
-
-                    return newMissile;
+                    return true;
                 }
+                return false;
+
             }
-            return null;
+            return false;
         }
     }
+
 }

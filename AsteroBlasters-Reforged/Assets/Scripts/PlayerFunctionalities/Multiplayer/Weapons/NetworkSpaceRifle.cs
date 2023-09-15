@@ -1,11 +1,11 @@
 namespace WeaponSystem
 {
     /// <summary>
-    /// Class providing the functionality for base player weapon.
+    /// Class providing the functionality for base player weapon (network version).
     /// </summary>
-    public class SpaceRifle : Weapon
+    public class NetworkSpaceRifle : NetworkWeapon
     {
-        private void Start()
+        void Start()
         {
             // Instantiating the wepon parameters on start, since this weapon is always active and available for player
             InstantiateWeapon();
@@ -13,7 +13,6 @@ namespace WeaponSystem
 
         public override void InstantiateWeapon()
         {
-            // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.SpaceRifle;
             fireCooldown = 0.35f;
