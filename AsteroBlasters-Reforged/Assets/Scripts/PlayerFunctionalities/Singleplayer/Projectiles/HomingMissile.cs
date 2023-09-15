@@ -28,8 +28,8 @@ namespace WeaponSystem
             speed = 15f;
             damage = 2;
 
-            rotationSpeed = 260f;
-            homingSpeed = 8f;
+            rotationSpeed = 360f;
+            homingSpeed = 6.4f;
             lostTarget = false;
         }
 
