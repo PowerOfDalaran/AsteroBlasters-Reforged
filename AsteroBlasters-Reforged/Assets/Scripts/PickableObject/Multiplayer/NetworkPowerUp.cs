@@ -12,14 +12,25 @@ namespace PickableObjects
         [SerializeField] float powerUpLifeLength = 15f;
         [SerializeField] float lifeLengthStatus = 0f;
 
+        float inaccessibilityTime = 1f;
+        float inaccessibilityStatus = 0f;
+
         private void Start()
         {
             // Setting up the time, at which the power up should be destroyed
-            lifeLengthStatus = Time.time + powerUpLifeLength;
+            lifeLengthStatus = Time.time + powerUpLifeLength + inaccessibilityTime;
+
+            inaccessibilityStatus = Time.time + inaccessibilityTime;
+            gameObject.layer = 6;
         }
 
         private void FixedUpdate()
         {
+            if (Time.time > inaccessibilityStatus)
+            {
+                gameObject.layer = 0;
+            }
+
             // Checking if the time limit was surprassed
             if (Time.time > lifeLengthStatus)
             {

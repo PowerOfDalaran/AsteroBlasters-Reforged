@@ -9,7 +9,7 @@ namespace PickableObjects
     /// </summary>
     public class NetworkWeaponPowerUp : NetworkPowerUp
     {
-        [SerializeField] WeaponClass grantedWeapon;
+        [SerializeField] public WeaponClass grantedWeapon;
 
         protected override void BuffPlayer(NetworkPlayerController playerController)
         {

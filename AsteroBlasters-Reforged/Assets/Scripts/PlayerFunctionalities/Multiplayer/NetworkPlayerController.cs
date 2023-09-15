@@ -5,6 +5,7 @@ using DataStructure;
 using NetworkFunctionality;
 using Others;
 using WeaponSystem;
+using PickableObjects;
 
 namespace PlayerFunctionality
 {
@@ -18,6 +19,7 @@ namespace PlayerFunctionality
         SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
 
+        [SerializeField] GameObject weaponPowerUpPrefab;
         [SerializeField] NetworkWeapon[] weaponArray = new NetworkWeapon[3];
 
         [SerializeField] NetworkSpaceRifle baseWeapon;
@@ -385,6 +387,12 @@ namespace PlayerFunctionality
         /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
         public void Die(ulong killerPlayerId = ulong.MaxValue)
         {
+            if (secondaryWeapon != null)
+            {
+                SpawnWeaponPowerUp(secondaryWeapon);
+                DiscardSecondaryWeapon();
+            }
+
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
             currentHealth = maxHealth;
             DieClientRpc();
@@ -402,5 +410,12 @@ namespace PlayerFunctionality
             myRigidbody2D.velocity = Vector2.zero;
         }
         #endregion
+
+        void SpawnWeaponPowerUp(NetworkWeapon networkWeapon)
+        {
+            GameObject spawnedPowerUp = Instantiate(weaponPowerUpPrefab, transform.position, Quaternion.identity);
+            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().grantedWeapon = networkWeapon.weaponClass;
+            spawnedPowerUp.GetComponent<NetworkObject>().Spawn();
+        }
     }
 }

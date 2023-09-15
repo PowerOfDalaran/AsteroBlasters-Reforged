@@ -283,6 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponPowerUpPrefab: {fileID: 6774092315431271072, guid: 4850aafbb78c918478ee24e4f2dc55d0, type: 3}
   weaponArray:
   - {fileID: 1129618845695241633}
   - {fileID: 8798171710794697629}
@@ -295,6 +296,7 @@ MonoBehaviour:
   isChargingWeapon: 0
   movementSpeed: 3
   rotationSpeed: 5.15
+  speedModifier: 1
   playerIndex: 0
   maxHealth:
     m_InternalValue: 0

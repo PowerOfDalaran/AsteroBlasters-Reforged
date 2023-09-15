@@ -14,7 +14,7 @@ namespace WeaponSystem
         [SerializeField] protected GameObject projectilePrefab;
 
         protected WeaponType type;
-        protected WeaponClass weaponClass;
+        public WeaponClass weaponClass;
 
         [SerializeField] protected float fireCooldown = 1;
         protected float cooldownStatus = 0;
