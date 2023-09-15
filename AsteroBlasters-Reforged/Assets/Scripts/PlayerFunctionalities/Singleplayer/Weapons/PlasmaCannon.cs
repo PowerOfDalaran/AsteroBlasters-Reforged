@@ -4,7 +4,7 @@ using UnityEngine;
 namespace WeaponSystem
 {
     /// <summary>
-    /// Child class managing the functionalities of plasma cannon weapon
+    /// Class managing the functionalities of plasma cannon weapon
     /// </summary>
     public class PlasmaCannon : Weapon
     {
@@ -45,7 +45,7 @@ namespace WeaponSystem
 
         private void Start()
         {
-            // Activating the event
+            // Activating the event, so that the text box won't display "0/0" on start 
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 

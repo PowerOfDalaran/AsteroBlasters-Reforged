@@ -10,7 +10,14 @@ namespace UserInterface
     public class AmmoLeftText : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI text;
+
+        /// <summary>
+        /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
+        /// </summary>
         [SerializeField] public GameObject playerCharacter;
+        /// <summary>
+        /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
+        /// </summary>
         [SerializeField] public GameObject networkPlayerCharacter;
 
         private void OnEnable()

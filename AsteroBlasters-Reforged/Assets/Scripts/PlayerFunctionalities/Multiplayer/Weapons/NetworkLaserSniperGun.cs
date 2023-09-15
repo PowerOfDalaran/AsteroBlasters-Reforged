@@ -1,13 +1,13 @@
 using PlayerFunctionality;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class managing the functionalities of laser sniper gun weapon (network version)
+    /// </summary>
     public class NetworkLaserSniperGun : NetworkWeapon
     {
         int maxAmmo;
@@ -48,11 +48,13 @@ namespace WeaponSystem
 
         private void Start()
         {
+            // Activating the event, so that the text box won't display "0/0"
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
         private void OnDisable()
         {
+            // Turning down the slowing effect and destroying the line renderer prefab
             NetworkPlayerController playerController = GetComponent<NetworkPlayerController>();
             playerController.SpeedModifier = 1f;
 
@@ -103,9 +105,12 @@ namespace WeaponSystem
 
                 if (weaponFired)
                 {
+                    // If weapon actually fired, drawing the laser, reducing amount of ammunition and calling the event
                     DrawRaycastLaserServerRpc();
                     currentAmmo -= 1;
+
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
                     return true;
                 }
 
@@ -114,18 +119,27 @@ namespace WeaponSystem
             return false;
         }
 
+        /// <summary>
+        /// Method calling the <c>DrawRaycastLaserClientRpc</c> method from host, since only he can use clients rpc's
+        /// </summary>
         [ServerRpc]
         void DrawRaycastLaserServerRpc()
         {
             DrawRaycastLaserClientRpc();
         }
 
+        /// <summary>
+        /// Method starting the coroutine on every connected player, in order to make the laser visible to everyone
+        /// </summary>
         [ClientRpc]
         void DrawRaycastLaserClientRpc()
         {
             StartCoroutine(DrawRaycastLaser());
         }
-        
+
+        /// <summary>
+        /// IEnumerator drawing showing and placing correctly the line of laser to display the fired shot
+        /// </summary>
         IEnumerator DrawRaycastLaser()
         {
             coroutineActive = true;

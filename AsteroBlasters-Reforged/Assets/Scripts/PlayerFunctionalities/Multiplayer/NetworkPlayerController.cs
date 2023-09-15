@@ -110,6 +110,7 @@ namespace PlayerFunctionality
                 // In some weapons by doing so, the player can increase damage dealt to opponent
                 if (currentCharge >= maxCharge)
                 {
+                    // IN CASE THE CHARGE METER REACHES MAXIMUM
                     // Checking if shot was actually fired, if so the charge counter is set back to 0, otherwise the weapon keeps charging
                     bool shotTaken = secondaryWeapon.Shoot(currentCharge);
                     if (shotTaken)
@@ -121,12 +122,14 @@ namespace PlayerFunctionality
                 }
                 else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.inProgress)
                 {
+                    // IN CASE THE SHOOT BUTTON IS STILL HELD
                     isChargingWeapon = true;
                     currentCharge += Time.deltaTime * chargingSpeed;
                     onChargeValueChanged?.Invoke(currentCharge);
                 }
                 else if (myPlayerControls.PlayerActions.ShootSecondaryWeapon.WasReleasedThisFrame())
                 {
+                    // IN CASE THE BUTTON WAS RELEASED
                     isChargingWeapon = false;
                     secondaryWeapon.Shoot(currentCharge);
                     currentCharge = 0;

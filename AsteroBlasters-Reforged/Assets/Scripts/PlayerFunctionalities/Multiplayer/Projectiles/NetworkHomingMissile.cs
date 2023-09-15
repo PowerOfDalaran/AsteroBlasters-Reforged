@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class controlling the <c>HomingMissile</c> projectile (network version)
+    /// </summary>
     public class NetworkHomingMissile : NetworkProjectileController
     {
         Transform target;
@@ -46,6 +49,9 @@ namespace WeaponSystem
             Rotate();
         }
 
+        /// <summary>
+        /// Method rotating the projectile to direction, its flying toward
+        /// </summary>
         private void Rotate()
         {
             Quaternion targetRotation = Quaternion.LookRotation(transform.forward, myRigidbody2D.velocity);

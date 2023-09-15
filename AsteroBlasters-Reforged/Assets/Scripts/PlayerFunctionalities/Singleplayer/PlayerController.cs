@@ -170,7 +170,7 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="weaponClass">Special enumerator representing the weapon class</param>
         /// <param name="weaponProjectile">The projectile the weapon will be using. Currently added to avoid searching for proper prefab in runtime. Need to find better solution though.</param>
-        public void PickNewSecondaryWeapon(WeaponClass weaponClass, GameObject weaponProjectile)
+        public void PickNewSecondaryWeapon(WeaponClass weaponClass)
         {
             if (secondaryWeapon != null)
             {

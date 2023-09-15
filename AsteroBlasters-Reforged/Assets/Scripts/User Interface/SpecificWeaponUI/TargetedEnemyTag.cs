@@ -11,7 +11,13 @@ namespace UserInterface
     {
         Transform currentTarget;
 
+        /// <summary>
+        /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
+        /// </summary>
         [SerializeField] public GameObject playerCharacter;
+        /// <summary>
+        /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
+        /// </summary>
         [SerializeField] public GameObject networkPlayerCharacter;
 
         void Start()
@@ -22,6 +28,7 @@ namespace UserInterface
 
         private void OnEnable()
         {
+            // Adding the "SwitchTarget" method to the events
             if (playerCharacter != null)
             {
                 playerCharacter.GetComponent<MissileLauncher>().onTargetSwitch += SwitchTarget;
@@ -35,6 +42,7 @@ namespace UserInterface
 
         private void OnDisable()
         {
+            // Removing the "SwitchTarget" method from the events
             if (playerCharacter != null)
             {
                 playerCharacter.GetComponent<MissileLauncher>().onTargetSwitch -= SwitchTarget;

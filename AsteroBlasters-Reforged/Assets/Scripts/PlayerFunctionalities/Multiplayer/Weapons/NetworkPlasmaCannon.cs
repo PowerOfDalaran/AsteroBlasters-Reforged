@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class managing the functionalities of secondary weapon - plasma cannon (network version)
+    /// </summary>
     public class NetworkPlasmaCannon : NetworkWeapon
     {
         [SerializeField] bool overheated;
@@ -93,8 +96,10 @@ namespace WeaponSystem
 
                 if (weaponFired)
                 {
+                    // If weapon actually fired, removing ammunition, generating heat and launching the events
                     currentAmmo -= 1;
                     currentHeat += heatGain;
+
                     onHeatChanged?.Invoke(currentHeat);
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 

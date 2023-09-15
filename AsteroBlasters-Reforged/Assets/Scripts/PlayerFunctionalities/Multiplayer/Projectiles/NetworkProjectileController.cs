@@ -22,8 +22,10 @@ namespace WeaponSystem
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            // Checking if colliding object is a player character
             NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
+            // If so, dealing damage to him
             if (networkPlayerController != null)
             {
                 networkPlayerController.TakeDamage(damage, gameObject.GetComponent<NetworkObject>().OwnerClientId);

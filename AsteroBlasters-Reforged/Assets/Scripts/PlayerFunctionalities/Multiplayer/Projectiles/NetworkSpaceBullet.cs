@@ -1,5 +1,8 @@
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class controlling the <c>SpaceBullet</c> projectile (network version)
+    /// </summary>
     public class NetworkSpaceBullet : NetworkProjectileController
     {
         protected override void Awake()

@@ -1,5 +1,8 @@
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class controlling the <c>PlasmaBurst</c> projectile (network version)
+    /// </summary>
     public class NetworkPlasmaBurst : NetworkProjectileController
     {
         protected override void Awake()

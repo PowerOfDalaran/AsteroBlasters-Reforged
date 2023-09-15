@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class managing the functionalities of the missile launcher weapon (network version) 
+    /// </summary>
     public class NetworkMissileLauncher : NetworkWeapon
     {
         int maxAmmo;
@@ -39,15 +42,20 @@ namespace WeaponSystem
             //Creating new game object, attatching it to playerCharacter, adding the box collider to it and setting it up
             targetingZoneChild = new GameObject();
 
+            // Setting up its initial world position, rotation and parent
             targetingZoneChild.transform.position = new Vector3(0, 0, 0);
             targetingZoneChild.transform.rotation = new Quaternion(0, 0, 0, 0);
             targetingZoneChild.transform.parent = transform;
 
+            // Setting up its position and rotation in relation to its parent
             targetingZoneChild.name = "targetingZone";
             targetingZoneChild.transform.localPosition = new Vector3(0, 0, 0);
             targetingZoneChild.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+            // Changing the layer to the "IgnoreProjectile", so that the projectiles etc. won't destroy themselfs
             targetingZoneChild.layer = 8;
 
+            // Adding the box collider and positioning it 
             BoxCollider2D targetingZone = targetingZoneChild.AddComponent<BoxCollider2D>();
             targetingZone.isTrigger = true;
             targetingZone.offset = new Vector2(0, 2);
@@ -56,11 +64,13 @@ namespace WeaponSystem
 
         private void OnDisable()
         {
+            // Destroying the created child, if weapon would be uneqipped
             Destroy(targetingZoneChild);
         }
 
         private void Start()
         {
+            // Launching the event on start, so that the text box wouldn't start with "0/0" value
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
@@ -116,6 +126,9 @@ namespace WeaponSystem
             }
         }
 
+        /// <summary>
+        /// Method finding new target within the box collider and assigning it to "targeted enemy" variable
+        /// </summary>
         void FindNewTargetInRange()
         {
             if (possibleTargets.Count > 0)

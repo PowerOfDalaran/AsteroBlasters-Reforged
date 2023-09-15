@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WeaponSystem
 {
+    /// <summary>
+    /// Class managing the functionalities of laser sniper gun weapon
+    /// </summary>
     public class LaserSniperGun : Weapon
     {
         int maxAmmo;
@@ -130,17 +133,6 @@ namespace WeaponSystem
             yield return new WaitForSeconds(0.12f);
 
             raycastLaser.enabled = false;
-        }
-
-        /// <summary>
-        /// Method activating removing this script and activating given weapon 
-        /// </summary>
-        /// <param name="weaponToActivate">Script of weapon, player switches to</param>
-        public void DiscardWeapon(Weapon weaponToActivate)
-        {
-            weaponToActivate.enabled = true;
-
-            Destroy(this);
         }
     }
 }
