@@ -1,4 +1,3 @@
-using PlayerFunctionality;
 using Unity.Netcode;
 using UnityEngine;
 

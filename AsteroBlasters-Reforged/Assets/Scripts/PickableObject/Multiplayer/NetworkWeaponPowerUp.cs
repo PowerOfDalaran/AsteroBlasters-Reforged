@@ -1,7 +1,6 @@
 using PlayerFunctionality;
 using System;
 using Unity.Netcode;
-using UnityEngine;
 using WeaponSystem;
 
 namespace PickableObjects
@@ -11,11 +10,15 @@ namespace PickableObjects
     /// </summary>
     public class NetworkWeaponPowerUp : NetworkPowerUp
     {
-        [NonSerialized] public NetworkVariable<WeaponClass> grantedWeapon;
-         public WeaponClass GrantedWeapon;
+        [NonSerialized] NetworkVariable<WeaponClass> grantedWeapon;
+        /// <summary>
+        /// Special property, which value will be assigned to the network variable on start of the script.
+        /// </summary>
+        public WeaponClass GrantedWeapon;
 
         private void Awake()
         {
+            // Instantiating the network variable
             grantedWeapon = new NetworkVariable<WeaponClass>();
         }
 

@@ -220,11 +220,9 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method being activated if the current secondary weapon should be discarded.
-        /// Activates the server rpc method and calls an event.
         /// </summary>
         public void DiscardSecondaryWeapon()
         {
-            onWeaponChanged?.Invoke(WeaponClass.None);
             DiscardSecondaryWeaponServerRpc();
         }
 
@@ -244,6 +242,7 @@ namespace PlayerFunctionality
         [ClientRpc]
         void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
+            // Calling the onWeaponChanged event if client running method is the owner of this player character
             if (IsOwner)
             {
                 onWeaponChanged?.Invoke(WeaponClass.None);
