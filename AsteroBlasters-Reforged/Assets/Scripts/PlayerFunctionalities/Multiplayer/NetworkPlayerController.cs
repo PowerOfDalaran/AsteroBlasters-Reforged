@@ -244,6 +244,11 @@ namespace PlayerFunctionality
         [ClientRpc]
         void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
+            if (IsOwner)
+            {
+                onWeaponChanged?.Invoke(WeaponClass.None);
+            }
+
             if (secondaryWeapon != null)
             {
                 secondaryWeapon.enabled = false;

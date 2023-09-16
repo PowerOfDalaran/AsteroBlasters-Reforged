@@ -22,7 +22,11 @@ namespace PickableObjects
         protected override void Start()
         {
             base.Start();
-            grantedWeapon.Value = GrantedWeapon;
+
+            if (IsHost)
+            {
+                grantedWeapon.Value = GrantedWeapon;
+            }
         }
 
         protected override void BuffPlayer(NetworkPlayerController playerController)
