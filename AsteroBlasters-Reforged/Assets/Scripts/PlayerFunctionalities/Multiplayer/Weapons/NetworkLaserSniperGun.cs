@@ -36,6 +36,9 @@ namespace WeaponSystem
 
         private void OnEnable()
         {
+            // Launching the event on start, so that the text box wouldn't start with "0/0" value
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
             // Setting up the line renderer prefab
             GameObject createdRaycastLaser = Instantiate(projectilePrefab);
             createdRaycastLaser.transform.parent = transform;
@@ -44,12 +47,6 @@ namespace WeaponSystem
             raycastLaserLineRenderer = createdRaycastLaser.GetComponent<LineRenderer>();
 
             raycastLaserLineRenderer.enabled = false;
-        }
-
-        private void Start()
-        {
-            // Activating the event, so that the text box won't display "0/0"
-            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
         private void OnDisable()

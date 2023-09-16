@@ -231,7 +231,7 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method, which only purpose is firing the Client Rpc method. It exist purely because only host can activate the Client Rpc's.
         /// </summary>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         void DiscardSecondaryWeaponServerRpc()
         {
             DiscardSecondaryWeaponClientRpc();
@@ -288,7 +288,7 @@ namespace PlayerFunctionality
         /// Method calling the host to activate the Client Rpc method, since only he can do that :|
         /// </summary>
         /// <param name="weaponId"></param>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         void ChangeSecondaryWeaponServerRpc(int weaponId)
         {
             ChangeSecondaryWeaponClientRpc(weaponId);
@@ -414,8 +414,7 @@ namespace PlayerFunctionality
         void SpawnWeaponPowerUp(NetworkWeapon networkWeapon)
         {
             GameObject spawnedPowerUp = Instantiate(weaponPowerUpPrefab, transform.position, Quaternion.identity);
-            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().grantedWeapon = networkWeapon.weaponClass;
             spawnedPowerUp.GetComponent<NetworkObject>().Spawn();
-        }
+            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        }
     }
 }

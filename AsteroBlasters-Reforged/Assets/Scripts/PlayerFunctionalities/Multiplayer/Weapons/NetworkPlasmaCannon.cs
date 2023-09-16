@@ -43,8 +43,9 @@ namespace WeaponSystem
             currentAmmo = maxAmmo;
         }
 
-        private void Start()
+        private void OnEnable()
         {
+            // Launching the event on start, so that the text box wouldn't start with "0/0" value
             onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 

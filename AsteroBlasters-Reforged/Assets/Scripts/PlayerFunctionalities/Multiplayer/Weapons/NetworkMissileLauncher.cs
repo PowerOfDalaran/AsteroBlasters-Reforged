@@ -39,6 +39,9 @@ namespace WeaponSystem
 
         private void OnEnable()
         {
+            // Launching the event on start, so that the text box wouldn't start with "0/0" value
+            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+
             //Creating new game object, attatching it to playerCharacter, adding the box collider to it and setting it up
             targetingZoneChild = new GameObject();
 
@@ -66,12 +69,6 @@ namespace WeaponSystem
         {
             // Destroying the created child, if weapon would be uneqipped
             Destroy(targetingZoneChild);
-        }
-
-        private void Start()
-        {
-            // Launching the event on start, so that the text box wouldn't start with "0/0" value
-            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
         }
 
         private void FixedUpdate()

@@ -1,4 +1,6 @@
 using PlayerFunctionality;
+using System;
+using Unity.Netcode;
 using UnityEngine;
 using WeaponSystem;
 
@@ -9,11 +11,23 @@ namespace PickableObjects
     /// </summary>
     public class NetworkWeaponPowerUp : NetworkPowerUp
     {
-        [SerializeField] public WeaponClass grantedWeapon;
+        [NonSerialized] public NetworkVariable<WeaponClass> grantedWeapon;
+         public WeaponClass GrantedWeapon;
+
+        private void Awake()
+        {
+            grantedWeapon = new NetworkVariable<WeaponClass>();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            grantedWeapon.Value = GrantedWeapon;
+        }
 
         protected override void BuffPlayer(NetworkPlayerController playerController)
         {
-            playerController.PickNewSecondaryWeapon(grantedWeapon);
+            playerController.PickNewSecondaryWeapon(grantedWeapon.Value);
         }
     }
 }
