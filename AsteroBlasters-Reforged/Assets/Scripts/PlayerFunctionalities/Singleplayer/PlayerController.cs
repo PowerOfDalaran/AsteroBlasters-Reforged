@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using WeaponSystem;
@@ -34,9 +35,9 @@ namespace PlayerFunctionality
         public int maxHealth = 3;
         public int currentHealth;
 
-        [SerializeField] float currentCharge;
-        [SerializeField] float maxCharge = 10f;
-        [SerializeField] float chargingSpeed = 10f;
+        float currentCharge;
+        float maxCharge = 10f;
+        float chargingSpeed = 10f;
 
         public bool isChargingWeapon = false;
 
@@ -142,6 +143,32 @@ namespace PlayerFunctionality
                     TakeDamage(1);
                 }
             }
+        }
+
+        /// <summary>
+        /// Method activating the Modify Speed Coroutine coroutine.
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        public void ModifySpeed(float modifier, float duration)
+        {
+            StartCoroutine(ModifySpeedCoroutine(modifier, duration));
+        }
+
+        /// <summary>
+        /// Method changing the speed modifier parameter of player character for given amount of seconds
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        /// <returns></returns>
+        IEnumerator ModifySpeedCoroutine(float modifier, float duration)
+        {
+            speedModifier *= modifier;
+            
+            yield return new WaitForSeconds(duration);
+
+            speedModifier /= modifier;
+
         }
 
         /// <summary>
