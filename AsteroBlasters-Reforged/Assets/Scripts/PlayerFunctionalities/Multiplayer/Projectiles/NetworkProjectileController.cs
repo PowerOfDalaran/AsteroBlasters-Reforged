@@ -25,13 +25,17 @@ namespace WeaponSystem
             // Checking if colliding object is a player character
             NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
-            // If so, dealing damage to him
-            if (networkPlayerController != null)
+            // If not, then destroying projectile
+            if (networkPlayerController == null)
             {
-                networkPlayerController.TakeDamage(damage, gameObject.GetComponent<NetworkObject>().OwnerClientId);
+                DespawnSelfServerRpc();
             }
-
-            DespawnSelfServerRpc();
+            // if so, and player hit isn't the owner of the projectile, then dealing damage to him, before deleting the projectile
+            else if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
+            {
+                networkPlayerController.TakeDamage(damage, OwnerClientId);
+                DespawnSelfServerRpc();
+            }
         }
 
         /// <summary>

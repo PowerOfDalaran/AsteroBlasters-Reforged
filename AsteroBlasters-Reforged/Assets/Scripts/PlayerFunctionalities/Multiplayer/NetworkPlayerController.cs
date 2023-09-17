@@ -5,6 +5,7 @@ using DataStructure;
 using NetworkFunctionality;
 using Others;
 using WeaponSystem;
+using PickableObjects;
 
 namespace PlayerFunctionality
 {
@@ -18,6 +19,7 @@ namespace PlayerFunctionality
         SpriteRenderer mySpriteRenderer;
         PlayerControls myPlayerControls;
 
+        [SerializeField] GameObject weaponPowerUpPrefab;
         [SerializeField] NetworkWeapon[] weaponArray = new NetworkWeapon[3];
 
         [SerializeField] NetworkSpaceRifle baseWeapon;
@@ -218,18 +220,16 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method being activated if the current secondary weapon should be discarded.
-        /// Activates the server rpc method and calls an event.
         /// </summary>
         public void DiscardSecondaryWeapon()
         {
-            onWeaponChanged?.Invoke(WeaponClass.None);
             DiscardSecondaryWeaponServerRpc();
         }
 
         /// <summary>
         /// Method, which only purpose is firing the Client Rpc method. It exist purely because only host can activate the Client Rpc's.
         /// </summary>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         void DiscardSecondaryWeaponServerRpc()
         {
             DiscardSecondaryWeaponClientRpc();
@@ -242,6 +242,12 @@ namespace PlayerFunctionality
         [ClientRpc]
         void DiscardSecondaryWeaponClientRpc(ClientRpcParams clientRpcParams = default)
         {
+            // Calling the onWeaponChanged event if client running method is the owner of this player character
+            if (IsOwner)
+            {
+                onWeaponChanged?.Invoke(WeaponClass.None);
+            }
+
             if (secondaryWeapon != null)
             {
                 secondaryWeapon.enabled = false;
@@ -286,7 +292,7 @@ namespace PlayerFunctionality
         /// Method calling the host to activate the Client Rpc method, since only he can do that :|
         /// </summary>
         /// <param name="weaponId"></param>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         void ChangeSecondaryWeaponServerRpc(int weaponId)
         {
             ChangeSecondaryWeaponClientRpc(weaponId);
@@ -385,6 +391,12 @@ namespace PlayerFunctionality
         /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
         public void Die(ulong killerPlayerId = ulong.MaxValue)
         {
+            if (secondaryWeapon != null)
+            {
+                SpawnWeaponPowerUp(secondaryWeapon);
+                DiscardSecondaryWeapon();
+            }
+
             int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
             currentHealth = maxHealth;
             DieClientRpc();
@@ -402,5 +414,11 @@ namespace PlayerFunctionality
             myRigidbody2D.velocity = Vector2.zero;
         }
         #endregion
+
+        void SpawnWeaponPowerUp(NetworkWeapon networkWeapon)
+        {
+            GameObject spawnedPowerUp = Instantiate(weaponPowerUpPrefab, transform.position, Quaternion.identity);
+            spawnedPowerUp.GetComponent<NetworkObject>().Spawn();
+            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        }
     }
 }

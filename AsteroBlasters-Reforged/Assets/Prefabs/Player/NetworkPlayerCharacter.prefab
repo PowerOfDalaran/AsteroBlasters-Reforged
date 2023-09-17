@@ -192,7 +192,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7459005435288910041}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.429, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -283,6 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponPowerUpPrefab: {fileID: 6774092315431271072, guid: 4850aafbb78c918478ee24e4f2dc55d0, type: 3}
   weaponArray:
   - {fileID: 1129618845695241633}
   - {fileID: 8798171710794697629}
@@ -295,6 +296,7 @@ MonoBehaviour:
   isChargingWeapon: 0
   movementSpeed: 3
   rotationSpeed: 5.15
+  speedModifier: 1
   playerIndex: 0
   maxHealth:
     m_InternalValue: 0
@@ -463,6 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 4715944071043663114, guid: a5b8a7a1006df184b8e64b0fe756c1cc, type: 3}
+  weaponClass: 0
   fireCooldown: 1
 --- !u!114 &1129618845695241633
 MonoBehaviour:
@@ -477,6 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 4715944071043663114, guid: 5f5e86cef5303b8429d2e36497764f5e, type: 3}
+  weaponClass: 0
   fireCooldown: 1
   overheated: 0
   currentHeat: 0
@@ -496,6 +500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 4715944071043663114, guid: a80569429f85e6e4e96441834e61e8bc, type: 3}
+  weaponClass: 0
   fireCooldown: 1
   targetedEnemy: {fileID: 0}
   targetingZoneChild: {fileID: 0}
@@ -513,5 +518,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
+  weaponClass: 0
   fireCooldown: 1
   chargingSlow: 0.64

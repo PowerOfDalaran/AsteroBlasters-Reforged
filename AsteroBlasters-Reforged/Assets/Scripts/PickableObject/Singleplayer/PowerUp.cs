@@ -8,6 +8,24 @@ namespace PickableObjects
     /// </summary>
     public class PowerUp : MonoBehaviour
     {
+        [SerializeField] float powerUpLifeLength = 15f;
+        [SerializeField] float lifeLengthStatus = 0f;
+
+        private void Start()
+        {
+            // Setting up the time, at which the power up should be destroyed
+            lifeLengthStatus = Time.time + powerUpLifeLength;
+        }
+
+        private void FixedUpdate()
+        {
+            // Checking if the time limit was surprassed
+            if (Time.time > lifeLengthStatus)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
