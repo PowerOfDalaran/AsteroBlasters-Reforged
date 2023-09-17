@@ -49,6 +49,12 @@ namespace WeaponSystem
             raycastLaserLineRenderer.enabled = false;
         }
 
+        //[ServerRpc]
+        //void CreateRaycastLaserServerRpc()
+
+        //[ClientRpc]
+        //void CreateRaycastLaserClientRpc()
+
         private void OnDisable()
         {
             // Turning down the slowing effect and destroying the line renderer prefab
@@ -142,18 +148,9 @@ namespace WeaponSystem
             coroutineActive = true;
             raycastLaserLineRenderer.enabled = true;
 
-            if ( raycastDistance > 0)
-            {
-                // Setting the laser to reach the hit enemy
-                raycastLaserLineRenderer.SetPosition(0, firePoint.position);
-                raycastLaserLineRenderer.SetPosition(1, firePoint.position + firePoint.up * raycastDistance);
-            }
-            else
-            {
-                // Setting the laser to reach some distance before vanishing
-                raycastLaserLineRenderer.SetPosition(0, firePoint.position);
-                raycastLaserLineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
-            }
+           // Setting the laser to reach the hit enemy
+            raycastLaserLineRenderer.SetPosition(0, firePoint.position);
+            raycastLaserLineRenderer.SetPosition(1, firePoint.position + firePoint.up * raycastDistance);
 
             yield return new WaitForSeconds(0.12f);
 
