@@ -36,9 +36,24 @@ namespace WeaponSystem
 
         private void OnEnable()
         {
-            // Launching the event on start, so that the text box wouldn't start with "0/0" value
-            onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
+            if (IsOwner)
+            {
+                // Launching the event on start, so that the text box wouldn't start with "0/0" value
+                onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
+                CreateRaycastLaserServerRpc();
+            }
+        }
+
+        [ServerRpc]
+        void CreateRaycastLaserServerRpc()
+        {
+            CreateRaycastLaserClientRpc();
+        }
+
+        [ClientRpc]
+        void CreateRaycastLaserClientRpc()
+        {
             // Setting up the line renderer prefab
             GameObject createdRaycastLaser = Instantiate(projectilePrefab);
             createdRaycastLaser.transform.parent = transform;
@@ -49,18 +64,27 @@ namespace WeaponSystem
             raycastLaserLineRenderer.enabled = false;
         }
 
-        //[ServerRpc]
-        //void CreateRaycastLaserServerRpc()
-
-        //[ClientRpc]
-        //void CreateRaycastLaserClientRpc()
-
         private void OnDisable()
         {
-            // Turning down the slowing effect and destroying the line renderer prefab
-            NetworkPlayerController playerController = GetComponent<NetworkPlayerController>();
-            playerController.SpeedModifier = 1f;
+            if (IsOwner)
+            {
+                // Turning down the slowing effect and destroying the line renderer prefab
+                NetworkPlayerController playerController = GetComponent<NetworkPlayerController>();
+                playerController.SpeedModifier = 1f;
 
+                RemoveRaycastLaserServerRpc();
+            }
+        }
+
+        [ServerRpc]
+        void RemoveRaycastLaserServerRpc()
+        {
+            RemoveRacyastLaserClientRpc();
+        }
+
+        [ClientRpc]
+        void RemoveRacyastLaserClientRpc()
+        {
             Destroy(gameObject.transform.Find("RaycastLaser(Clone)").gameObject);
         }
 
@@ -128,29 +152,29 @@ namespace WeaponSystem
         [ServerRpc]
         void DrawRaycastLaserServerRpc()
         {
-            DrawRaycastLaserClientRpc();
+            DrawRaycastLaserClientRpc(raycastDistance);
         }
 
         /// <summary>
         /// Method starting the coroutine on every connected player, in order to make the laser visible to everyone
         /// </summary>
         [ClientRpc]
-        void DrawRaycastLaserClientRpc()
+        void DrawRaycastLaserClientRpc(float laserDistance)
         {
-            StartCoroutine(DrawRaycastLaser());
+            StartCoroutine(DrawRaycastLaser(laserDistance));
         }
 
         /// <summary>
         /// IEnumerator drawing showing and placing correctly the line of laser to display the fired shot
         /// </summary>
-        IEnumerator DrawRaycastLaser()
+        IEnumerator DrawRaycastLaser(float laserDistance)
         {
             coroutineActive = true;
             raycastLaserLineRenderer.enabled = true;
 
            // Setting the laser to reach the hit enemy
             raycastLaserLineRenderer.SetPosition(0, firePoint.position);
-            raycastLaserLineRenderer.SetPosition(1, firePoint.position + firePoint.up * raycastDistance);
+            raycastLaserLineRenderer.SetPosition(1, firePoint.position + firePoint.up * laserDistance);
 
             yield return new WaitForSeconds(0.12f);
 
