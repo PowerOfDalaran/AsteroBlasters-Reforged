@@ -45,12 +45,19 @@ namespace WeaponSystem
             }
         }
 
+        /// <summary>
+        /// Server rpc method existing only to call the client rpc - 
+        /// only host can use client rpc methods :( 
+        /// </summary>
         [ServerRpc]
         void CreateRaycastLaserServerRpc()
         {
             CreateRaycastLaserClientRpc();
         }
 
+        /// <summary>
+        /// Client rpc method, which creates the raycast laser prefab attatched to this player character, on every version of the game.
+        /// </summary>
         [ClientRpc]
         void CreateRaycastLaserClientRpc()
         {
@@ -76,12 +83,19 @@ namespace WeaponSystem
             }
         }
 
+        /// <summary>
+        /// Server rpc method existing only to call the client rpc - 
+        /// only host can use client rpc methods :( 
+        /// </summary>
         [ServerRpc]
         void RemoveRaycastLaserServerRpc()
         {
             RemoveRacyastLaserClientRpc();
         }
 
+        /// <summary>
+        /// Client rpc method, which destroys the raycast laser object from this player character on every version of the game.
+        /// </summary>
         [ClientRpc]
         void RemoveRacyastLaserClientRpc()
         {
@@ -152,12 +166,14 @@ namespace WeaponSystem
         [ServerRpc]
         void DrawRaycastLaserServerRpc()
         {
+            // Using his raycast distance variable instead of the client one, since the host take a shot and actually know how far away the target is
             DrawRaycastLaserClientRpc(raycastDistance);
         }
 
         /// <summary>
         /// Method starting the coroutine on every connected player, in order to make the laser visible to everyone
         /// </summary>
+        /// <param name="laserDistance">Length of the laser</param>
         [ClientRpc]
         void DrawRaycastLaserClientRpc(float laserDistance)
         {
@@ -167,6 +183,7 @@ namespace WeaponSystem
         /// <summary>
         /// IEnumerator drawing showing and placing correctly the line of laser to display the fired shot
         /// </summary>
+        /// <param name="laserDistance">Length of the laser</param>
         IEnumerator DrawRaycastLaser(float laserDistance)
         {
             coroutineActive = true;
