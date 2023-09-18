@@ -6,6 +6,7 @@ using NetworkFunctionality;
 using Others;
 using WeaponSystem;
 using PickableObjects;
+using System.Collections;
 
 namespace PlayerFunctionality
 {
@@ -415,10 +416,41 @@ namespace PlayerFunctionality
         }
         #endregion
 
+        /// <summary>
+        /// Method creating new weapon power up and spawning it.
+        /// Activated from server after player death.
+        /// </summary>
+        /// <param name="networkWeapon">Class of weapon, which the new power up will grant</param>
         void SpawnWeaponPowerUp(NetworkWeapon networkWeapon)
         {
             GameObject spawnedPowerUp = Instantiate(weaponPowerUpPrefab, transform.position, Quaternion.identity);
             spawnedPowerUp.GetComponent<NetworkObject>().Spawn();
-            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        }
+            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        
+        }
+
+        /// <summary>
+        /// Method activating the Modify Speed Coroutine coroutine.
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        public void ModifySpeed(float modifier, float duration)
+        {
+            StartCoroutine(ModifySpeedCoroutine(modifier, duration));
+        }
+
+        /// <summary>
+        /// Method changing the speed modifier parameter of player character for given amount of seconds
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        /// <returns></returns>
+        IEnumerator ModifySpeedCoroutine(float modifier, float duration)
+        {
+            speedModifier *= modifier;
+
+            yield return new WaitForSeconds(duration);
+
+            speedModifier /= modifier;
+        }
     }
 }
