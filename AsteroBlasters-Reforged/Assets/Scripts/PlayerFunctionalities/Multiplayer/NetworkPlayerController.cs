@@ -428,6 +428,11 @@ namespace PlayerFunctionality
             spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        
         }
 
+        /// <summary>
+        /// Server rpc method healing this player by given amount.
+        /// If the max health property would be crossed, healing them up to his max health.
+        /// </summary>
+        /// <param name="amountOfHealing">Amount of health that should be restored</param>
         [ServerRpc]
         public void HealPlayerServerRpc(int amountOfHealing)
         {
