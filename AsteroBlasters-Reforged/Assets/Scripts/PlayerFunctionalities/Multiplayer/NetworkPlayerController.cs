@@ -428,6 +428,12 @@ namespace PlayerFunctionality
             spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        
         }
 
+        [ServerRpc]
+        public void HealPlayerServerRpc(int amountOfHealing)
+        {
+            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth.Value ? maxHealth.Value : currentHealth.Value + amountOfHealing;
+        }
+
         /// <summary>
         /// Method activating the Modify Speed Coroutine coroutine.
         /// </summary>

@@ -9,9 +9,7 @@ namespace PickableObjects
 
         protected override void BuffPlayer(PlayerController playerController)
         {
-            Debug.Log(playerController.currentHealth);
             playerController.currentHealth += playerController.currentHealth + amountOfHealing > playerController.maxHealth ? playerController.maxHealth : amountOfHealing;
-            Debug.Log(playerController.currentHealth);
         }
     }
 }

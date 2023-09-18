@@ -9,7 +9,7 @@ namespace PickableObjects
     /// </summary>
     public class NetworkPowerUp : NetworkBehaviour
     {
-        float powerUpLifeLength = 15f;
+        [SerializeField] float powerUpLifeLength = 15f;
         float lifeLengthStatus = 0f;
 
         float inaccessibilityTime = 1f;
