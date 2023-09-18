@@ -35,6 +35,9 @@ namespace PlayerFunctionality
         public int maxHealth = 3;
         public int currentHealth;
 
+        public int maxShield = 2;
+        public int currentShield = 0;
+
         float currentCharge;
         float maxCharge = 10f;
         float chargingSpeed = 10f;
@@ -255,7 +258,21 @@ namespace PlayerFunctionality
 
         public void TakeDamage(int damage)
         {
-            currentHealth -= damage;
+            // If shield is available, it will block incoming hit, without passing any excess damage
+            if (currentShield > 0)
+            {
+                currentShield -= damage;
+
+                // If shield was destroyed, setting it to 0 in order to not end up with negative shield
+                if (currentShield < 0)
+                {
+                    currentShield = 0;
+                }
+            }
+            else
+            {
+                currentHealth -= damage;
+            }
             Debug.Log("You took " + damage + " damage!");
         }
         public void Die()
