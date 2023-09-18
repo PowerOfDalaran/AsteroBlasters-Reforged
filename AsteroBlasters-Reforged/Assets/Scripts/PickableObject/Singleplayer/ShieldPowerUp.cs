@@ -17,5 +17,4 @@ namespace PickableObjects
             playerController.currentShield += playerController.currentShield + grantedShield > playerController.maxShield ? playerController.maxShield : grantedShield;
         }
     }
-
 }
