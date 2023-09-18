@@ -6,6 +6,7 @@ using NetworkFunctionality;
 using Others;
 using WeaponSystem;
 using PickableObjects;
+using System.Collections;
 
 namespace PlayerFunctionality
 {
@@ -54,6 +55,10 @@ namespace PlayerFunctionality
 
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
+
+        public NetworkVariable<int> maxShield = new NetworkVariable<int>();
+        public NetworkVariable<int> currentShield = new NetworkVariable<int>();
+
         public NetworkVariable<Vector3> spawnPosition = new NetworkVariable<Vector3>();
 
         #region Build-in methods
@@ -67,6 +72,9 @@ namespace PlayerFunctionality
 
             maxHealth.Value = 3;
             currentHealth.Value = maxHealth.Value;
+
+            maxShield.Value = 2;
+            currentShield.Value = 0;
 
             chargingSpeed = 8f;
             isChargingWeapon = false;
@@ -355,14 +363,30 @@ namespace PlayerFunctionality
             ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
             var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
 
-            if (client.currentHealth.Value > 1)
+            // If shield is available, it will block incoming hit, without passing any excess damage
+            if (currentShield.Value > 0)
             {
-                client.currentHealth.Value -= damage;
+                currentShield.Value -= damage;
+
+                // If shield was destroyed, setting it to 0 in order to not end up with negative shield
+                if (currentShield.Value < 0)
+                {
+                    currentShield.Value = 0;
+                }
             }
             else
             {
-                client.currentHealth.Value = 3;
-                Die(damagingPlayerId);
+                // If there was no shield, dealing damage to the player...
+                if (client.currentHealth.Value > 1)
+                {
+                    client.currentHealth.Value -= damage;
+                }
+                else
+                {
+                    //...or killing him, if he won't be able to survive the damage
+                    client.currentHealth.Value = 3;
+                    Die(damagingPlayerId);
+                }
             }
         }
 
@@ -415,10 +439,63 @@ namespace PlayerFunctionality
         }
         #endregion
 
+        /// <summary>
+        /// Method creating new weapon power up and spawning it.
+        /// Activated from server after player death.
+        /// </summary>
+        /// <param name="networkWeapon">Class of weapon, which the new power up will grant</param>
         void SpawnWeaponPowerUp(NetworkWeapon networkWeapon)
         {
             GameObject spawnedPowerUp = Instantiate(weaponPowerUpPrefab, transform.position, Quaternion.identity);
             spawnedPowerUp.GetComponent<NetworkObject>().Spawn();
-            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        }
+            spawnedPowerUp.GetComponent<NetworkWeaponPowerUp>().GrantedWeapon = networkWeapon.weaponClass;        
+        }
+
+        /// <summary>
+        /// Server rpc method healing this player by given amount.
+        /// If the max health property would be crossed, healing them up to his max health.
+        /// </summary>
+        /// <param name="amountOfHealing">Amount of health that should be restored</param>
+        [ServerRpc]
+        public void HealPlayerServerRpc(int amountOfHealing)
+        {
+            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth.Value ? maxHealth.Value : currentHealth.Value + amountOfHealing;
+        }
+
+        /// <summary>
+        /// Server rpc method giving shield to the person's picking it up by the grantedShield property, if it wouldn't cross the maxShield amount.
+        /// Otherwise increasing their shield up to their maximum shield.        
+        /// </summary>
+        /// <param name="shieldValue">Amount of shield that should be granted</param>
+        [ServerRpc]
+        public void GainShieldServerRpc(int shieldValue)
+        {
+            currentShield.Value = currentShield.Value + shieldValue > maxShield.Value ? maxShield.Value : currentShield.Value + shieldValue;
+        }
+
+        /// <summary>
+        /// Method activating the Modify Speed Coroutine coroutine.
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        public void ModifySpeed(float modifier, float duration)
+        {
+            StartCoroutine(ModifySpeedCoroutine(modifier, duration));
+        }
+
+        /// <summary>
+        /// Method changing the speed modifier parameter of player character for given amount of seconds
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        /// <returns></returns>
+        IEnumerator ModifySpeedCoroutine(float modifier, float duration)
+        {
+            speedModifier *= modifier;
+
+            yield return new WaitForSeconds(duration);
+
+            speedModifier /= modifier;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace PickableObjects
     public class PowerUp : MonoBehaviour
     {
         [SerializeField] float powerUpLifeLength = 15f;
-        [SerializeField] float lifeLengthStatus = 0f;
+        float lifeLengthStatus = 0f;
 
         private void Start()
         {

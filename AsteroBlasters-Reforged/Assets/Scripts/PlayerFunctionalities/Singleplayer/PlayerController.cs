@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using WeaponSystem;
@@ -34,9 +35,12 @@ namespace PlayerFunctionality
         public int maxHealth = 3;
         public int currentHealth;
 
-        [SerializeField] float currentCharge;
-        [SerializeField] float maxCharge = 10f;
-        [SerializeField] float chargingSpeed = 10f;
+        public int maxShield = 2;
+        public int currentShield = 0;
+
+        float currentCharge;
+        float maxCharge = 10f;
+        float chargingSpeed = 10f;
 
         public bool isChargingWeapon = false;
 
@@ -145,6 +149,32 @@ namespace PlayerFunctionality
         }
 
         /// <summary>
+        /// Method activating the Modify Speed Coroutine coroutine.
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        public void ModifySpeed(float modifier, float duration)
+        {
+            StartCoroutine(ModifySpeedCoroutine(modifier, duration));
+        }
+
+        /// <summary>
+        /// Method changing the speed modifier parameter of player character for given amount of seconds
+        /// </summary>
+        /// <param name="modifier">Modifier, which is multiplied by the player character speed</param>
+        /// <param name="duration">Duration of the speed modification</param>
+        /// <returns></returns>
+        IEnumerator ModifySpeedCoroutine(float modifier, float duration)
+        {
+            speedModifier *= modifier;
+            
+            yield return new WaitForSeconds(duration);
+
+            speedModifier /= modifier;
+
+        }
+
+        /// <summary>
         /// Method activating the base weapon in order to fire.
         /// Is added to the "PlayerActions.Shoot.performed" delegate.
         /// Since the base weapon isn't using any charge mechanics, it passes the argument with value 0.
@@ -228,7 +258,21 @@ namespace PlayerFunctionality
 
         public void TakeDamage(int damage)
         {
-            currentHealth -= damage;
+            // If shield is available, it will block incoming hit, without passing any excess damage
+            if (currentShield > 0)
+            {
+                currentShield -= damage;
+
+                // If shield was destroyed, setting it to 0 in order to not end up with negative shield
+                if (currentShield < 0)
+                {
+                    currentShield = 0;
+                }
+            }
+            else
+            {
+                currentHealth -= damage;
+            }
             Debug.Log("You took " + damage + " damage!");
         }
         public void Die()
