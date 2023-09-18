@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using PlayerFunctionality;
 using UnityEngine;
 
-public class HealthPowerUp : MonoBehaviour
+namespace PickableObjects
 {
-    // Start is called before the first frame update
-    void Start()
+    public class HealthPowerUp : PowerUp
     {
-        
-    }
+        [SerializeField] int amountOfHealing;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void BuffPlayer(PlayerController playerController)
+        {
+            Debug.Log(playerController.currentHealth);
+            playerController.currentHealth += playerController.currentHealth + amountOfHealing > playerController.maxHealth ? playerController.maxHealth : amountOfHealing;
+            Debug.Log(playerController.currentHealth);
+        }
     }
 }
