@@ -6,6 +6,9 @@ using Random = UnityEngine.Random;
 
 namespace GameMapElements
 {
+    /// <summary>
+    /// Class responsible for the behaviour of asteroids (network version)
+    /// </summary>
     public class NetworkAsteroidController : NetworkBehaviour
     {
         // Arrays of possible sprites, which corresponds to different asteroid types
@@ -89,6 +92,10 @@ namespace GameMapElements
             DespawnSelfServerRpc();
         }
 
+        /// <summary>
+        /// Server rpc method, which creates two new asteroids in place of the old one.
+        /// If the asteroid is the type of "small", creating the reward instead.
+        /// </summary>
         [ServerRpc]
         void SplitAsteroidServerRpc()
         {
@@ -138,42 +145,59 @@ namespace GameMapElements
             }
             else
             {
+                // Rhecking if the number should be spawned
                 int random = Random.Range(1, 10);
 
                 if (random >= 6)
                 {
-                    int randomReward = Random.Range(0, 3);
+                    // Randomizing the reward and spawning it
+                    int rewardIndex = Random.Range(0, possibleRewards.Length);
 
-                    GameObject createdReward = Instantiate(possibleRewards[randomReward], transform.position, Quaternion.identity);
-
-                    NetworkWeaponPowerUp createdWeaponPowerUp = createdReward.GetComponent<NetworkWeaponPowerUp>();
-
-                    if (createdWeaponPowerUp != null)
-                    {
-                        int randomWeapon = Random.Range(0, 2);
-
-                        switch (randomWeapon)
-                        {
-                            case 0:
-                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.PlasmaCannon;
-                                break;
-                            case 1:
-                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.MissileLauncher;
-                                break;
-                            case 2:
-                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.LaserSniperGun;
-                                break;
-                            default:
-                                Debug.Log("Unexpected number was randomized.");
-                                break;
-                        }
-                    }
-
-                    createdReward.GetComponent<NetworkObject>().Spawn();
+                    SpawnReward(rewardIndex);
                 }
             }
         }
 
+        /// <summary>
+        /// Method spawning the reward with given index, checking if it is the weapon power up (if so, randomizing which weapon should be given) and spawning it
+        /// </summary>
+        /// <param name="rewardIndex">Index of reward, which should be spawned</param>
+        void SpawnReward(int rewardIndex)
+        {
+            // Creating the reward locally
+            GameObject createdReward = Instantiate(possibleRewards[rewardIndex], transform.position, Quaternion.identity);
+
+            // Checking if created reward is weapon power up, if so randomizing the weapon it grants
+            NetworkWeaponPowerUp createdWeaponPowerUp = createdReward.GetComponent<NetworkWeaponPowerUp>();
+
+            if (createdWeaponPowerUp != null)
+            {
+                int randomWeapon = Random.Range(0, 2);
+
+                switch (randomWeapon)
+                {
+                    case 0:
+                        createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.PlasmaCannon;
+                        break;
+                    case 1:
+                        createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.MissileLauncher;
+                        break;
+                    case 2:
+                        createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.LaserSniperGun;
+                        break;
+                    default:
+                        Debug.Log("Unexpected number was randomized.");
+                        break;
+                }
+            }
+
+            // Spawning the reward on every connected client
+            createdReward.GetComponent<NetworkObject>().Spawn();
+        }
+
+        /// <summary>
+        /// Method despawning this game object
+        /// </summary>
         [ServerRpc]
         void DespawnSelfServerRpc()
         {
