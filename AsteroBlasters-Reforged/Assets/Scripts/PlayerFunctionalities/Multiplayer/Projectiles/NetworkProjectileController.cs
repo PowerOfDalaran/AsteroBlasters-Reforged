@@ -1,3 +1,4 @@
+using GameMapElements;
 using PlayerFunctionality;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,15 +26,22 @@ namespace WeaponSystem
             // Checking if colliding object is a player character
             NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
 
+            NetworkAsteroidController networkAsteroidController = collision.gameObject.GetComponent<NetworkAsteroidController>();
+
             // If not, then destroying projectile
-            if (networkPlayerController == null)
+            if (networkPlayerController == null && networkAsteroidController == null)
             {
                 DespawnSelfServerRpc();
             }
             // if so, and player hit isn't the owner of the projectile, then dealing damage to him, before deleting the projectile
-            else if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId)
+            else if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId && networkPlayerController != null)
             {
                 networkPlayerController.TakeDamage(damage, OwnerClientId);
+                DespawnSelfServerRpc();
+            }
+            else if(networkAsteroidController != null)
+            {
+                networkAsteroidController.TakeDamage(damage);
                 DespawnSelfServerRpc();
             }
         }

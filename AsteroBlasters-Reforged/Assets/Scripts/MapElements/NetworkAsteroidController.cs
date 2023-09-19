@@ -1,51 +1,53 @@
-using PlayerFunctionality;
+using System;
+using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameMapElements
 {
-    /// <summary>
-    /// Enumerator representing the three possible sizes of asteroids.
-    /// </summary>
-    public enum AsteroidTypes
-    {
-        BigAsteroid,
-        MediumAsteroid,
-        SmallAsteroid,
-    }
-
-    /// <summary>
-    /// Class responsible for the behaviour of asteroids
-    /// </summary>
-    public class AsteroidController : MonoBehaviour, IHealthSystem
+    public class NetworkAsteroidController : NetworkBehaviour
     {
         // Arrays of possible sprites, which corresponds to different asteroid types
         [SerializeField] Sprite[] smallSprites;
         [SerializeField] Sprite[] mediumSprites;
         [SerializeField] Sprite[] bigSprites;
 
-        [SerializeField] public AsteroidTypes asteroidType;
+        [SerializeField] GameObject asteroidPrefab;
+
+        [NonSerialized] NetworkVariable<AsteroidTypes> asteroidType;
+
+        public AsteroidTypes AsteroidType
+        {
+            get { return asteroidType.Value; }
+            set { asteroidType.Value = value; }
+        }
 
         [SerializeField] int maxDurability;
         [SerializeField] int currentDurability;
 
         SpriteRenderer mySpriteRenderer;
 
-        void Start() 
+        private void Awake()
+        {
+            asteroidType = new NetworkVariable<AsteroidTypes>();
+        }
+
+        void Start()
         {
             mySpriteRenderer = GetComponent<SpriteRenderer>();
 
             // Setting up the properties, which differs between asteroid types
-            if (asteroidType == AsteroidTypes.SmallAsteroid)
+            if (AsteroidType == AsteroidTypes.SmallAsteroid)
             {
                 maxDurability = 1;
                 mySpriteRenderer.sprite = smallSprites[Random.Range(0, smallSprites.Length)];
             }
-            else if (asteroidType == AsteroidTypes.MediumAsteroid)
+            else if (AsteroidType == AsteroidTypes.MediumAsteroid)
             {
                 maxDurability = 2;
                 mySpriteRenderer.sprite = mediumSprites[Random.Range(0, mediumSprites.Length)];
             }
-            else if (asteroidType == AsteroidTypes.BigAsteroid)
+            else if (AsteroidType == AsteroidTypes.BigAsteroid)
             {
                 maxDurability = 3;
                 mySpriteRenderer.sprite = bigSprites[Random.Range(0, bigSprites.Length)];
@@ -64,6 +66,12 @@ namespace GameMapElements
 
         public void TakeDamage(int damage)
         {
+            TakeDamageServerRpc(damage);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void TakeDamageServerRpc(int damage)
+        {
             currentDurability -= damage;
 
             if (currentDurability <= 0)
@@ -74,16 +82,14 @@ namespace GameMapElements
 
         public void Die()
         {
-            SplitAsteroid();
-            Destroy(gameObject);
+            SplitAsteroidServerRpc();
+            DespawnSelfServerRpc();
         }
 
-        /// <summary>
-        /// Method, which creates two new asteroids in place of the old one (if the asteroid size is bigger than "small" one)
-        /// </summary>
-        void SplitAsteroid()
+        [ServerRpc]
+        void SplitAsteroidServerRpc()
         {
-            if (asteroidType != AsteroidTypes.SmallAsteroid)
+            if (AsteroidType != AsteroidTypes.SmallAsteroid)
             {
                 // Generazing random offset for the first asteroid, and reversing it to create the offset for the second one
                 float randomChangeX = Random.Range(0f, 1f);
@@ -107,24 +113,32 @@ namespace GameMapElements
                 for (int i = 0; i < 2; i++)
                 {
                     // Creating new asteroid and accessing its AsteroidController script
-                    GameObject subAsteroid = Instantiate(gameObject, spawnPositions[i], Quaternion.identity);
+                    GameObject subAsteroid = Instantiate(asteroidPrefab, spawnPositions[i], Quaternion.identity);
 
-                    AsteroidController createdAsteroidController = subAsteroid.GetComponent<AsteroidController>();
+                    NetworkAsteroidController createdAsteroidController = subAsteroid.GetComponent<NetworkAsteroidController>();
 
                     // Assigning the type of new asteroid
-                    if (asteroidType == AsteroidTypes.BigAsteroid)
+                    if (AsteroidType == AsteroidTypes.BigAsteroid)
                     {
-                        createdAsteroidController.asteroidType = AsteroidTypes.MediumAsteroid;
+                        createdAsteroidController.AsteroidType = AsteroidTypes.MediumAsteroid;
                     }
                     else
                     {
-                        createdAsteroidController.asteroidType = AsteroidTypes.SmallAsteroid;
+                        createdAsteroidController.AsteroidType = AsteroidTypes.SmallAsteroid;
                     }
+
+                    subAsteroid.GetComponent<NetworkObject>().Spawn();
 
                     // Launching the new asteroid in randomized direction
                     subAsteroid.GetComponent<Rigidbody2D>().AddForce(new Vector2(randomForceX[i], randomForceY[i]), ForceMode2D.Impulse);
                 }
             }
+        }
+
+        [ServerRpc]
+        void DespawnSelfServerRpc()
+        {
+            gameObject.GetComponent<NetworkObject>().Despawn();
         }
     }
 }
