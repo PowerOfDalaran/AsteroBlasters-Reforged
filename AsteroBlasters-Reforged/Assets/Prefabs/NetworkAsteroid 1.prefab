@@ -188,8 +188,12 @@ MonoBehaviour:
   - {fileID: 21300008, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
   - {fileID: 21300010, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
   - {fileID: 21300012, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+  possibleRewards:
+  - {fileID: 6774092315431271072, guid: 657b8a221e8c8d74981c6cf9086631ee, type: 3}
+  - {fileID: 6774092315431271072, guid: 292604f1f1d977a4fa18f3315cb1e5bb, type: 3}
+  - {fileID: 6774092315431271072, guid: fb90769e77d45ca4c84e21fbc39ab9a7, type: 3}
+  - {fileID: 6774092315431271072, guid: 4850aafbb78c918478ee24e4f2dc55d0, type: 3}
   asteroidPrefab: {fileID: 2007029534465263717, guid: 7a952897b72db474cb10e03c0b599ddc, type: 3}
-  asteroidType: 2
   maxDurability: 0
   currentDurability: 0
 --- !u!114 &1782430659947172103

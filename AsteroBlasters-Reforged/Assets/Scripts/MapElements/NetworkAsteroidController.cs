@@ -1,3 +1,4 @@
+using PickableObjects;
 using System;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace GameMapElements
         [SerializeField] Sprite[] smallSprites;
         [SerializeField] Sprite[] mediumSprites;
         [SerializeField] Sprite[] bigSprites;
+
+        [SerializeField] GameObject[] possibleRewards;
 
         [SerializeField] GameObject asteroidPrefab;
 
@@ -131,6 +134,42 @@ namespace GameMapElements
 
                     // Launching the new asteroid in randomized direction
                     subAsteroid.GetComponent<Rigidbody2D>().AddForce(new Vector2(randomForceX[i], randomForceY[i]), ForceMode2D.Impulse);
+                }
+            }
+            else
+            {
+                int random = Random.Range(1, 10);
+
+                if (random >= 6)
+                {
+                    int randomReward = Random.Range(0, 3);
+
+                    GameObject createdReward = Instantiate(possibleRewards[randomReward], transform.position, Quaternion.identity);
+
+                    NetworkWeaponPowerUp createdWeaponPowerUp = createdReward.GetComponent<NetworkWeaponPowerUp>();
+
+                    if (createdWeaponPowerUp != null)
+                    {
+                        int randomWeapon = Random.Range(0, 2);
+
+                        switch (randomWeapon)
+                        {
+                            case 0:
+                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.PlasmaCannon;
+                                break;
+                            case 1:
+                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.MissileLauncher;
+                                break;
+                            case 2:
+                                createdWeaponPowerUp.GrantedWeapon = WeaponSystem.WeaponClass.LaserSniperGun;
+                                break;
+                            default:
+                                Debug.Log("Unexpected number was randomized.");
+                                break;
+                        }
+                    }
+
+                    createdReward.GetComponent<NetworkObject>().Spawn();
                 }
             }
         }

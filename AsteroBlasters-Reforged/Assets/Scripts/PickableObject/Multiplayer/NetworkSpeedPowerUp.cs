@@ -8,8 +8,8 @@ namespace PickableObjects
     /// </summary>
     public class NetworkSpeedPowerUp : NetworkPowerUp
     {
-        [SerializeField] float speedModifier;
-        [SerializeField] float buffDuration;
+        [SerializeField] float speedModifier = 1.5f;
+        [SerializeField] float buffDuration = 5f;
 
         protected override void BuffPlayer(NetworkPlayerController networkPlayerController)
         {

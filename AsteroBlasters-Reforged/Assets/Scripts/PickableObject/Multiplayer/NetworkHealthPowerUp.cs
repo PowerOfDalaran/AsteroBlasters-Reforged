@@ -8,7 +8,7 @@ namespace PickableObjects
     /// </summary>
     public class NetworkHealthPowerUp : NetworkPowerUp
     {
-        [SerializeField] int amountOfHealing;
+        [SerializeField] int amountOfHealing = 2;
 
         protected override void BuffPlayer(NetworkPlayerController networkPlayerController)
         {
