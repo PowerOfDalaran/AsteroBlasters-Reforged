@@ -8,7 +8,7 @@ namespace PickableObjects
     /// </summary>
     public class NetworkShieldPowerUp : NetworkPowerUp
     {
-        [SerializeField] int grantedShield;
+        [SerializeField] int grantedShield = 1;
 
         protected override void BuffPlayer(NetworkPlayerController playerController)
         {

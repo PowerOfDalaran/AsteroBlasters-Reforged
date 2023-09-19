@@ -1,3 +1,4 @@
+using GameMapElements;
 using PlayerFunctionality;
 using System.Collections;
 using Unity.Netcode;
@@ -134,6 +135,24 @@ namespace WeaponSystem
                 else
                 {
                     playerController.TakeDamage(3, accessingPlayerId);
+                }
+            }
+
+            NetworkAsteroidController networkAsteroidController = GetComponent<NetworkAsteroidController>();
+            
+            if (networkAsteroidController != null)
+            {
+                if (charge <= 6)
+                {
+                    networkAsteroidController.TakeDamage(1);
+                }
+                else if (charge < 10)
+                {
+                    networkAsteroidController.TakeDamage(2);
+                }
+                else
+                {
+                    networkAsteroidController.TakeDamage(3);
                 }
             }
         }

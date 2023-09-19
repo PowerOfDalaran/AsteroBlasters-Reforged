@@ -4185,6 +4185,87 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8151760770417798554, guid: a136f25d3393abb45934374a06325ad7, type: 3}
   m_PrefabInstance: {fileID: 5965620514409912860}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7266340760262596616
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2007029534465263717, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_Name
+      value: Asteroid
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_RootOrder
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.1074944
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5592761
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408268340583738153, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942370207250572741, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: bigSprites.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942370207250572741, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: bigSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300006, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+    - target: {fileID: 7942370207250572741, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: bigSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300008, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+    - target: {fileID: 7942370207250572741, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: bigSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300010, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+    - target: {fileID: 7942370207250572741, guid: de508601886547042af9d95845eca3b7, type: 3}
+      propertyPath: bigSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300012, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: de508601886547042af9d95845eca3b7, type: 3}
 --- !u!1001 &8579324909898343539
 PrefabInstance:
   m_ObjectHideFlags: 0
