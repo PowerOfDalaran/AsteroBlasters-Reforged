@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,6 +16,21 @@ namespace GameDevelopmentTools
         int spawningChance = 10;
 
         private void Start()
+        {
+            if (NetworkManager.Singleton != null)
+            {
+                if (NetworkManager.Singleton.IsHost)
+                {
+                    FillAreaWithAsteroid(true);
+                }
+            }
+            else
+            {
+                FillAreaWithAsteroid(false);
+            }
+        }
+
+        void FillAreaWithAsteroid(bool isNetworkVersion)
         {
             // Instantiating the temproary variables
             Vector3Int currentPosition;
@@ -47,6 +63,12 @@ namespace GameDevelopmentTools
                             // Instantiating the asteroid in its position
                             GameObject createdAsteroid = Instantiate(asteroidPrefab, new Vector2(currentPosition.x + 0.5f, currentPosition.y + 0.5f), Quaternion.identity);
                             createdAsteroid.transform.Rotate(0, 0, randomZ);
+
+                            if (isNetworkVersion)
+                            {
+                                // Spawning the asteroid online
+                                createdAsteroid.GetComponent<NetworkObject>().Spawn();
+                            }
 
                             // Setting up the spawning chance back to 10
                             spawningChance = 10;
