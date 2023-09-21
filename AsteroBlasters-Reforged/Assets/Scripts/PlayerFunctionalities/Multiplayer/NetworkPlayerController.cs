@@ -363,7 +363,7 @@ namespace PlayerFunctionality
 
         public void TakeDamage(int damage, ulong damagingPlayerId)
         {
-            TakeDamageServerRpc(damage, damagingPlayerId);
+            TakeDamageServerRpc(damage, (long)damagingPlayerId);
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="damage">Amount of damage you want to deal</param>
         [ServerRpc(RequireOwnership = false)]
-        public void TakeDamageServerRpc(int damage, ulong damagingPlayerId = ulong.MaxValue)
+        public void TakeDamageServerRpc(int damage, long damagingPlayerId = -1)
         {
             ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
             var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
@@ -409,7 +409,7 @@ namespace PlayerFunctionality
         /// Method handling the player death (on host)
         /// </summary>
         /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
-        public void Die(ulong killerPlayerId = ulong.MaxValue)
+        public void Die(long killerPlayerId)
         {
             if (secondaryWeapon != null)
             {
@@ -417,7 +417,7 @@ namespace PlayerFunctionality
                 DiscardSecondaryWeapon();
             }
 
-            int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
+            int killingPlayerIndex = killerPlayerId >= 0 ? MultiplayerGameManager.instance.GetPlayerIndexFromClientId((ulong)killerPlayerId) : -1;
             currentHealth = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);

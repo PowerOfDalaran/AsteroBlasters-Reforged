@@ -92,17 +92,20 @@ namespace GameManager
         /// <param name="killingPlayerIndex">Index of player, who killed</param>
         public void UpdateStats(int killedPlayerIndex, int killingPlayerIndex)
         {
-            PlayerGameData killingPlayerGameData = GetPlayerGameDataFromIndex(killingPlayerIndex);
-            killingPlayerGameData.killCount += 1;
-            playersGameDataList[killingPlayerIndex] = killingPlayerGameData;
-
             PlayerGameData killedPlayerGameData = GetPlayerGameDataFromIndex(killedPlayerIndex);
             killedPlayerGameData.deathCount += 1;
             playersGameDataList[killedPlayerIndex] = killedPlayerGameData;
 
-            if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
+            if (killingPlayerIndex >= 0)
             {
-                EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
+                PlayerGameData killingPlayerGameData = GetPlayerGameDataFromIndex(killingPlayerIndex);
+                killingPlayerGameData.killCount += 1;
+                playersGameDataList[killingPlayerIndex] = killingPlayerGameData;
+
+                if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
+                {
+                    EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
+                }
             }
         }
         #endregion
