@@ -55,7 +55,7 @@ namespace GameDevelopmentTools
                     {
                         float currentSpawningChance = Random.Range(0, 100);
 
-                        if (currentSpawningChance >= spawningChance)
+                        if (currentSpawningChance <= spawningChance)
                         {
                             //Randomizing rotation
                             float randomZ = Random.Range(0f, 359f);
@@ -76,7 +76,7 @@ namespace GameDevelopmentTools
                         else
                         {
                             // Increasing the spawning chance by 5
-                            spawningChance += 5;
+                            spawningChance += 10;
                         }
                     }
                 }
