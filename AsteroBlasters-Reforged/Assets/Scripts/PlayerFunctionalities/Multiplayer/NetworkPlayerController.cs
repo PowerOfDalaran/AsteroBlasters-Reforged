@@ -178,25 +178,35 @@ namespace PlayerFunctionality
             // Checking if collision damage should be applied and applying it
             if (!collision.gameObject.CompareTag("NoImpactDamage"))
             {
+                // Checking if code is run by the owner of the player character
                 if (!IsOwner) return;
-                if (collision.gameObject.TryGetComponent(out NetworkPlayerController networkPlayer))
+
+                // Calculating velocity and assigning the proper amount of damage
+                float impactVelocity = collision.relativeVelocity.magnitude;
+                int impactDamage = 0;
+
+                if (impactVelocity > 7)
                 {
-                    //impactVelocity.Value = collision.relativeVelocity.magnitude;
-
-                    var player1 = new PlayerInGameData()
-                    {
-                        Id = OwnerClientId,
-                        ImpactVelocity = collision.relativeVelocity.magnitude
-                    };
-
-                    var player2 = new PlayerInGameData()
-                    {
-                        Id = networkPlayer.OwnerClientId,
-                        ImpactVelocity = collision.relativeVelocity.magnitude
-                    };
-                    ImpactDamageServerRpc(player1, player2);
+                    impactDamage = 5;
+                }
+                else if (impactVelocity > 5)
+                {
+                    impactDamage = 2;
+                }
+                else if (impactVelocity > 3)
+                {
+                    impactDamage = 1;
                 }
 
+                // Applying the damage to self...
+                TakeDamage(impactDamage);
+
+                // ...and to colliding player character, if an object is indeed the other player's ship
+                NetworkPlayerController collidingNetworkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
+                if (collidingNetworkPlayerController != null && impactDamage > 0)
+                {
+                    collidingNetworkPlayerController.TakeDamage(impactDamage);
+                }
             }
         }
         #endregion
@@ -390,23 +400,6 @@ namespace PlayerFunctionality
                     client.currentHealth.Value = 3;
                     Die(damagingPlayerId);
                 }
-            }
-        }
-
-        [ServerRpc]
-        private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
-        {
-            if (player1.ImpactVelocity > 8)
-            {
-                Die();
-            }
-            else if (player1.ImpactVelocity > 6)
-            {
-                TakeDamageServerRpc(2);
-            }
-            else if (player1.ImpactVelocity > 5)
-            {
-                TakeDamageServerRpc(1);
             }
         }
         #endregion

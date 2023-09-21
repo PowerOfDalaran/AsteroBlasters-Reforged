@@ -167,7 +167,6 @@ namespace NetworkFunctionality
 
                     // Creating new player object and accessing its network player controller
                     GameObject newPlayer = Instantiate(playerPrefab, gameModeManager.spawnPoints[i].transform.position, Quaternion.identity);
-                    //newPlayer.transform.LookAt(Vector3.zero, Vector3.forward);
                     NetworkPlayerController newPlayerController = newPlayer.GetComponent<NetworkPlayerController>();
 
                     // Spawning the player in the network
