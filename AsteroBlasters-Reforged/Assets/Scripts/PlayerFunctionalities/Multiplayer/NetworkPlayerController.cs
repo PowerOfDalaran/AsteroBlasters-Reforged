@@ -103,6 +103,12 @@ namespace PlayerFunctionality
             PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
             mySpriteRenderer.color = myColor;
+
+            // If this player character is owned by the local client, setting up the camera to follow them
+            if (IsOwner)
+            {
+                CameraController.instance.FollowPlayer(transform);
+            }
         }
 
         private void Update()
@@ -155,9 +161,6 @@ namespace PlayerFunctionality
             {
                 return;
             }
-
-            CameraController.instance.FollowPlayer(transform);
-
 
             // Reading current input value for movement and if it's different than zero activate movement and rotation
             Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
