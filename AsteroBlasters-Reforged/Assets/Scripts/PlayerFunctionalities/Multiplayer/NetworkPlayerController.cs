@@ -408,7 +408,7 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method handling the player death (on host)
         /// </summary>
-        /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
+        /// <param name="killerPlayerId">Player id, whos killed this player (-1 if the player died on their own)</param>
         public void Die(long killerPlayerId)
         {
             if (secondaryWeapon != null)
@@ -417,7 +417,10 @@ namespace PlayerFunctionality
                 DiscardSecondaryWeapon();
             }
 
+            // Assigning the killing player index (-1 if the player died on their own)
             int killingPlayerIndex = killerPlayerId >= 0 ? MultiplayerGameManager.instance.GetPlayerIndexFromClientId((ulong)killerPlayerId) : -1;
+
+            // Resetting the current health, activating client rpc and activating the event
             currentHealth = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);

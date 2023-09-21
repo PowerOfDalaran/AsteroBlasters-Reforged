@@ -86,22 +86,26 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Method adding one kill to the killing player, one death to killed player, and then checking if game should be ended.
+        /// Method adding one kill to the killing player (if there is a killer), one death to killed player, and then checking if game should be ended.
         /// </summary>
         /// <param name="killedPlayerIndex">Index of player, who was killed</param>
-        /// <param name="killingPlayerIndex">Index of player, who killed</param>
+        /// <param name="killingPlayerIndex">Index of player, who killed (-1 if killed player died by its own mistake)</param>
         public void UpdateStats(int killedPlayerIndex, int killingPlayerIndex)
         {
+            // Getting the killed player data and adding one death to their counter
             PlayerGameData killedPlayerGameData = GetPlayerGameDataFromIndex(killedPlayerIndex);
             killedPlayerGameData.deathCount += 1;
             playersGameDataList[killedPlayerIndex] = killedPlayerGameData;
 
+            // If the deceased player didn't died on their own
             if (killingPlayerIndex >= 0)
             {
+                // Getting the killing player data and adding one kill to their counter
                 PlayerGameData killingPlayerGameData = GetPlayerGameDataFromIndex(killingPlayerIndex);
                 killingPlayerGameData.killCount += 1;
                 playersGameDataList[killingPlayerIndex] = killingPlayerGameData;
 
+                // Checking if the victory treshold have been reached
                 if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
                 {
                     EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
