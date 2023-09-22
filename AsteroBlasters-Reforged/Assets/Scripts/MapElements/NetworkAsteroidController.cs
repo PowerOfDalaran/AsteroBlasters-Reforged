@@ -146,7 +146,7 @@ namespace GameMapElements
             else
             {
                 // Rhecking if the number should be spawned
-                int random = Random.Range(1, 10);
+                int random = Random.Range(1, 11);
 
                 if (random >= 6)
                 {
@@ -172,7 +172,7 @@ namespace GameMapElements
 
             if (createdWeaponPowerUp != null)
             {
-                int randomWeapon = Random.Range(0, 2);
+                int randomWeapon = Random.Range(0, 3);
 
                 switch (randomWeapon)
                 {
