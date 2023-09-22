@@ -28,7 +28,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""3b12f16b-22f7-40f9-a64c-9ea43ff674e6"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""Rotate"",
                     ""type"": ""Value"",
                     ""id"": ""a5407b86-4743-4cf2-83c9-d4efc4c7c814"",
                     ""expectedControlType"": ""Vector2"",
@@ -53,6 +53,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae804abf-de9c-42a8-8a9e-df7e74fd6235"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -70,7 +79,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""549fb2b2-f49c-409f-895d-5077ecdf004c"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -80,56 +89,56 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""7bd35371-91e9-44ae-bc0e-49019fa11b5c"",
+                    ""id"": ""2e2e4f7d-b8ac-46b9-bd01-b435c45f7ff0"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""86990f9b-c601-4048-af82-583a5e79402e"",
+                    ""id"": ""4f80ee46-ecbc-43d8-9ffc-4c23158edcd2"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Move"",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""01f32139-5626-4a4b-a876-628e26ef92b5"",
+                    ""id"": ""27ccec79-c778-4b43-9b72-70e47f6272b2"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Move"",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""f336d207-3b71-46d2-99b9-d491caebd4a2"",
+                    ""id"": ""f0bbfa62-c803-4180-bcff-b6a20a5865bc"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Move"",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""a76681ee-0b63-4e35-905a-8465838d57fb"",
+                    ""id"": ""868e93ab-0024-4bb3-a480-a32bfe1a8106"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Move"",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -140,7 +149,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Move"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -163,6 +172,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""ShootSecondaryWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50e19bac-193d-4d03-8a97-c9a9ab9530e4"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""318e834b-94c4-41b0-8770-352ca1b34704"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -196,9 +227,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
 }");
         // PlayerActions
         m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
-        m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
+        m_PlayerActions_Rotate = m_PlayerActions.FindAction("Rotate", throwIfNotFound: true);
         m_PlayerActions_ShootFirstWeapon = m_PlayerActions.FindAction("ShootFirstWeapon", throwIfNotFound: true);
         m_PlayerActions_ShootSecondaryWeapon = m_PlayerActions.FindAction("ShootSecondaryWeapon", throwIfNotFound: true);
+        m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -260,16 +292,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // PlayerActions
     private readonly InputActionMap m_PlayerActions;
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
-    private readonly InputAction m_PlayerActions_Move;
+    private readonly InputAction m_PlayerActions_Rotate;
     private readonly InputAction m_PlayerActions_ShootFirstWeapon;
     private readonly InputAction m_PlayerActions_ShootSecondaryWeapon;
+    private readonly InputAction m_PlayerActions_Move;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
+        public InputAction @Rotate => m_Wrapper.m_PlayerActions_Rotate;
         public InputAction @ShootFirstWeapon => m_Wrapper.m_PlayerActions_ShootFirstWeapon;
         public InputAction @ShootSecondaryWeapon => m_Wrapper.m_PlayerActions_ShootSecondaryWeapon;
+        public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -279,28 +313,34 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
             @ShootFirstWeapon.started += instance.OnShootFirstWeapon;
             @ShootFirstWeapon.performed += instance.OnShootFirstWeapon;
             @ShootFirstWeapon.canceled += instance.OnShootFirstWeapon;
             @ShootSecondaryWeapon.started += instance.OnShootSecondaryWeapon;
             @ShootSecondaryWeapon.performed += instance.OnShootSecondaryWeapon;
             @ShootSecondaryWeapon.canceled += instance.OnShootSecondaryWeapon;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
             @ShootFirstWeapon.started -= instance.OnShootFirstWeapon;
             @ShootFirstWeapon.performed -= instance.OnShootFirstWeapon;
             @ShootFirstWeapon.canceled -= instance.OnShootFirstWeapon;
             @ShootSecondaryWeapon.started -= instance.OnShootSecondaryWeapon;
             @ShootSecondaryWeapon.performed -= instance.OnShootSecondaryWeapon;
             @ShootSecondaryWeapon.canceled -= instance.OnShootSecondaryWeapon;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -338,8 +378,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     }
     public interface IPlayerActionsActions
     {
-        void OnMove(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
         void OnShootFirstWeapon(InputAction.CallbackContext context);
         void OnShootSecondaryWeapon(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }
