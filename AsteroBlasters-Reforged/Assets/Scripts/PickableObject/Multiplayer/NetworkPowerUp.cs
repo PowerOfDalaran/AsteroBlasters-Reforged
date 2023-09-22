@@ -20,15 +20,17 @@ namespace PickableObjects
             // Setting up the time, at which the power up should be destroyed
             lifeLengthStatus = Time.time + powerUpLifeLength + inaccessibilityTime;
 
+            // Making the power up transparent for short duration of time
             inaccessibilityStatus = Time.time + inaccessibilityTime;
             gameObject.layer = 6;
         }
 
         private void FixedUpdate()
         {
+            // Switching the power up layer to make it pickable
             if (Time.time > inaccessibilityStatus)
             {
-                gameObject.layer = 0;
+                gameObject.layer = 8;
             }
 
             // Checking if the time limit was surprassed
