@@ -14,7 +14,7 @@ namespace PlayerFunctionality
     /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
     /// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
     /// </summary>
-    public class NetworkPlayerController : NetworkBehaviour
+    public class NetworkPlayerController : NetworkBehaviour, INetworkHealthSystem
     {
         Rigidbody2D myRigidbody2D;
         SpriteRenderer mySpriteRenderer;
@@ -103,6 +103,12 @@ namespace PlayerFunctionality
             PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
             Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
             mySpriteRenderer.color = myColor;
+
+            // If this player character is owned by the local client, setting up the camera to follow them
+            if (IsOwner)
+            {
+                CameraController.instance.FollowPlayer(transform);
+            }
         }
 
         private void Update()
@@ -156,9 +162,6 @@ namespace PlayerFunctionality
                 return;
             }
 
-            CameraController.instance.FollowPlayer(transform);
-
-
             // Reading current input value for movement and if it's different than zero activate movement and rotation
             Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
 
@@ -175,25 +178,35 @@ namespace PlayerFunctionality
             // Checking if collision damage should be applied and applying it
             if (!collision.gameObject.CompareTag("NoImpactDamage"))
             {
+                // Checking if code is run by the owner of the player character
                 if (!IsOwner) return;
-                if (collision.gameObject.TryGetComponent(out NetworkPlayerController networkPlayer))
+
+                // Calculating velocity and assigning the proper amount of damage
+                float impactVelocity = collision.relativeVelocity.magnitude;
+                int impactDamage = 0;
+
+                if (impactVelocity > 7)
                 {
-                    //impactVelocity.Value = collision.relativeVelocity.magnitude;
-
-                    var player1 = new PlayerInGameData()
-                    {
-                        Id = OwnerClientId,
-                        ImpactVelocity = collision.relativeVelocity.magnitude
-                    };
-
-                    var player2 = new PlayerInGameData()
-                    {
-                        Id = networkPlayer.OwnerClientId,
-                        ImpactVelocity = collision.relativeVelocity.magnitude
-                    };
-                    ImpactDamageServerRpc(player1, player2);
+                    impactDamage = 5;
+                }
+                else if (impactVelocity > 5)
+                {
+                    impactDamage = 2;
+                }
+                else if (impactVelocity > 3)
+                {
+                    impactDamage = 1;
                 }
 
+                // Applying the damage to self...
+                TakeDamage(impactDamage);
+
+                // ...and to colliding player character, if an object is indeed the other player's ship
+                NetworkPlayerController collidingNetworkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
+                if (collidingNetworkPlayerController != null && impactDamage > 0)
+                {
+                    collidingNetworkPlayerController.TakeDamage(impactDamage);
+                }
             }
         }
         #endregion
@@ -343,12 +356,7 @@ namespace PlayerFunctionality
         #endregion
 
         #region Taking Damage
-        public void TakeDamage(int damage)
-        {
-            TakeDamageServerRpc(damage);
-        }
-
-        public void TakeDamage(int damage, ulong damagingPlayerId)
+        public void TakeDamage(int damage, long damagingPlayerId = -1)
         {
             TakeDamageServerRpc(damage, damagingPlayerId);
         }
@@ -358,7 +366,7 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="damage">Amount of damage you want to deal</param>
         [ServerRpc(RequireOwnership = false)]
-        public void TakeDamageServerRpc(int damage, ulong damagingPlayerId = ulong.MaxValue)
+        public void TakeDamageServerRpc(int damage, long damagingPlayerId)
         {
             ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
             var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();
@@ -389,31 +397,14 @@ namespace PlayerFunctionality
                 }
             }
         }
-
-        [ServerRpc]
-        private void ImpactDamageServerRpc(PlayerInGameData player1, PlayerInGameData player2)
-        {
-            if (player1.ImpactVelocity > 8)
-            {
-                Die();
-            }
-            else if (player1.ImpactVelocity > 6)
-            {
-                TakeDamageServerRpc(2);
-            }
-            else if (player1.ImpactVelocity > 5)
-            {
-                TakeDamageServerRpc(1);
-            }
-        }
         #endregion
 
         #region Player Death
         /// <summary>
         /// Method handling the player death (on host)
         /// </summary>
-        /// <param name="killerPlayerId">Player id, whose projectile killed this player</param>
-        public void Die(ulong killerPlayerId = ulong.MaxValue)
+        /// <param name="killerPlayerId">Player id, whos killed this player (-1 if the player died on their own)</param>
+        public void Die(long killerPlayerId)
         {
             if (secondaryWeapon != null)
             {
@@ -421,7 +412,10 @@ namespace PlayerFunctionality
                 DiscardSecondaryWeapon();
             }
 
-            int killingPlayerIndex = MultiplayerGameManager.instance.GetPlayerIndexFromClientId(killerPlayerId);
+            // Assigning the killing player index (-1 if the player died on their own)
+            int killingPlayerIndex = killerPlayerId >= 0 ? MultiplayerGameManager.instance.GetPlayerIndexFromClientId((ulong)killerPlayerId) : -1;
+
+            // Resetting the current health, activating client rpc and activating the event
             currentHealth = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);

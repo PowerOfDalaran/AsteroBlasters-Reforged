@@ -1,4 +1,5 @@
 using PickableObjects;
+using PlayerFunctionality;
 using System;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GameMapElements
     /// <summary>
     /// Class responsible for the behaviour of asteroids (network version)
     /// </summary>
-    public class NetworkAsteroidController : NetworkBehaviour
+    public class NetworkAsteroidController : NetworkBehaviour, INetworkHealthSystem
     {
         // Arrays of possible sprites, which corresponds to different asteroid types
         [SerializeField] Sprite[] smallSprites;
@@ -70,7 +71,7 @@ namespace GameMapElements
             gameObject.AddComponent<PolygonCollider2D>();
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, long damagingPlayer = -1)
         {
             TakeDamageServerRpc(damage);
         }
@@ -82,11 +83,11 @@ namespace GameMapElements
 
             if (currentDurability <= 0)
             {
-                Die();
+                Die(-1);
             }
         }
 
-        public void Die()
+        public void Die(long killerPlayerId)
         {
             SplitAsteroidServerRpc();
             DespawnSelfServerRpc();
@@ -146,7 +147,7 @@ namespace GameMapElements
             else
             {
                 // Rhecking if the number should be spawned
-                int random = Random.Range(1, 10);
+                int random = Random.Range(1, 11);
 
                 if (random >= 6)
                 {
@@ -172,7 +173,7 @@ namespace GameMapElements
 
             if (createdWeaponPowerUp != null)
             {
-                int randomWeapon = Random.Range(0, 2);
+                int randomWeapon = Random.Range(0, 3);
 
                 switch (randomWeapon)
                 {
