@@ -111,12 +111,16 @@ namespace PlayerFunctionality
         private void FixedUpdate()
         {
             // Reading current input value for movement and if it's different than zero activate movement and rotation
-            Vector2 movementVector = myPlayerControls.PlayerActions.Move.ReadValue<Vector2>();
+            Vector2 rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>();
 
-            if (!movementVector.Equals(new Vector2(0, 0)))
+            if (!rotationVector.Equals(new Vector2(0, 0)))
             {
-                Movement(movementVector);
-                Rotate(movementVector);
+                Rotate(rotationVector);
+            }
+
+            if (myPlayerControls.PlayerActions.Move.inProgress)
+            {
+                Movement();
             }
 
             // Checking if the player is still alive
@@ -238,9 +242,9 @@ namespace PlayerFunctionality
         /// Is triggered in "FixedUpdate()" method each frame.
         /// </summary>
         /// <param name="context">Value gathered by input system</param>
-        void Movement(Vector2 movementVector)
+        void Movement()
         {
-            myRigidbody2D.AddForce(movementVector * movementSpeed * speedModifier, ForceMode2D.Force);
+            myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
         }
 
         /// <summary>
@@ -249,9 +253,9 @@ namespace PlayerFunctionality
         /// Not that proud of the result, may look for better rotation system later.
         /// </summary>
         /// <param name="movementVector">Value gathered by input system</param>
-        void Rotate(Vector2 movementVector)
+        void Rotate(Vector2 rotationVector)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, movementVector);
+            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
             Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
             gameObject.transform.rotation = newRotation;
         }
