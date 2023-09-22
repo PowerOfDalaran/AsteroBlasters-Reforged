@@ -78,7 +78,7 @@ namespace WeaponSystem
         /// <param name="hitObject">Game object hit by the raycast</param>
         /// <param name="charge">Value representing how long the shot was charged before firing</param>
         /// <param name="accessingPlayerId">Id of the player, who shot the raycast</param>
-        protected virtual void AccessHitObject(GameObject hitObject, float charge, ulong accessingPlayerId)
+        protected virtual void AccessHitObject(GameObject hitObject, float charge, long accessingPlayerId)
         {
             // Implement in child classes
         }
@@ -109,7 +109,7 @@ namespace WeaponSystem
                 if (hitInfo)
                 {
                     raycastDistance = hitInfo.distance;
-                    AccessHitObject(hitInfo.transform.gameObject, charge, callerId);
+                    AccessHitObject(hitInfo.transform.gameObject, charge, (long)callerId);
                 }
                 else
                 {

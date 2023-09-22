@@ -14,7 +14,7 @@ namespace PlayerFunctionality
     /// Class responsible for controlling the player character, by moving it, activating sound effects, animations etc.
     /// This version is also using multiple Netcode methods to allow playing in multiplayer mode.
     /// </summary>
-    public class NetworkPlayerController : NetworkBehaviour
+    public class NetworkPlayerController : NetworkBehaviour, INetworkHealthSystem
     {
         Rigidbody2D myRigidbody2D;
         SpriteRenderer mySpriteRenderer;
@@ -356,14 +356,9 @@ namespace PlayerFunctionality
         #endregion
 
         #region Taking Damage
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, long damagingPlayerId = -1)
         {
-            TakeDamageServerRpc(damage);
-        }
-
-        public void TakeDamage(int damage, ulong damagingPlayerId)
-        {
-            TakeDamageServerRpc(damage, (long)damagingPlayerId);
+            TakeDamageServerRpc(damage, damagingPlayerId);
         }
 
         /// <summary>
@@ -371,7 +366,7 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="damage">Amount of damage you want to deal</param>
         [ServerRpc(RequireOwnership = false)]
-        public void TakeDamageServerRpc(int damage, long damagingPlayerId = -1)
+        public void TakeDamageServerRpc(int damage, long damagingPlayerId)
         {
             ulong clientId = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex).clientId;
             var client = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.GetComponent<NetworkPlayerController>();

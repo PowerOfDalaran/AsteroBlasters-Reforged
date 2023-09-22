@@ -23,27 +23,19 @@ namespace WeaponSystem
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            // Checking if colliding object is a player character
-            NetworkPlayerController networkPlayerController = collision.gameObject.GetComponent<NetworkPlayerController>();
+            // Checking if hit target is a proper enemy
+            INetworkHealthSystem networkHealthSystem = collision.GetComponent<INetworkHealthSystem>();
 
-            NetworkAsteroidController networkAsteroidController = collision.gameObject.GetComponent<NetworkAsteroidController>();
-
-            // If not, then destroying projectile
-            if (networkPlayerController == null && networkAsteroidController == null)
+            // Checking if hit object doesn't implement the interface or is player character owned by the shooting player
+            if (networkHealthSystem == null || (collision.gameObject.GetComponent<NetworkPlayerController>() != null && collision.gameObject.GetComponent<NetworkObject>().OwnerClientId == OwnerClientId))
             {
-                DespawnSelfServerRpc();
+                return;
             }
-            // if so, and player hit isn't the owner of the projectile, then dealing damage to him, before deleting the projectile
-            else if (collision.gameObject.GetComponent<NetworkObject>().OwnerClientId != OwnerClientId && networkPlayerController != null)
+            else if (networkHealthSystem != null)
             {
-                networkPlayerController.TakeDamage(damage, OwnerClientId);
-                DespawnSelfServerRpc();
+                networkHealthSystem.TakeDamage(damage, (long)OwnerClientId);
             }
-            else if(networkAsteroidController != null)
-            {
-                networkAsteroidController.TakeDamage(damage);
-                DespawnSelfServerRpc();
-            }
+            DespawnSelfServerRpc();
         }
 
         /// <summary>

@@ -1,4 +1,3 @@
-using GameMapElements;
 using PlayerFunctionality;
 using System.Collections;
 using Unity.Netcode;
@@ -116,43 +115,25 @@ namespace WeaponSystem
             }
         }
 
-        protected override void AccessHitObject(GameObject hitObject, float charge, ulong accessingPlayerId)
+        protected override void AccessHitObject(GameObject hitObject, float charge, long accessingPlayerId)
         {
             // Checking if hit target is a proper enemy
-            NetworkPlayerController playerController = hitObject.GetComponent<NetworkPlayerController>();
+            INetworkHealthSystem networkHealthSystem = hitObject.gameObject.GetComponent<INetworkHealthSystem>();
 
-            if (playerController != null)
+            if (networkHealthSystem != null)
             {
                 // Deal damage based on charged energy
                 if (charge <= 6)
                 {
-                    playerController.TakeDamage(1, accessingPlayerId);
+                    networkHealthSystem.TakeDamage(1, accessingPlayerId);
                 }
                 else if (charge < 10)
                 {
-                    playerController.TakeDamage(2, accessingPlayerId);
+                    networkHealthSystem.TakeDamage(2, accessingPlayerId);
                 }
                 else
                 {
-                    playerController.TakeDamage(3, accessingPlayerId);
-                }
-            }
-
-            NetworkAsteroidController networkAsteroidController = GetComponent<NetworkAsteroidController>();
-            
-            if (networkAsteroidController != null)
-            {
-                if (charge <= 6)
-                {
-                    networkAsteroidController.TakeDamage(1);
-                }
-                else if (charge < 10)
-                {
-                    networkAsteroidController.TakeDamage(2);
-                }
-                else
-                {
-                    networkAsteroidController.TakeDamage(3);
+                    networkHealthSystem.TakeDamage(3, accessingPlayerId);
                 }
             }
         }

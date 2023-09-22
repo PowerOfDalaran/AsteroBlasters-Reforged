@@ -23,7 +23,6 @@ namespace WeaponSystem
 
             // Checking if colliding object implement health system, and if it's the player character
             IHealthSystem healthSystem = collision.gameObject.GetComponent<IHealthSystem>();
-            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
             if (healthSystem != null)
             {
