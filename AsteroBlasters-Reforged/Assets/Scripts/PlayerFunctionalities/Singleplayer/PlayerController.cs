@@ -110,7 +110,7 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            // Reading current input value for movement and if it's different than zero activate movement and rotation
+            // Reading current input value for rotation and if it's different than zero activate rotation method
             Vector2 rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>();
 
             if (!rotationVector.Equals(new Vector2(0, 0)))
@@ -118,6 +118,7 @@ namespace PlayerFunctionality
                 Rotate(rotationVector);
             }
 
+            // Checking if movement button is pressed
             if (myPlayerControls.PlayerActions.Move.inProgress)
             {
                 Movement();
@@ -239,9 +240,7 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method moving player character by adding force to its rigidbody2D component.
-        /// Is triggered in "FixedUpdate()" method each frame.
         /// </summary>
-        /// <param name="context">Value gathered by input system</param>
         void Movement()
         {
             myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
@@ -249,10 +248,8 @@ namespace PlayerFunctionality
 
         /// <summary>
         /// Method rotating player character by creating new desired rotation and then using it to calculate rotation.
-        /// Is triggered in "FixedUpdate()" method each frame.
-        /// Not that proud of the result, may look for better rotation system later.
         /// </summary>
-        /// <param name="movementVector">Value gathered by input system</param>
+        /// <param name="rotationVector">Value gathered by input system</param>
         void Rotate(Vector2 rotationVector)
         {
             Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
