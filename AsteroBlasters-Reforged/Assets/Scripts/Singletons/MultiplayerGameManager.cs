@@ -22,7 +22,13 @@ namespace NetworkFunctionality
         [SerializeField] GameObject playerPrefab;
         [SerializeField] List<Color> playerColorList;
 
+        /// <summary>
+        /// Original amount of time, after which the game should end
+        /// </summary>
         public NetworkVariable<float> timeLimit;
+        /// <summary>
+        /// Value representing the treshold, which players need to reach in order to win the game
+        /// </summary>
         public NetworkVariable<int> victoryTreshold;
 
         public NetworkList<PlayerNetworkData> playerDataNetworkList;
@@ -47,10 +53,11 @@ namespace NetworkFunctionality
                 Destroy(gameObject);
             }
 
+            // Initializing the network variables
             timeLimit = new NetworkVariable<float>();
             victoryTreshold = new NetworkVariable<int>();
 
-            // Initializating the list of players data and adding an event
+            // Initializing the list of players data and adding an event
             playerDataNetworkList = new NetworkList<PlayerNetworkData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
         }

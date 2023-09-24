@@ -17,7 +17,13 @@ namespace GameManager
 
         public NetworkList<PlayerGameData> playersGameDataList;
 
+        /// <summary>
+        /// Float value, which is reduced every second and ending the game after it reaches 0.
+        /// </summary>
         public NetworkVariable<float> timeLeft;
+        /// <summary>
+        /// Amount of kills required to win the game.
+        /// </summary>
         public NetworkVariable<int> requiredAmountOfKills;
 
         public GameObject[] spawnPoints;

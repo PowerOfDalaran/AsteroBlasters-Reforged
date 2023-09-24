@@ -79,6 +79,7 @@ namespace UserInterface
                 ChangeButtonsState(false);
                 bool creatingResult = await LobbyManager.instance.CreateLobby(lobbyNameInputField.text, (int)maxPlayersSlider.value);
 
+                // Assigning the values from UI elements to the Multiplayer Game Manager variables
                 MultiplayerGameManager.instance.timeLimit.Value = gameLengthSlider.value;
                 MultiplayerGameManager.instance.victoryTreshold.Value = (int)victoryTresholdSlider.value;
 
