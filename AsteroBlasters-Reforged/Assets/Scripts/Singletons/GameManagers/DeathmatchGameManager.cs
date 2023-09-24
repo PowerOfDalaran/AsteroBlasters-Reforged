@@ -15,25 +15,23 @@ namespace GameManager
     {
         public static DeathmatchGameManager instance;
 
-        public NetworkVariable<float> timeLeft;
-
         #region Build-in methods
         protected override void Awake()
         {
             base.Awake();
 
             instance = this;
-            timeLeft = new NetworkVariable<float>();
         }
 
         protected override void Start()
         {
             base.Start();
 
-            // Setting up the timer
+            // Setting up the timer and required amount of kills
             if (NetworkManager.IsHost)
             {
                 timeLeft.Value = MultiplayerGameManager.instance.timeLimit.Value;
+                requiredAmountOfKills.Value = MultiplayerGameManager.instance.victoryTreshold.Value;
             }
         }
 
