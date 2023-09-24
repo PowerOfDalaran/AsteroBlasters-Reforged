@@ -7942,6 +7942,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Minimap
       objectReference: {fileID: 0}
+    - target: {fileID: 5848801829538348966, guid: eab093142dbe7aa40a5a9ae75e183762, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848801829538348966, guid: eab093142dbe7aa40a5a9ae75e183762, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848801829538348966, guid: eab093142dbe7aa40a5a9ae75e183762, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848801829538348966, guid: eab093142dbe7aa40a5a9ae75e183762, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MinimapCameraController : MonoBehaviour
 {
-    [SerializeField] Transform playerTransform;
+    Transform playerTransform;
 
     private void LateUpdate()
     {
