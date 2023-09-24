@@ -17,6 +17,9 @@ namespace GameManager
 
         public NetworkList<PlayerGameData> playersGameDataList;
 
+        public NetworkVariable<float> timeLeft;
+        public NetworkVariable<int> requiredAmountOfKills;
+
         public GameObject[] spawnPoints;
 
         public event EventHandler OnPlayersGameDataListNetworkListChanged;
@@ -33,6 +36,9 @@ namespace GameManager
 
             // Adding reference of this script to MultiplayerGameManager
             MultiplayerGameManager.instance.gameModeManager = this;
+
+            timeLeft = new NetworkVariable<float>();
+            requiredAmountOfKills = new NetworkVariable<int>();
         }
 
         protected virtual void Start()
@@ -106,7 +112,7 @@ namespace GameManager
                 playersGameDataList[killingPlayerIndex] = killingPlayerGameData;
 
                 // Checking if the victory treshold have been reached
-                if (playersGameDataList[killingPlayerIndex].killCount == 3 && gameActive)
+                if (playersGameDataList[killingPlayerIndex].killCount == requiredAmountOfKills.Value && gameActive)
                 {
                     EndGameClientRpc(UtilitiesToolbox.ListToArray(UtilitiesToolbox.NetworkListPGDToListPGD(playersGameDataList)));
                 }

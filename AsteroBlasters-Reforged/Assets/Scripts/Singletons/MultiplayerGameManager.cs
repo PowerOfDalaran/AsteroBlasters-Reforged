@@ -21,7 +21,9 @@ namespace NetworkFunctionality
 
         [SerializeField] GameObject playerPrefab;
         [SerializeField] List<Color> playerColorList;
+
         public NetworkVariable<float> timeLimit;
+        public NetworkVariable<int> victoryTreshold;
 
         public NetworkList<PlayerNetworkData> playerDataNetworkList;
 
@@ -46,16 +48,11 @@ namespace NetworkFunctionality
             }
 
             timeLimit = new NetworkVariable<float>();
+            victoryTreshold = new NetworkVariable<int>();
 
             // Initializating the list of players data and adding an event
             playerDataNetworkList = new NetworkList<PlayerNetworkData>();
             playerDataNetworkList.OnListChanged += PlayerDataNetworkList_OnListChanged;
-        }
-
-        private void Start()
-        {
-            // Setting up the timer
-            timeLimit.Value = 120f;
         }
         #endregion
 
