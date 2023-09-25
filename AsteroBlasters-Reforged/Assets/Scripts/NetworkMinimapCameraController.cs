@@ -16,9 +16,12 @@ public class NetworkMinimapCameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        // Updating the camera position to match the player's one (except z parameter)
-        Vector3 newPosition = playerTransform.position;
-        newPosition.z = transform.position.z;
-        transform.position = newPosition;
+        if (playerTransform != null)
+        {
+            // Updating the camera position to match the player's one (except z parameter)
+            Vector3 newPosition = playerTransform.position;
+            newPosition.z = transform.position.z;
+            transform.position = newPosition;
+        }
     }
 }
