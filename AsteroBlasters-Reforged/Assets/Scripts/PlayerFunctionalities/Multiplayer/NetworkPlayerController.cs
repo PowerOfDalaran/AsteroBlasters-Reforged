@@ -7,6 +7,7 @@ using Others;
 using WeaponSystem;
 using PickableObjects;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace PlayerFunctionality
 {
@@ -81,6 +82,14 @@ namespace PlayerFunctionality
 
             maxCharge = 10f;
             currentCharge = 0f;
+
+            // Creating values for client prediction related variables
+            timer = new NetworkTimer(k_bufferSize);
+            clientStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
+            clientInputBuffer = new CircularBuffer<InputPayLoad>(k_bufferSize);
+
+            serverStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
+            serverInputQueue = new Queue<InputPayLoad>();
         }
 
         void OnEnable()
@@ -118,6 +127,9 @@ namespace PlayerFunctionality
             {
                 return;
             }
+
+            // Updating the Network Timer
+            timer.Update(Time.deltaTime);
 
             // Using the second weapon functionality - player can hold and load the attack. 
             // Checking if there is any secondary weapon equipped.
@@ -162,6 +174,13 @@ namespace PlayerFunctionality
                 return;
             }
 
+            // Executing movement with client prediction and server reconciliation
+            while (timer.ShouldTick())
+            {
+                HandleClientTick();
+                HandleHostTick();
+            }
+
             // Reading current input value for rotation and if it's different than zero activate rotation method
             Vector2 rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>();
 
@@ -171,10 +190,10 @@ namespace PlayerFunctionality
             }
 
             // Checking if movement button is pressed
-            if (myPlayerControls.PlayerActions.Move.inProgress)
-            {
-                Movement();
-            }
+            //if (myPlayerControls.PlayerActions.Move.inProgress)
+            //{
+            //    Movement();
+            //}
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -213,6 +232,113 @@ namespace PlayerFunctionality
                     collidingNetworkPlayerController.TakeDamage(impactDamage);
                 }
             }
+        }
+        #endregion
+
+        #region Client Prediction
+        // Netcode general
+        NetworkTimer timer;
+        const float k_serverTickRate = 60f;
+        const int k_bufferSize = 1024;
+
+        // Netcode client specific
+        CircularBuffer<StatePayLoad> clientStateBuffer;
+        CircularBuffer<InputPayLoad> clientInputBuffer;
+        StatePayLoad lastServerState;
+        StatePayLoad lastProccessedState;
+
+        // Netcode server specific
+        CircularBuffer<StatePayLoad> serverStateBuffer;
+        Queue<InputPayLoad> serverInputQueue;
+
+        // Methods
+        void HandleHostTick()
+        {
+            Debug.Log("Handling host");
+            var bufferIndex = -1;
+
+            while (serverInputQueue.Count > 0)
+            {
+                InputPayLoad inputPayLoad = serverInputQueue.Dequeue();
+
+                bufferIndex = inputPayLoad.tick % k_bufferSize;
+
+                StatePayLoad statePayLoad = SimulateMovement(inputPayLoad);
+                serverStateBuffer.Add(statePayLoad, bufferIndex);
+                SendToClientRpc(serverStateBuffer.Get(bufferIndex));
+            }
+        }
+
+        StatePayLoad SimulateMovement(InputPayLoad inputPayLoad)
+        {
+            Physics2D.simulationMode = SimulationMode2D.Script;
+
+            Movement(inputPayLoad.moveBool);
+            Physics2D.Simulate(Time.fixedDeltaTime);
+            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
+
+            return new StatePayLoad()
+            {
+                tick = inputPayLoad.tick,
+                position = transform.position,
+                rotation = transform.rotation,
+                velocity = myRigidbody2D.velocity,
+                angularVelocity = myRigidbody2D.angularVelocity,
+            };
+        }
+
+        [ClientRpc]
+        void SendToClientRpc(StatePayLoad statePayLoad)
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            lastServerState = statePayLoad;
+        }
+
+        void HandleClientTick()
+        {
+            if (!IsClient) {
+                return;
+            }
+
+            var currentTick = timer.currentTick;
+            var bufferIndex = currentTick % k_bufferSize;
+
+            InputPayLoad inputPayLoad = new InputPayLoad()
+            {
+                tick = currentTick,
+                moveBool = myPlayerControls.PlayerActions.Move.IsPressed(),
+            };
+
+            clientInputBuffer.Add(inputPayLoad, bufferIndex);
+            SendToServerRpc(inputPayLoad);
+
+            StatePayLoad statePayLoad = ProcessMovement(inputPayLoad);
+            clientStateBuffer.Add(statePayLoad, bufferIndex);
+
+            // HandleServerReconcitilation();
+        }
+
+        [ServerRpc]
+        void SendToServerRpc(InputPayLoad inputPayLoad)
+        {
+            serverInputQueue.Enqueue(inputPayLoad);
+        }
+
+        StatePayLoad ProcessMovement(InputPayLoad input)
+        {
+            Movement(input.moveBool);
+
+            return new StatePayLoad() {
+                tick = input.tick,
+                position = transform.position,
+                rotation = transform.rotation,
+                velocity = myRigidbody2D.velocity,
+                angularVelocity = myRigidbody2D.angularVelocity,
+            };
         }
         #endregion
 
@@ -339,9 +465,12 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method moving player character by adding force to its rigidbody2D component.
         /// </summary>
-        void Movement()
+        void Movement(bool inputBool)
         {
-            myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
+            if (inputBool)
+            {
+                myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
+            }
         }
 
         /// <summary>
