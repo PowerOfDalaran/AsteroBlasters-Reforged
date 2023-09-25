@@ -44,10 +44,12 @@ namespace UserInterface
                     GameObject currentWeaponUI = activatedElements[i];
 
                     currentWeaponUI.SetActive(false);
-                    AmmoLeftText.SetActive(false);
-                    secondaryWeaponButton.SetActive(false);
                     activatedElements.Remove(currentWeaponUI);
                 }
+
+                // Turning off the elements thata are shared by every secondary weapon
+                AmmoLeftText.SetActive(false);
+                secondaryWeaponButton.SetActive(false);
 
                 return;
             }
@@ -60,8 +62,6 @@ namespace UserInterface
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    heatWeaponBar.SetActive(true);
-                    activatedElements.Add(heatWeaponBar);
                     break;
                 case WeaponClass.MissileLauncher:
                     TargetedEnemyTag.SetActive(true);

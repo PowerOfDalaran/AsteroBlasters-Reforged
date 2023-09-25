@@ -20,31 +20,36 @@ namespace UserInterface
         /// </summary>
         [SerializeField] public GameObject networkPlayerCharacter;
 
-        void OnEnable()
+        void Start()
         {
             // Adding the "UpdateHeatbar" method to the events
             if (playerCharacter != null)
             {
-                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged += UpdateHeatbar;
-            }
-
-            if (networkPlayerCharacter != null)
-            {
-                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged += UpdateHeatbar;
+                playerCharacter.GetComponent<SpaceRifle>().onHeatChanged += UpdateHeatbar;
             }
         }
 
-        private void OnDisable()
+        private void FixedUpdate()
+        {
+            // Since all the data on the multiplayer game mode is drawn AFTER creating the network player character
+            // it is impossible to get it on Start method.
+            if (networkPlayerCharacter != null)
+            {
+                networkPlayerCharacter.GetComponent<NetworkSpaceRifle>().onHeatChanged += UpdateHeatbar;
+            }
+        }
+
+        private void OnDestroy()
         {
             // Removing the "UpdateHeatbar" method from the events
             if (playerCharacter != null)
             {
-                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+                playerCharacter.GetComponent<SpaceRifle>().onHeatChanged -= UpdateHeatbar;
             }
 
             if (networkPlayerCharacter != null)
             {
-                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+                networkPlayerCharacter.GetComponent<NetworkSpaceRifle>().onHeatChanged -= UpdateHeatbar;
             }
         }
 

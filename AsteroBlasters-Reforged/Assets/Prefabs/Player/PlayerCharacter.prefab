@@ -128,11 +128,11 @@ GameObject:
   - component: {fileID: 380561299333317966}
   - component: {fileID: 5943086929601196749}
   - component: {fileID: 6252139606656388992}
-  - component: {fileID: -5497724795567469902}
   - component: {fileID: -2151754817381589884}
   - component: {fileID: -4469070397727524422}
   - component: {fileID: -6157206514204597178}
   - component: {fileID: -5326192483525269264}
+  - component: {fileID: -5497724795567469902}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -287,31 +287,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
---- !u!114 &-5497724795567469902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1754668765510775113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 777c34792d6b20a4d9c6f8bcd2b2163e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponArray:
-  - {fileID: -4469070397727524422}
-  - {fileID: -6157206514204597178}
-  - {fileID: -5326192483525269264}
-  baseWeapon: {fileID: -2151754817381589884}
-  secondaryWeapon: {fileID: 0}
-  movementSpeed: 3
-  rotationSpeed: 5.15
-  maxHealth: 3
-  currentHealth: 0
-  maxShield: 2
-  currentShield: 0
-  isChargingWeapon: 0
 --- !u!114 &-2151754817381589884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireCooldown: 1
   projectilePrefab: {fileID: 4715944071043663114, guid: f1dbe886a84ef7244a4c300ea8d39510, type: 3}
+  currentHeat: 0
 --- !u!114 &-4469070397727524422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +346,31 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   raycastLaserPrefab: {fileID: 1093208807853221125, guid: 985564c3ebaf0a74c81f439aa1251bde, type: 3}
   chargingSlow: 0
+--- !u!114 &-5497724795567469902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754668765510775113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 777c34792d6b20a4d9c6f8bcd2b2163e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponArray:
+  - {fileID: -4469070397727524422}
+  - {fileID: -6157206514204597178}
+  - {fileID: -5326192483525269264}
+  baseWeapon: {fileID: -2151754817381589884}
+  secondaryWeapon: {fileID: 0}
+  movementSpeed: 3
+  rotationSpeed: 5.15
+  maxHealth: 3
+  currentHealth: 0
+  maxShield: 2
+  currentShield: 0
+  isChargingWeapon: 0
 --- !u!1 &5478113278548724231
 GameObject:
   m_ObjectHideFlags: 0

@@ -306,7 +306,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1556783272922540310}
   - component: {fileID: 1435888321632768615}
-  - component: {fileID: 1601350277311793369}
   - component: {fileID: 8669993570994774450}
   - component: {fileID: 2421293461411614341}
   - component: {fileID: 4516027465537155275}
@@ -316,6 +315,7 @@ GameObject:
   - component: {fileID: 1129618845695241633}
   - component: {fileID: 8798171710794697629}
   - component: {fileID: 1198149724257309463}
+  - component: {fileID: 1601350277311793369}
   m_Layer: 0
   m_Name: NetworkPlayerCharacter
   m_TagString: Untagged
@@ -369,43 +369,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &1601350277311793369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115823543803121173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponPowerUpPrefab: {fileID: 6774092315431271072, guid: 4850aafbb78c918478ee24e4f2dc55d0, type: 3}
-  weaponArray:
-  - {fileID: 1129618845695241633}
-  - {fileID: 8798171710794697629}
-  - {fileID: 1198149724257309463}
-  baseWeapon: {fileID: 0}
-  secondaryWeapon: {fileID: 0}
-  currentCharge: 0
-  maxCharge: 0
-  chargingSpeed: 0
-  isChargingWeapon: 0
-  movementSpeed: 3
-  rotationSpeed: 5.15
-  speedModifier: 1
-  playerIndex: 0
-  maxHealth:
-    m_InternalValue: 0
-  currentHealth:
-    m_InternalValue: 0
-  maxShield:
-    m_InternalValue: 0
-  currentShield:
-    m_InternalValue: 0
-  spawnPosition:
-    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!58 &8669993570994774450
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -584,9 +547,6 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4715944071043663114, guid: 5f5e86cef5303b8429d2e36497764f5e, type: 3}
   weaponClass: 0
   fireCooldown: 1
-  overheated: 0
-  currentHeat: 0
-  maxHeat: 0
   maxAmmo: 0
   currentAmmo: 0
 --- !u!114 &8798171710794697629
@@ -623,3 +583,40 @@ MonoBehaviour:
   weaponClass: 0
   fireCooldown: 1
   chargingSlow: 0.64
+--- !u!114 &1601350277311793369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115823543803121173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7734f9aad412ed446834c516aa397fba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPowerUpPrefab: {fileID: 6774092315431271072, guid: 4850aafbb78c918478ee24e4f2dc55d0, type: 3}
+  weaponArray:
+  - {fileID: 1129618845695241633}
+  - {fileID: 8798171710794697629}
+  - {fileID: 1198149724257309463}
+  baseWeapon: {fileID: 0}
+  secondaryWeapon: {fileID: 0}
+  currentCharge: 0
+  maxCharge: 0
+  chargingSpeed: 0
+  isChargingWeapon: 0
+  movementSpeed: 3
+  rotationSpeed: 5.15
+  speedModifier: 1
+  playerIndex: 0
+  maxHealth:
+    m_InternalValue: 0
+  currentHealth:
+    m_InternalValue: 0
+  maxShield:
+    m_InternalValue: 0
+  currentShield:
+    m_InternalValue: 0
+  spawnPosition:
+    m_InternalValue: {x: 0, y: 0, z: 0}

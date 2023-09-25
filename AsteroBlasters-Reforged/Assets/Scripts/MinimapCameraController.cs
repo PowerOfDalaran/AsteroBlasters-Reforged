@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class MinimapCameraController : MonoBehaviour
 {
-    Transform playerTransform;
+    [SerializeField] Transform playerTransform;
 
     private void LateUpdate()
     {
