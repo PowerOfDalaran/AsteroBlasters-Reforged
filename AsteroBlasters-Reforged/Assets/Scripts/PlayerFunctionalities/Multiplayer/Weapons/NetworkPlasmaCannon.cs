@@ -8,38 +8,20 @@ namespace WeaponSystem
     /// </summary>
     public class NetworkPlasmaCannon : NetworkWeapon
     {
-        [SerializeField] bool overheated;
-
-        [SerializeField] float currentHeat;
-        [SerializeField] float maxHeat;
-
-        float heatLoss;
-        float heatGain;
-
         [SerializeField] int maxAmmo;
         [SerializeField] int currentAmmo;
 
         public delegate void OnAmmoValueChange(int current, int maximum);
         public event OnAmmoValueChange onAmmoValueChange;
 
-        public delegate void OnHeatChanged(float heat);
-        public event OnHeatChanged onHeatChanged;
-
         public override void InstantiateWeapon()
         {
             // Assigning the values to the properties
             type = WeaponType.ProjectileBased;
             weaponClass = WeaponClass.PlasmaCannon;
-            fireCooldown = 0.25f;
+            fireCooldown = 0.45f;
 
-            overheated = false;
-            currentHeat = 0f;
-            maxHeat = 1f;
-
-            heatLoss = 0.0075f;
-            heatGain = 0.3f;
-
-            maxAmmo = 14;
+            maxAmmo = 20;
             currentAmmo = maxAmmo;
         }
 
@@ -62,46 +44,18 @@ namespace WeaponSystem
             {
                 gameObject.GetComponent<NetworkPlayerController>().DiscardSecondaryWeapon();
             }
-
-            // Checking wether the weapon is overheated, or should be overheated, or isn't overheated
-            if (overheated)
-            {
-                // Decreasing current heat and running the event
-                currentHeat -= heatLoss;
-                onHeatChanged?.Invoke(currentHeat);
-
-                // Checking if weapon should still be overheated 
-                if (currentHeat <= 0f)
-                {
-                    overheated = false;
-                }
-            }
-            else if (currentHeat >= maxHeat)
-            {
-                // Turning overheated state to true
-                overheated = true;
-            }
-            else if (currentHeat > 0)
-            {
-                // Decreasing current heat and running the event
-                currentHeat -= heatLoss;
-                onHeatChanged?.Invoke(currentHeat);
-            }
         }
 
         public override bool Shoot(float charge)
         {
-            if (!overheated && currentAmmo > 0)
+            if (currentAmmo > 0)
             {
                 bool weaponFired = base.Shoot(charge);
 
                 if (weaponFired)
                 {
-                    // If weapon actually fired, removing ammunition, generating heat and launching the events
+                    // If weapon actually fired, removing ammunition and launching the events
                     currentAmmo -= 1;
-                    currentHeat += heatGain;
-
-                    onHeatChanged?.Invoke(currentHeat);
                     onAmmoValueChange?.Invoke(currentAmmo, maxAmmo);
 
                     return true;

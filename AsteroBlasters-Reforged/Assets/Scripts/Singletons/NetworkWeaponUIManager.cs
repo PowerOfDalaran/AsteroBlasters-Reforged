@@ -68,8 +68,10 @@ namespace UserInterface
                     currentWeaponUI.SetActive(false);
                     activatedElements.Remove(currentWeaponUI);
                 }
+
                 AmmoLeftText.SetActive(false);
                 secondaryWeaponButton.SetActive(false);
+                
                 return;
             }
 
@@ -81,8 +83,6 @@ namespace UserInterface
             switch (weaponClass)
             {
                 case WeaponClass.PlasmaCannon:
-                    heatWeaponBar.SetActive(true);
-                    activatedElements.Add(heatWeaponBar);
                     break;
                 case WeaponClass.MissileLauncher:
                     TargetedEnemyTag.SetActive(true);

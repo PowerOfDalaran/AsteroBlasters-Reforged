@@ -27,10 +27,15 @@ namespace UserInterface
             {
                 playerCharacter.GetComponent<SpaceRifle>().onHeatChanged += UpdateHeatbar;
             }
+        }
 
+        private void FixedUpdate()
+        {
+            // Since all the data on the multiplayer game mode is drawn AFTER creating the network player character
+            // it is impossible to get it on Start method.
             if (networkPlayerCharacter != null)
             {
-                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged += UpdateHeatbar;
+                networkPlayerCharacter.GetComponent<NetworkSpaceRifle>().onHeatChanged += UpdateHeatbar;
             }
         }
 
@@ -44,7 +49,7 @@ namespace UserInterface
 
             if (networkPlayerCharacter != null)
             {
-                networkPlayerCharacter.GetComponent<NetworkPlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+                networkPlayerCharacter.GetComponent<NetworkSpaceRifle>().onHeatChanged -= UpdateHeatbar;
             }
         }
 
