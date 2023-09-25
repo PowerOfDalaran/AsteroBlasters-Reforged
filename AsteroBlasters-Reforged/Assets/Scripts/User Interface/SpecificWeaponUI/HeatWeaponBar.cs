@@ -20,12 +20,12 @@ namespace UserInterface
         /// </summary>
         [SerializeField] public GameObject networkPlayerCharacter;
 
-        void OnEnable()
+        void Start()
         {
             // Adding the "UpdateHeatbar" method to the events
             if (playerCharacter != null)
             {
-                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged += UpdateHeatbar;
+                playerCharacter.GetComponent<SpaceRifle>().onHeatChanged += UpdateHeatbar;
             }
 
             if (networkPlayerCharacter != null)
@@ -34,12 +34,12 @@ namespace UserInterface
             }
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             // Removing the "UpdateHeatbar" method from the events
             if (playerCharacter != null)
             {
-                playerCharacter.GetComponent<PlasmaCannon>().onHeatChanged -= UpdateHeatbar;
+                playerCharacter.GetComponent<SpaceRifle>().onHeatChanged -= UpdateHeatbar;
             }
 
             if (networkPlayerCharacter != null)
