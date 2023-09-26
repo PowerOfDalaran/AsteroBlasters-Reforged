@@ -84,7 +84,7 @@ namespace PlayerFunctionality
             currentCharge = 0f;
 
             // Creating values for client prediction related variables
-            timer = new NetworkTimer(k_bufferSize);
+            timer = new NetworkTimer(k_serverTickRate);
             clientStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
             clientInputBuffer = new CircularBuffer<InputPayLoad>(k_bufferSize);
 
@@ -122,14 +122,14 @@ namespace PlayerFunctionality
 
         private void Update()
         {
+            // Updating the Network Timer
+            timer.Update(Time.deltaTime);
+
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
             }
-
-            // Updating the Network Timer
-            timer.Update(Time.deltaTime);
 
             // Using the second weapon functionality - player can hold and load the attack. 
             // Checking if there is any secondary weapon equipped.
@@ -254,7 +254,6 @@ namespace PlayerFunctionality
         // Methods
         void HandleHostTick()
         {
-            Debug.Log("Handling host");
             var bufferIndex = -1;
 
             while (serverInputQueue.Count > 0)
@@ -265,15 +264,22 @@ namespace PlayerFunctionality
 
                 StatePayLoad statePayLoad = SimulateMovement(inputPayLoad);
                 serverStateBuffer.Add(statePayLoad, bufferIndex);
-                SendToClientRpc(serverStateBuffer.Get(bufferIndex));
             }
+
+            if (bufferIndex == -1)
+            {
+                return;
+            }
+
+            SendToClientRpc(serverStateBuffer.Get(bufferIndex));
+
         }
 
         StatePayLoad SimulateMovement(InputPayLoad inputPayLoad)
         {
             Physics2D.simulationMode = SimulationMode2D.Script;
 
-            Movement(inputPayLoad.moveBool);
+            Movement(inputPayLoad.movePressed);
             Physics2D.Simulate(Time.fixedDeltaTime);
             Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
 
@@ -304,13 +310,13 @@ namespace PlayerFunctionality
                 return;
             }
 
-            var currentTick = timer.currentTick;
+            var currentTick = timer.CurrentTick;
             var bufferIndex = currentTick % k_bufferSize;
 
             InputPayLoad inputPayLoad = new InputPayLoad()
             {
                 tick = currentTick,
-                moveBool = myPlayerControls.PlayerActions.Move.IsPressed(),
+                movePressed = myPlayerControls.PlayerActions.Move.IsPressed(),
             };
 
             clientInputBuffer.Add(inputPayLoad, bufferIndex);
@@ -330,7 +336,7 @@ namespace PlayerFunctionality
 
         StatePayLoad ProcessMovement(InputPayLoad input)
         {
-            Movement(input.moveBool);
+            Movement(input.movePressed);
 
             return new StatePayLoad() {
                 tick = input.tick,

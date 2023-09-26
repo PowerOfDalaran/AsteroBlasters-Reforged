@@ -2,7 +2,7 @@ public class NetworkTimer
 {
     float timer;
     public float MinTimeBetweenTicks { get; }
-    public int currentTick { get; private set; }
+    public int CurrentTick { get; private set; }
 
     public NetworkTimer(float serverTickRate)
     {
@@ -19,7 +19,7 @@ public class NetworkTimer
         if (timer >= MinTimeBetweenTicks)
         {
             timer -= MinTimeBetweenTicks;
-            currentTick++;
+            CurrentTick++;
             return true;
         }
 

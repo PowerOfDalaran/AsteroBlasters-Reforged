@@ -9,18 +9,9 @@ public class CircularBuffer<T>
         buffer = new T[bufferSize];
     }
 
-    public void Add(T item, int index)
-    {
-        buffer[index % bufferSize] = item;
-    }
+    public void Add(T item, int index) => buffer[index % bufferSize] = item;
 
-    public T Get(int index) 
-    {
-        return buffer[index % bufferSize];
-    }
+    public T Get(int index) => buffer[index % bufferSize];
 
-    public void Clear()
-    {
-        buffer = new T[bufferSize];
-    }
+    public void Clear() => buffer = new T[bufferSize];
 }
