@@ -180,20 +180,6 @@ namespace PlayerFunctionality
                 HandleClientTick();
                 HandleHostTick();
             }
-
-            // Reading current input value for rotation and if it's different than zero activate rotation method
-            Vector2 rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>();
-
-            if (!rotationVector.Equals(new Vector2(0, 0)))
-            {
-                Rotate(rotationVector);
-            }
-
-            // Checking if movement button is pressed
-            //if (myPlayerControls.PlayerActions.Move.inProgress)
-            //{
-            //    Movement();
-            //}
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -262,7 +248,7 @@ namespace PlayerFunctionality
 
                 bufferIndex = inputPayLoad.tick % k_bufferSize;
 
-                StatePayLoad statePayLoad = SimulateMovement(inputPayLoad);
+                StatePayLoad statePayLoad = SimulateInput(inputPayLoad);
                 serverStateBuffer.Add(statePayLoad, bufferIndex);
             }
 
@@ -275,11 +261,13 @@ namespace PlayerFunctionality
 
         }
 
-        StatePayLoad SimulateMovement(InputPayLoad inputPayLoad)
+        StatePayLoad SimulateInput(InputPayLoad inputPayLoad)
         {
             Physics2D.simulationMode = SimulationMode2D.Script;
 
             Movement(inputPayLoad.movePressed);
+            Rotate(inputPayLoad.rotationVector);
+
             Physics2D.Simulate(Time.fixedDeltaTime);
             Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
 
@@ -317,12 +305,13 @@ namespace PlayerFunctionality
             {
                 tick = currentTick,
                 movePressed = myPlayerControls.PlayerActions.Move.IsPressed(),
+                rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>(),
             };
 
             clientInputBuffer.Add(inputPayLoad, bufferIndex);
             SendToServerRpc(inputPayLoad);
 
-            StatePayLoad statePayLoad = ProcessMovement(inputPayLoad);
+            StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
             clientStateBuffer.Add(statePayLoad, bufferIndex);
 
             // HandleServerReconcitilation();
@@ -334,9 +323,10 @@ namespace PlayerFunctionality
             serverInputQueue.Enqueue(inputPayLoad);
         }
 
-        StatePayLoad ProcessMovement(InputPayLoad input)
+        StatePayLoad ProcessInput(InputPayLoad input)
         {
             Movement(input.movePressed);
+            Rotate(input.rotationVector);
 
             return new StatePayLoad() {
                 tick = input.tick,
@@ -476,6 +466,9 @@ namespace PlayerFunctionality
             if (inputBool)
             {
                 myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
+
+                //float lerpFraction = timer.MinTimeBetweenTicks / (1f / Time.deltaTime);
+                //myRigidbody2D.velocity = Vector2.Lerp(myRigidbody2D.velocity, transform.up * movementSpeed * speedModifier, timer.MinTimeBetweenTicks);
             }
         }
 
@@ -485,9 +478,12 @@ namespace PlayerFunctionality
         /// <param name="rotationVector">Value gathered by input system</param>
         void Rotate(Vector2 rotationVector)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
-            gameObject.transform.rotation = newRotation;
+            if (rotationVector != Vector2.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
+                Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
+                gameObject.transform.rotation = newRotation;
+            }
         }
         #endregion
 
