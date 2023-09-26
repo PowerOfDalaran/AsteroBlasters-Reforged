@@ -17,5 +17,8 @@ namespace PlayerFunctionality
         /// </summary>
         /// <param name="killerPlayerId">Id of player, who killed this player character (-1 if no player was killer)</param>
         public void Die(long killerPlayerId);
+
+        public delegate int OnHealthChange(int currentHealth);
+        public event OnHealthChange onHealthChange;
     }
 }

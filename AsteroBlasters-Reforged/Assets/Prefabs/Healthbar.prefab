@@ -162,6 +162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 658557769235878456}
   - component: {fileID: 2569321820045479461}
+  - component: {fileID: 8355235023189098741}
   m_Layer: 5
   m_Name: Healthbar
   m_TagString: Untagged
@@ -231,7 +232,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 8110801637964791415}
   m_HandleRect: {fileID: 0}
@@ -243,6 +244,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8355235023189098741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859669409753721586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c39d0d3e46839eb4f9f40352f45376e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6931600512981300658
 GameObject:
   m_ObjectHideFlags: 0
