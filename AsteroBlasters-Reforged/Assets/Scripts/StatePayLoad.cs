@@ -1,6 +1,10 @@
 using Unity.Netcode;
 using UnityEngine;
 
+/// <summary>
+/// Structure containing the data about player position, rotation, velocity and angular velocity.
+/// Is serializable to make it possible to send it through the network.
+/// </summary>
 public struct StatePayLoad : INetworkSerializable
 {
     public int tick;

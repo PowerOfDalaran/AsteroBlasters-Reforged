@@ -43,6 +43,22 @@ namespace PlayerFunctionality
             set { speedModifier = value; }
         }
 
+        // Client Prediction/Reconciliation related parameters
+        // General
+        NetworkTimer timer;
+        const float k_serverTickRate = 60f;
+        const int k_bufferSize = 1024;
+
+        // Client specific
+        CircularBuffer<StatePayLoad> clientStateBuffer;
+        CircularBuffer<InputPayLoad> clientInputBuffer;
+        StatePayLoad lastServerState;
+        StatePayLoad lastProccessedState;
+
+        // Server specific
+        CircularBuffer<StatePayLoad> serverStateBuffer;
+        Queue<InputPayLoad> serverInputQueue;
+
         public int playerIndex;
 
         public delegate void OnPlayerDeath(int killedPlayerIndex, int killingPlayerIndex);
@@ -169,7 +185,7 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            // Executing movement with client prediction and server reconciliation
+            // Executing movement with client prediction
             while (timer.ShouldTick())
             {
                 HandleClientTick();
@@ -217,22 +233,6 @@ namespace PlayerFunctionality
         #endregion
 
         #region Client Prediction
-        // Netcode general
-        NetworkTimer timer;
-        const float k_serverTickRate = 60f;
-        const int k_bufferSize = 1024;
-
-        // Netcode client specific
-        CircularBuffer<StatePayLoad> clientStateBuffer;
-        CircularBuffer<InputPayLoad> clientInputBuffer;
-        StatePayLoad lastServerState;
-        StatePayLoad lastProccessedState;
-
-        // Netcode server specific
-        CircularBuffer<StatePayLoad> serverStateBuffer;
-        Queue<InputPayLoad> serverInputQueue;
-
-        // Methods
         void HandleServerTick()
         {
             if (!IsServer)
@@ -261,17 +261,6 @@ namespace PlayerFunctionality
             SendToClientRpc(serverStateBuffer.Get(bufferIndex));
         }
 
-        [ClientRpc]
-        void SendToClientRpc(StatePayLoad statePayLoad)
-        {
-            if (!IsOwner)
-            {
-                return;
-            }
-
-            lastServerState = statePayLoad;
-        }
-
         void HandleClientTick()
         {
             if (!IsClient || !IsOwner) 
@@ -296,6 +285,17 @@ namespace PlayerFunctionality
             clientStateBuffer.Add(statePayLoad, bufferIndex);
 
             // HandleServerReconcitilation();
+        }
+
+        [ClientRpc]
+        void SendToClientRpc(StatePayLoad statePayLoad)
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            lastServerState = statePayLoad;
         }
 
         [ServerRpc]
