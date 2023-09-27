@@ -294,13 +294,17 @@ MonoBehaviour:
   maxCharge: 0
   chargingSpeed: 0
   isChargingWeapon: 0
-  movementSpeed: 3
-  rotationSpeed: 5.15
+  movementSpeed: 7
+  rotationSpeed: 120
   speedModifier: 1
   playerIndex: 0
   maxHealth:
     m_InternalValue: 0
   currentHealth:
+    m_InternalValue: 0
+  maxShield:
+    m_InternalValue: 0
+  currentShield:
     m_InternalValue: 0
   spawnPosition:
     m_InternalValue: {x: 0, y: 0, z: 0}

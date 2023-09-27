@@ -33,8 +33,8 @@ namespace PlayerFunctionality
         [SerializeField] float chargingSpeed;
         [SerializeField] public bool isChargingWeapon;
 
-        [SerializeField] float movementSpeed = 3f;
-        [SerializeField] float rotationSpeed = 5.15f;
+        [SerializeField] float movementSpeed = 7f;
+        [SerializeField] float rotationSpeed = 120f;
 
         [SerializeField] float speedModifier = 1f;
         public float SpeedModifier
@@ -85,6 +85,7 @@ namespace PlayerFunctionality
 
             // Creating values for client prediction related variables
             timer = new NetworkTimer(k_serverTickRate);
+
             clientStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
             clientInputBuffer = new CircularBuffer<InputPayLoad>(k_bufferSize);
 
@@ -168,17 +169,11 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            // Deciding whether the rest of method should be activated
-            if (!IsOwner)
-            {
-                return;
-            }
-
             // Executing movement with client prediction and server reconciliation
             while (timer.ShouldTick())
             {
                 HandleClientTick();
-                HandleHostTick();
+                HandleServerTick();
             }
         }
 
@@ -238,17 +233,23 @@ namespace PlayerFunctionality
         Queue<InputPayLoad> serverInputQueue;
 
         // Methods
-        void HandleHostTick()
+        void HandleServerTick()
         {
+            if (!IsServer)
+            {
+                return;
+            }
+
             var bufferIndex = -1;
+            InputPayLoad inputPayLoad = default;
 
             while (serverInputQueue.Count > 0)
             {
-                InputPayLoad inputPayLoad = serverInputQueue.Dequeue();
+                inputPayLoad = serverInputQueue.Dequeue();
 
                 bufferIndex = inputPayLoad.tick % k_bufferSize;
 
-                StatePayLoad statePayLoad = SimulateInput(inputPayLoad);
+                StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
                 serverStateBuffer.Add(statePayLoad, bufferIndex);
             }
 
@@ -258,27 +259,6 @@ namespace PlayerFunctionality
             }
 
             SendToClientRpc(serverStateBuffer.Get(bufferIndex));
-
-        }
-
-        StatePayLoad SimulateInput(InputPayLoad inputPayLoad)
-        {
-            Physics2D.simulationMode = SimulationMode2D.Script;
-
-            Movement(inputPayLoad.movePressed);
-            Rotate(inputPayLoad.rotationVector);
-
-            Physics2D.Simulate(Time.fixedDeltaTime);
-            Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
-
-            return new StatePayLoad()
-            {
-                tick = inputPayLoad.tick,
-                position = transform.position,
-                rotation = transform.rotation,
-                velocity = myRigidbody2D.velocity,
-                angularVelocity = myRigidbody2D.angularVelocity,
-            };
         }
 
         [ClientRpc]
@@ -294,7 +274,8 @@ namespace PlayerFunctionality
 
         void HandleClientTick()
         {
-            if (!IsClient) {
+            if (!IsClient || !IsOwner) 
+            {
                 return;
             }
 
@@ -465,10 +446,10 @@ namespace PlayerFunctionality
         {
             if (inputBool)
             {
-                myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
+                float targetSpeed = movementSpeed * speedModifier;
+                Vector2 up = transform.up.normalized;
 
-                //float lerpFraction = timer.MinTimeBetweenTicks / (1f / Time.deltaTime);
-                //myRigidbody2D.velocity = Vector2.Lerp(myRigidbody2D.velocity, transform.up * movementSpeed * speedModifier, timer.MinTimeBetweenTicks);
+                myRigidbody2D.velocity = Vector2.Lerp(myRigidbody2D.velocity, up * targetSpeed, timer.MinTimeBetweenTicks);              
             }
         }
 
@@ -481,7 +462,8 @@ namespace PlayerFunctionality
             if (rotationVector != Vector2.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
-                Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
+                Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier * timer.MinTimeBetweenTicks);
+
                 gameObject.transform.rotation = newRotation;
             }
         }
