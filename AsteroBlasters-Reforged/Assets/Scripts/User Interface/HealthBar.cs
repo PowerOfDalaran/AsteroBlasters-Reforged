@@ -1,17 +1,28 @@
 using PlayerFunctionality;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] PlayerController playerController;
-    [SerializeField] NetworkPlayerController networkPlayerController;
+    [SerializeField] GameObject playerController;
+    [SerializeField] GameObject networkPlayerController;
 
     private void Start()
     {
         // Subscribing to the events
         if (playerController != null)
         {
-            playerController.GetComponent<PlayerController>().on
+            playerController.GetComponent<PlayerController>().onHealthChanged += UpdateTheHealthBar;
         }
+
+        if (networkPlayerController != null)
+        {
+            networkPlayerController.GetComponent<NetworkPlayerController>().onHealthChanged += UpdateTheHealthBar;
+        }
+    }
+
+    void UpdateTheHealthBar(int currentHealth)
+    {
+        gameObject.GetComponent<Slider>().value = currentHealth;
     }
 }

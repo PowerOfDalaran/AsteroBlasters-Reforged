@@ -53,6 +53,9 @@ namespace PlayerFunctionality
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
         public event OnWeaponChanged onWeaponChanged;
 
+        public delegate void OnHealthChanged(int newHealthValue);
+        public event OnHealthChanged onHealthChanged;
+
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
@@ -83,6 +86,23 @@ namespace PlayerFunctionality
             currentCharge = 0f;
         }
 
+        void Start()
+        {
+            // Setting up color of the player
+            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
+            Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
+            mySpriteRenderer.color = myColor;
+
+            // If this player character is owned by the local client, setting up the camera to follow them
+            if (IsOwner)
+            {
+                CameraController.instance.FollowPlayer(transform);
+
+                // Triggering the event, so that the player hp wouldn't display empty value
+                onHealthChanged?.Invoke(currentHealth.Value);
+            }
+        }
+
         void OnEnable()
         {
             // Adding methods to PlayerControls delegates and activating it
@@ -95,20 +115,6 @@ namespace PlayerFunctionality
             // Removing methods from PlayerControls delegates and deactivating it
             myPlayerControls.Disable();
             myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= UseBaseWeapon;
-        }
-
-        void Start()
-        {
-            // Setting up color of the player
-            PlayerNetworkData playerData = MultiplayerGameManager.instance.GetPlayerDataFromPlayerIndex(playerIndex);
-            Color myColor = MultiplayerGameManager.instance.GetPlayerColor(playerData.colorId);
-            mySpriteRenderer.color = myColor;
-
-            // If this player character is owned by the local client, setting up the camera to follow them
-            if (IsOwner)
-            {
-                CameraController.instance.FollowPlayer(transform);
-            }
         }
 
         private void Update()
@@ -359,6 +365,11 @@ namespace PlayerFunctionality
         #region Taking Damage
         public void TakeDamage(int damage, long damagingPlayerId = -1)
         {
+            if (currentShield.Value <= 0)
+            {
+                onHealthChanged?.Invoke(currentHealth.Value);
+            }
+
             TakeDamageServerRpc(damage, damagingPlayerId);
         }
 
@@ -429,6 +440,8 @@ namespace PlayerFunctionality
         [ClientRpc]
         public void DieClientRpc()
         {
+            onHealthChanged?.Invoke(currentHealth.Value);
+
             myRigidbody2D.position = spawnPosition.Value;
             myRigidbody2D.velocity = Vector2.zero;
         }
@@ -455,6 +468,7 @@ namespace PlayerFunctionality
         public void HealPlayerServerRpc(int amountOfHealing)
         {
             currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth.Value ? maxHealth.Value : currentHealth.Value + amountOfHealing;
+            onHealthChanged?.Invoke(currentHealth.Value);
         }
 
         /// <summary>
