@@ -2,22 +2,30 @@ using PlayerFunctionality;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+public class HealthBar : MonoBehaviour, IRequirePlayerReference
 {
-    [SerializeField] GameObject playerController;
-    [SerializeField] GameObject networkPlayerController;
+    PlayerController playerController;
+    NetworkPlayerController networkPlayerController;
 
-    private void Start()
+    public void AddReferences(GameObject givenCharacter)
+    {
+        playerController = givenCharacter.GetComponent<PlayerController>();
+        networkPlayerController = givenCharacter.GetComponent<NetworkPlayerController>();
+
+        SubscribeToEvents();
+    }
+
+    private void SubscribeToEvents()
     {
         // Subscribing to the events
         if (playerController != null)
         {
-            playerController.GetComponent<PlayerController>().onHealthChanged += UpdateTheHealthBar;
+            playerController.onHealthChanged += UpdateTheHealthBar;
         }
 
         if (networkPlayerController != null)
         {
-            networkPlayerController.GetComponent<NetworkPlayerController>().onHealthChanged += UpdateTheHealthBar;
+            networkPlayerController.onHealthChanged += UpdateTheHealthBar;
         }
     }
 
