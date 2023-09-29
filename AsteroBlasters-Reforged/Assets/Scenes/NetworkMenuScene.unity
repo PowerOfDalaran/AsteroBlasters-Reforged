@@ -3193,7 +3193,7 @@ PrefabInstance:
     - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
       propertyPath: playerPrefab
       value: 
-      objectReference: {fileID: 8115823543803121173, guid: 8d63749b4a589074db8d48423e73e30e, type: 3}
+      objectReference: {fileID: 8115823543803121173, guid: 86813dcd21d873e47b2067f3ddd9d373, type: 3}
     - target: {fileID: 3855026612293599471, guid: 157c777a8337fe04097e153f3a3fecc4, type: 3}
       propertyPath: playerColorList.Array.size
       value: 6

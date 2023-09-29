@@ -7,6 +7,7 @@ using Others;
 using WeaponSystem;
 using PickableObjects;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace PlayerFunctionality
 {
@@ -32,8 +33,8 @@ namespace PlayerFunctionality
         [SerializeField] float chargingSpeed;
         [SerializeField] public bool isChargingWeapon;
 
-        [SerializeField] float movementSpeed = 3f;
-        [SerializeField] float rotationSpeed = 5.15f;
+        [SerializeField] float movementSpeed = 7f;
+        [SerializeField] float rotationSpeed = 120f;
 
         [SerializeField] float speedModifier = 1f;
         public float SpeedModifier
@@ -41,6 +42,23 @@ namespace PlayerFunctionality
             get { return speedModifier; }
             set { speedModifier = value; }
         }
+
+        // Client Prediction/Reconciliation related parameters
+        // General
+        NetworkTimer timer;
+        const float k_serverTickRate = 60f;
+        const int k_bufferSize = 1024;
+        [SerializeField] double reconciliationTreshikd = 10f;
+
+        // Client specific
+        CircularBuffer<StatePayLoad> clientStateBuffer;
+        CircularBuffer<InputPayLoad> clientInputBuffer;
+        StatePayLoad lastServerState;
+        StatePayLoad lastProccessedState;
+
+        // Server specific
+        CircularBuffer<StatePayLoad> serverStateBuffer;
+        Queue<InputPayLoad> serverInputQueue;
 
         public int playerIndex;
 
@@ -81,6 +99,15 @@ namespace PlayerFunctionality
 
             maxCharge = 10f;
             currentCharge = 0f;
+
+            // Creating values for client prediction related variables
+            timer = new NetworkTimer(k_serverTickRate);
+
+            clientStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
+            clientInputBuffer = new CircularBuffer<InputPayLoad>(k_bufferSize);
+
+            serverStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
+            serverInputQueue = new Queue<InputPayLoad>();
         }
 
         void OnEnable()
@@ -109,14 +136,30 @@ namespace PlayerFunctionality
             {
                 CameraController.instance.FollowPlayer(transform);
             }
+
+            // Hard-coded movement and rotation speed buff to balance the weird bug with increased host speed
+            if (playerIndex != 0)
+            {
+                Debug.Log("kurwa");
+                movementSpeed = 10f;
+                rotationSpeed = 240f;
+            }
         }
 
         private void Update()
         {
+            // Updating the Network Timer
+            timer.Update(Time.deltaTime);
+
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {
                 return;
+            }
+
+            if(Input.GetKeyDown(KeyCode.T)) 
+            {
+                transform.position += Vector3.up * 20f;
             }
 
             // Using the second weapon functionality - player can hold and load the attack. 
@@ -156,24 +199,11 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            // Deciding whether the rest of method should be activated
-            if (!IsOwner)
+            // Executing movement with client prediction
+            while (timer.ShouldTick())
             {
-                return;
-            }
-
-            // Reading current input value for rotation and if it's different than zero activate rotation method
-            Vector2 rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>();
-
-            if (!rotationVector.Equals(new Vector2(0, 0)))
-            {
-                Rotate(rotationVector);
-            }
-
-            // Checking if movement button is pressed
-            if (myPlayerControls.PlayerActions.Move.inProgress)
-            {
-                Movement();
+                HandleClientTick();
+                HandleServerTick();
             }
         }
 
@@ -213,6 +243,157 @@ namespace PlayerFunctionality
                     collidingNetworkPlayerController.TakeDamage(impactDamage);
                 }
             }
+        }
+        #endregion
+
+        #region Client Prediction
+        void HandleServerTick()
+        {
+            if (!IsServer)
+            {
+                return;
+            }
+
+            var bufferIndex = -1;
+            InputPayLoad inputPayLoad = default;
+
+            while (serverInputQueue.Count > 0)
+            {
+                inputPayLoad = serverInputQueue.Dequeue();
+
+                bufferIndex = inputPayLoad.tick % k_bufferSize;
+
+                StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
+                serverStateBuffer.Add(statePayLoad, bufferIndex);
+            }
+
+            if (bufferIndex == -1)
+            {
+                return;
+            }
+
+            SendToClientRpc(serverStateBuffer.Get(bufferIndex));
+        }
+
+        void HandleClientTick()
+        {
+            if (!IsClient || !IsOwner) 
+            {
+                return;
+            }
+
+            var currentTick = timer.CurrentTick;
+            var bufferIndex = currentTick % k_bufferSize;
+
+            InputPayLoad inputPayLoad = new InputPayLoad()
+            {
+                tick = currentTick,
+                movePressed = myPlayerControls.PlayerActions.Move.IsPressed(),
+                rotationVector = myPlayerControls.PlayerActions.Rotate.ReadValue<Vector2>(),
+            };
+
+            clientInputBuffer.Add(inputPayLoad, bufferIndex);
+            SendToServerRpc(inputPayLoad);
+
+            StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
+            clientStateBuffer.Add(statePayLoad, bufferIndex);
+
+            //HandleServerReconcitilation();
+        }
+
+        bool ShouldReconcile()
+        {
+            bool isNewServerState = !lastServerState.Equals(default);
+            bool isLastStateUndefinedOrDifferent = lastProccessedState.Equals(default) || !lastProccessedState.Equals(lastServerState);
+
+            return isNewServerState && isLastStateUndefinedOrDifferent;
+        }
+
+        void HandleServerReconcitilation()
+        {
+            if (!ShouldReconcile())
+            {
+                return;           
+            }
+
+            float positionError;
+            int bufferIndex;
+            StatePayLoad rewindState = default;
+
+            bufferIndex = lastServerState.tick % k_bufferSize;
+            
+            if (bufferIndex - 1 < 0)
+            {
+                return; // Not enough information to reconcile
+            }
+
+            rewindState = IsHost ? serverStateBuffer.Get(bufferIndex - 1) : lastServerState; //Host Rpc's execute immediately, so we can use the last server state
+            positionError = Vector2.Distance(rewindState.position, clientStateBuffer.Get(bufferIndex).position);
+        
+            if (positionError > reconciliationTreshikd) 
+            {
+                Debug.Log("reconciling");
+                ReconcileState(rewindState);
+            }
+
+            lastProccessedState = lastServerState;
+        }
+
+        void ReconcileState(StatePayLoad rewindState)
+        {
+            transform.position = rewindState.position;
+            transform.rotation = rewindState.rotation;
+            myRigidbody2D.velocity = rewindState.velocity;
+            myRigidbody2D.angularVelocity = rewindState.angularVelocity;
+
+            if (!rewindState.Equals(lastServerState))
+            {
+                return;
+            }
+
+            clientStateBuffer.Add(rewindState, rewindState.tick % k_bufferSize);
+
+            // Replay all inputs front the rewind state to the current state
+            int tickToReplay = lastServerState.tick;
+
+            while (tickToReplay < timer.CurrentTick)
+            {
+                int bufferIndex = tickToReplay % k_bufferSize;
+                StatePayLoad statePayLoad = ProcessInput(clientInputBuffer.Get(bufferIndex));
+                clientStateBuffer.Add(statePayLoad, bufferIndex);
+                tickToReplay++;
+            }
+        }
+
+        [ClientRpc]
+        void SendToClientRpc(StatePayLoad statePayLoad)
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
+
+            lastServerState = statePayLoad;
+        }
+
+        [ServerRpc]
+        void SendToServerRpc(InputPayLoad inputPayLoad)
+        {
+            serverInputQueue.Enqueue(inputPayLoad);
+        }
+
+        StatePayLoad ProcessInput(InputPayLoad input)
+        {
+            Movement(input.movePressed);
+            Rotate(input.rotationVector);
+
+            return new StatePayLoad() {
+                tick = input.tick,
+                position = transform.position,
+                rotation = transform.rotation,
+                velocity = myRigidbody2D.velocity,
+                angularVelocity = myRigidbody2D.angularVelocity,
+            };
         }
         #endregion
 
@@ -339,9 +520,15 @@ namespace PlayerFunctionality
         /// <summary>
         /// Method moving player character by adding force to its rigidbody2D component.
         /// </summary>
-        void Movement()
+        void Movement(bool inputBool)
         {
-            myRigidbody2D.AddForce(transform.up * movementSpeed * speedModifier, ForceMode2D.Force);
+            if (inputBool)
+            {
+                float targetSpeed = movementSpeed * speedModifier;
+                Vector2 up = transform.up.normalized;
+
+                myRigidbody2D.velocity = Vector2.Lerp(myRigidbody2D.velocity, up * targetSpeed, timer.MinTimeBetweenTicks);              
+            }
         }
 
         /// <summary>
@@ -350,9 +537,13 @@ namespace PlayerFunctionality
         /// <param name="rotationVector">Value gathered by input system</param>
         void Rotate(Vector2 rotationVector)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier);
-            gameObject.transform.rotation = newRotation;
+            if (rotationVector != Vector2.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(transform.forward, rotationVector);
+                Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * speedModifier * timer.MinTimeBetweenTicks);
+
+                gameObject.transform.rotation = newRotation;
+            }
         }
         #endregion
 

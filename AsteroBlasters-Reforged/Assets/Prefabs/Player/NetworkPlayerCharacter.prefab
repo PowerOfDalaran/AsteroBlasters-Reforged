@@ -606,9 +606,10 @@ MonoBehaviour:
   maxCharge: 0
   chargingSpeed: 0
   isChargingWeapon: 0
-  movementSpeed: 3
-  rotationSpeed: 5.15
+  movementSpeed: 7
+  rotationSpeed: 120
   speedModifier: 1
+  reconciliationTreshikd: 10
   playerIndex: 0
   maxHealth:
     m_InternalValue: 0
