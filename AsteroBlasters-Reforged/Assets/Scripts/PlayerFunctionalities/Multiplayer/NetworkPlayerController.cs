@@ -48,6 +48,7 @@ namespace PlayerFunctionality
         NetworkTimer timer;
         const float k_serverTickRate = 60f;
         const int k_bufferSize = 1024;
+        [SerializeField] double reconciliationTreshikd = 10f;
 
         // Client specific
         CircularBuffer<StatePayLoad> clientStateBuffer;
@@ -146,6 +147,11 @@ namespace PlayerFunctionality
             if (!IsOwner)
             {
                 return;
+            }
+
+            if(Input.GetKeyDown(KeyCode.T)) 
+            {
+                transform.position += Vector3.up * 20f;
             }
 
             // Using the second weapon functionality - player can hold and load the attack. 
@@ -284,7 +290,72 @@ namespace PlayerFunctionality
             StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
             clientStateBuffer.Add(statePayLoad, bufferIndex);
 
-            // HandleServerReconcitilation();
+            HandleServerReconcitilation();
+        }
+
+        bool ShouldReconcile()
+        {
+            bool isNewServerState = !lastServerState.Equals(default);
+            bool isLastStateUndefinedOrDifferent = lastProccessedState.Equals(default)
+                || !lastProccessedState.Equals(lastServerState);
+
+            return isNewServerState && isLastStateUndefinedOrDifferent;
+        }
+
+        void HandleServerReconcitilation()
+        {
+            if (!ShouldReconcile())
+            {
+                return;
+            }
+
+            float positionError;
+            int bufferIndex;
+            StatePayLoad rewindState = default;
+
+            bufferIndex = lastServerState.tick % k_bufferSize;
+            
+            if (bufferIndex - 1 < 0)
+            {
+                return; // Not enough information to reconcile
+            }
+
+            rewindState = IsHost ? serverStateBuffer.Get(bufferIndex - 1) : lastServerState; //Host Rpc's execute immediately, so we can use the last server state
+            positionError = Vector2.Distance(rewindState.position, clientStateBuffer.Get(bufferIndex).position);
+        
+            if (positionError > reconciliationTreshikd) 
+            {
+                Debug.Break();
+                ReconcileState(rewindState);
+            }
+
+            lastProccessedState = lastServerState;
+        }
+
+        void ReconcileState(StatePayLoad rewindState)
+        {
+            transform.position = rewindState.position;
+            transform.rotation = rewindState.rotation;
+            myRigidbody2D.velocity = rewindState.velocity;
+            myRigidbody2D.angularVelocity = rewindState.angularVelocity;
+
+            if (!rewindState.Equals(lastServerState))
+            {
+                return;
+            }
+
+            clientStateBuffer.Add(rewindState, rewindState.tick);
+
+            // Replay all inputs front the rewind state to the current state
+            int tickToReplay = lastServerState.tick;
+
+            while (tickToReplay < timer.CurrentTick)
+            {
+                int bufferIndex = tickToReplay % k_bufferSize;
+                StatePayLoad statePayLoad = ProcessInput(clientInputBuffer.Get(bufferIndex));
+                clientStateBuffer.Add(statePayLoad, bufferIndex);
+                tickToReplay++;
+            }
         }
 
         [ClientRpc]
