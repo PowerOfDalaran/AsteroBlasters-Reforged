@@ -140,7 +140,6 @@ namespace PlayerFunctionality
             // Hard-coded movement and rotation speed buff to balance the weird bug with increased host speed
             if (playerIndex != 0)
             {
-                Debug.Log("kurwa");
                 movementSpeed = 10f;
                 rotationSpeed = 240f;
             }
@@ -298,6 +297,7 @@ namespace PlayerFunctionality
             StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
             clientStateBuffer.Add(statePayLoad, bufferIndex);
 
+            // Currently turned the Reconcitilation off, since the feature isn't fully developed yet
             //HandleServerReconcitilation();
         }
 
@@ -622,6 +622,7 @@ namespace PlayerFunctionality
         {
             myRigidbody2D.position = spawnPosition.Value;
             myRigidbody2D.velocity = Vector2.zero;
+            myRigidbody2D.angularVelocity = 0f;
         }
         #endregion
 
