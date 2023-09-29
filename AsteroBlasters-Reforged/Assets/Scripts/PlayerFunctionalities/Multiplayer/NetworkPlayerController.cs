@@ -162,8 +162,6 @@ namespace PlayerFunctionality
 
         private void FixedUpdate()
         {
-            Debug.Log(onHealthChanged);
-
             // Deciding whether the rest of method should be activated
             if (!IsOwner)
             {

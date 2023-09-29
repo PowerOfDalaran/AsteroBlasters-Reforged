@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour, IRequirePlayerReference
 {
-    PlayerController playerController;
-    NetworkPlayerController networkPlayerController;
+    [SerializeField] PlayerController playerController;
+    [SerializeField] NetworkPlayerController networkPlayerController;
 
     public void AddReferences(GameObject givenCharacter)
     {

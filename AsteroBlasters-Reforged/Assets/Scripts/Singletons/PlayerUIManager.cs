@@ -12,11 +12,11 @@ namespace UserInterface
     public class PlayerUIManager : MonoBehaviour
     {
         [SerializeField] Button secondaryWeaponButton;
-        [SerializeField] HeatWeaponBar heatWeaponBar;
         [SerializeField] AmmoLeftText ammoLeftText;
         [SerializeField] TargetedEnemyTag targetedEnemyTag;
         [SerializeField] ChargeStatusBar chargeStatusBar;
-        [SerializeField] HealthBar healthBar;
+
+        [SerializeField] GameObject[] elementsRequiringPlayerReference;
 
         [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
@@ -27,10 +27,13 @@ namespace UserInterface
             playerCharacter.GetComponent<PlayerController>().onWeaponChanged += UpdateVisibility;
 
             ammoLeftText.playerCharacter = playerCharacter;
-            heatWeaponBar.playerCharacter = playerCharacter;
             targetedEnemyTag.playerCharacter = playerCharacter;
             chargeStatusBar.playerCharacter = playerCharacter;
-            healthBar.playerController = playerCharacter;
+
+            foreach (GameObject element in elementsRequiringPlayerReference) 
+            {
+                element.GetComponent<IRequirePlayerReference>().AddReferences(playerCharacter);
+            }
         }
 
         /// <summary>

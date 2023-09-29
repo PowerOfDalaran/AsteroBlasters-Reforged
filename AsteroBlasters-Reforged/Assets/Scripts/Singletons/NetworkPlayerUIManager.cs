@@ -17,7 +17,7 @@ namespace UserInterface
         [SerializeField] TargetedEnemyTag targetedEnemyTag;
         [SerializeField] ChargeStatusBar chargeStatusBar;
 
-        [SerializeField] IRequirePlayerReference[] elementsRequiringPlayerReference;
+        [SerializeField] GameObject[] elementsRequiringPlayerReference;
 
         [SerializeField] List<GameObject> activatedElements = new List<GameObject>();
 
@@ -51,9 +51,9 @@ namespace UserInterface
             targetedEnemyTag.networkPlayerCharacter = referencedPlayerCharacter;
             chargeStatusBar.networkPlayerCharacter = referencedPlayerCharacter;
 
-            foreach(IRequirePlayerReference element in elementsRequiringPlayerReference)
+            foreach(GameObject element in elementsRequiringPlayerReference)
             {
-                element.AddReferences(referencedPlayerCharacter);
+                element.GetComponent<IRequirePlayerReference>().AddReferences(referencedPlayerCharacter);
             }
         }
 
