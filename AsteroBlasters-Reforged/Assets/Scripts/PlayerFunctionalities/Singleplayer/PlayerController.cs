@@ -50,6 +50,9 @@ namespace PlayerFunctionality
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
         public event OnWeaponChanged onWeaponChanged;
 
+        public delegate void OnHealthChanged(int newHealthValue);
+        public event OnHealthChanged onHealthChanged;
+
         void Awake()
         {
             // Assigning values to properties
@@ -59,6 +62,12 @@ namespace PlayerFunctionality
 
             currentHealth = maxHealth;
             currentCharge = 0;
+        }
+
+        void Start()
+        {
+            // Triggering the event, so that the player hp wouldn't display empty value
+            onHealthChanged?.Invoke(currentHealth);
         }
 
         void OnEnable()
@@ -273,12 +282,14 @@ namespace PlayerFunctionality
             else
             {
                 currentHealth -= damage;
+                onHealthChanged?.Invoke(currentHealth);
             }
             Debug.Log("You took " + damage + " damage!");
         }
         public void Die()
         {
             Debug.Log("You died");
+            onHealthChanged?.Invoke(currentHealth);
         }
     }
 }

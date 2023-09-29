@@ -1,3 +1,4 @@
+using PlayerFunctionality;
 using UnityEngine;
 using UnityEngine.UI;
 using WeaponSystem;
@@ -7,32 +8,35 @@ namespace UserInterface
     /// <summary>
     /// Class managing the UI slider, displaying the heat level of plasma cannon (weapon)
     /// </summary>
-    public class HeatWeaponBar : MonoBehaviour
+    public class HeatWeaponBar : MonoBehaviour, IRequirePlayerReference
     {
         [SerializeField] Slider slider;
 
         /// <summary>
         /// Reference to player character game object. If this parameter isn't null, then the game is working in singleplayer mode.
         /// </summary>
-        [SerializeField] public GameObject playerCharacter;
+        PlayerController playerCharacter;
         /// <summary>
         /// Reference to network player character game object. If this parameter isn't null, then the game is working in multiplayer mode.
         /// </summary>
-        [SerializeField] public GameObject networkPlayerCharacter;
+        NetworkPlayerController networkPlayerCharacter;
 
-        void Start()
+        public void AddReferences(GameObject givenCharacter)
         {
-            // Adding the "UpdateHeatbar" method to the events
+            playerCharacter = givenCharacter.GetComponent<PlayerController>();
+            networkPlayerCharacter = givenCharacter.GetComponent<NetworkPlayerController>();
+
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            // Subscribing to the events
             if (playerCharacter != null)
             {
                 playerCharacter.GetComponent<SpaceRifle>().onHeatChanged += UpdateHeatbar;
             }
-        }
 
-        private void FixedUpdate()
-        {
-            // Since all the data on the multiplayer game mode is drawn AFTER creating the network player character
-            // it is impossible to get it on Start method.
             if (networkPlayerCharacter != null)
             {
                 networkPlayerCharacter.GetComponent<NetworkSpaceRifle>().onHeatChanged += UpdateHeatbar;

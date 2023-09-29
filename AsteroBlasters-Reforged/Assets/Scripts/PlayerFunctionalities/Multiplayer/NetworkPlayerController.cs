@@ -71,7 +71,10 @@ namespace PlayerFunctionality
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
         public event OnWeaponChanged onWeaponChanged;
 
-        public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
+        public delegate void OnCurrentHealthChanged(int currentHealth);
+        public event OnCurrentHealthChanged onCurrentHealthChanged;
+
+        public int maxHealth;
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         public NetworkVariable<int> maxShield = new NetworkVariable<int>();
@@ -88,8 +91,8 @@ namespace PlayerFunctionality
             mySpriteRenderer = GetComponent<SpriteRenderer>();
             myPlayerControls = new PlayerControls();
 
-            maxHealth.Value = 3;
-            currentHealth.Value = maxHealth.Value;
+            maxHealth = 3;
+            currentHealth.Value = maxHealth;
 
             maxShield.Value = 2;
             currentShield.Value = 0;
@@ -108,20 +111,10 @@ namespace PlayerFunctionality
 
             serverStateBuffer = new CircularBuffer<StatePayLoad>(k_bufferSize);
             serverInputQueue = new Queue<InputPayLoad>();
-        }
+        
 
-        void OnEnable()
-        {
-            // Adding methods to PlayerControls delegates and activating it
-            myPlayerControls.Enable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
-        }
-
-        void OnDisable()
-        {
-            // Removing methods from PlayerControls delegates and deactivating it
-            myPlayerControls.Disable();
-            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= UseBaseWeapon;
+            // Adding method to network variable's delegate
+            currentHealth.OnValueChanged += CurrentHealthChanged;
         }
 
         void Start()
@@ -143,6 +136,20 @@ namespace PlayerFunctionality
                 movementSpeed = 10f;
                 rotationSpeed = 240f;
             }
+        }
+
+        void OnEnable()
+        {
+            // Adding methods to PlayerControls delegates and activating it
+            myPlayerControls.Enable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed += UseBaseWeapon;
+        }
+
+        void OnDisable()
+        {
+            // Removing methods from PlayerControls delegates and deactivating it
+            myPlayerControls.Disable();
+            myPlayerControls.PlayerActions.ShootFirstWeapon.performed -= UseBaseWeapon;
         }
 
         private void Update()
@@ -242,6 +249,13 @@ namespace PlayerFunctionality
                     collidingNetworkPlayerController.TakeDamage(impactDamage);
                 }
             }
+        }
+        #endregion
+
+        #region Network Events
+        private void CurrentHealthChanged(int previousValue, int newValue)
+        {
+            onCurrentHealthChanged?.Invoke(newValue);
         }
         #endregion
 
@@ -608,7 +622,7 @@ namespace PlayerFunctionality
             int killingPlayerIndex = killerPlayerId >= 0 ? MultiplayerGameManager.instance.GetPlayerIndexFromClientId((ulong)killerPlayerId) : -1;
 
             // Resetting the current health, activating client rpc and activating the event
-            currentHealth = maxHealth;
+            currentHealth.Value = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
         }
@@ -646,7 +660,7 @@ namespace PlayerFunctionality
         [ServerRpc]
         public void HealPlayerServerRpc(int amountOfHealing)
         {
-            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth.Value ? maxHealth.Value : currentHealth.Value + amountOfHealing;
+            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth ? maxHealth : currentHealth.Value + amountOfHealing;
         }
 
         /// <summary>
