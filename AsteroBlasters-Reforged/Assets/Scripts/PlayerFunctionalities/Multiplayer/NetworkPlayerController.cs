@@ -7,6 +7,7 @@ using Others;
 using WeaponSystem;
 using PickableObjects;
 using System.Collections;
+using System;
 
 namespace PlayerFunctionality
 {
@@ -53,10 +54,10 @@ namespace PlayerFunctionality
         public delegate void OnWeaponChanged(WeaponClass weaponClass);
         public event OnWeaponChanged onWeaponChanged;
 
-        public delegate void OnHealthChanged(int newHealthValue);
-        public event OnHealthChanged onHealthChanged;
+        public delegate void OnCurrentHealthChanged(int currentHealth);
+        public event OnCurrentHealthChanged onCurrentHealthChanged;
 
-        public NetworkVariable<int> maxHealth = new NetworkVariable<int>();
+        public int maxHealth;
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         public NetworkVariable<int> maxShield = new NetworkVariable<int>();
@@ -73,8 +74,8 @@ namespace PlayerFunctionality
             mySpriteRenderer = GetComponent<SpriteRenderer>();
             myPlayerControls = new PlayerControls();
 
-            maxHealth.Value = 3;
-            currentHealth.Value = maxHealth.Value;
+            maxHealth = 3;
+            currentHealth.Value = maxHealth;
 
             maxShield.Value = 2;
             currentShield.Value = 0;
@@ -84,6 +85,9 @@ namespace PlayerFunctionality
 
             maxCharge = 10f;
             currentCharge = 0f;
+
+            // Adding method to network variable's delegate
+            currentHealth.OnValueChanged += CurrentHealthChanged;
         }
 
         void Start()
@@ -97,9 +101,6 @@ namespace PlayerFunctionality
             if (IsOwner)
             {
                 CameraController.instance.FollowPlayer(transform);
-
-                // Triggering the event, so that the player hp wouldn't display empty value
-                onHealthChanged?.Invoke(currentHealth.Value);
             }
         }
 
@@ -219,6 +220,13 @@ namespace PlayerFunctionality
                     collidingNetworkPlayerController.TakeDamage(impactDamage);
                 }
             }
+        }
+        #endregion
+
+        #region Network Events
+        private void CurrentHealthChanged(int previousValue, int newValue)
+        {
+            onCurrentHealthChanged?.Invoke(newValue);
         }
         #endregion
 
@@ -365,11 +373,6 @@ namespace PlayerFunctionality
         #region Taking Damage
         public void TakeDamage(int damage, long damagingPlayerId = -1)
         {
-            if (currentShield.Value <= 0)
-            {
-                onHealthChanged?.Invoke(currentHealth.Value);
-            }
-
             TakeDamageServerRpc(damage, damagingPlayerId);
         }
 
@@ -428,7 +431,7 @@ namespace PlayerFunctionality
             int killingPlayerIndex = killerPlayerId >= 0 ? MultiplayerGameManager.instance.GetPlayerIndexFromClientId((ulong)killerPlayerId) : -1;
 
             // Resetting the current health, activating client rpc and activating the event
-            currentHealth = maxHealth;
+            currentHealth.Value = maxHealth;
             DieClientRpc();
             onPlayerDeath?.Invoke(playerIndex, killingPlayerIndex);
         }
@@ -440,8 +443,6 @@ namespace PlayerFunctionality
         [ClientRpc]
         public void DieClientRpc()
         {
-            onHealthChanged?.Invoke(currentHealth.Value);
-
             myRigidbody2D.position = spawnPosition.Value;
             myRigidbody2D.velocity = Vector2.zero;
         }
@@ -467,8 +468,7 @@ namespace PlayerFunctionality
         [ServerRpc]
         public void HealPlayerServerRpc(int amountOfHealing)
         {
-            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth.Value ? maxHealth.Value : currentHealth.Value + amountOfHealing;
-            onHealthChanged?.Invoke(currentHealth.Value);
+            currentHealth.Value = currentHealth.Value + amountOfHealing > maxHealth ? maxHealth : currentHealth.Value + amountOfHealing;
         }
 
         /// <summary>

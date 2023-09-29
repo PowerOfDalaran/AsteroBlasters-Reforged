@@ -1,4 +1,5 @@
 using PlayerFunctionality;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,10 +26,9 @@ public class HealthBar : MonoBehaviour, IRequirePlayerReference
 
         if (networkPlayerController != null)
         {
-            networkPlayerController.onHealthChanged += UpdateTheHealthBar;
+            networkPlayerController.onCurrentHealthChanged += UpdateTheHealthBar;
         }
     }
-
     void UpdateTheHealthBar(int currentHealth)
     {
         gameObject.GetComponent<Slider>().value = currentHealth;
