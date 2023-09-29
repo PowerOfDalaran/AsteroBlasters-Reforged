@@ -136,6 +136,14 @@ namespace PlayerFunctionality
             {
                 CameraController.instance.FollowPlayer(transform);
             }
+
+            // Hard-coded movement and rotation speed buff to balance the weird bug with increased host speed
+            if (playerIndex != 0)
+            {
+                Debug.Log("kurwa");
+                movementSpeed = 10f;
+                rotationSpeed = 240f;
+            }
         }
 
         private void Update()
@@ -290,14 +298,13 @@ namespace PlayerFunctionality
             StatePayLoad statePayLoad = ProcessInput(inputPayLoad);
             clientStateBuffer.Add(statePayLoad, bufferIndex);
 
-            HandleServerReconcitilation();
+            //HandleServerReconcitilation();
         }
 
         bool ShouldReconcile()
         {
             bool isNewServerState = !lastServerState.Equals(default);
-            bool isLastStateUndefinedOrDifferent = lastProccessedState.Equals(default)
-                || !lastProccessedState.Equals(lastServerState);
+            bool isLastStateUndefinedOrDifferent = lastProccessedState.Equals(default) || !lastProccessedState.Equals(lastServerState);
 
             return isNewServerState && isLastStateUndefinedOrDifferent;
         }
@@ -306,7 +313,7 @@ namespace PlayerFunctionality
         {
             if (!ShouldReconcile())
             {
-                return;
+                return;           
             }
 
             float positionError;
@@ -325,7 +332,7 @@ namespace PlayerFunctionality
         
             if (positionError > reconciliationTreshikd) 
             {
-                Debug.Break();
+                Debug.Log("reconciling");
                 ReconcileState(rewindState);
             }
 
@@ -344,7 +351,7 @@ namespace PlayerFunctionality
                 return;
             }
 
-            clientStateBuffer.Add(rewindState, rewindState.tick);
+            clientStateBuffer.Add(rewindState, rewindState.tick % k_bufferSize);
 
             // Replay all inputs front the rewind state to the current state
             int tickToReplay = lastServerState.tick;

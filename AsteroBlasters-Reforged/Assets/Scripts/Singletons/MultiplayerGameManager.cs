@@ -171,14 +171,14 @@ namespace NetworkFunctionality
 
                     // Creating new player object and accessing its network player controller
                     GameObject newPlayer = Instantiate(playerPrefab, gameModeManager.spawnPoints[i].transform.position, Quaternion.identity);
+                    Debug.Log(newPlayer.transform.position);
                     NetworkPlayerController newPlayerController = newPlayer.GetComponent<NetworkPlayerController>();
 
                     // Spawning the player in the network
                     newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
 
-                    // Assigning the player index and his starting position
+                    // Assigning the player index
                     newPlayerController.SetMyIndexClientRpc(playerDataNetworkList.IndexOf(playerData));
-                    newPlayerController.spawnPosition.Value = gameModeManager.spawnPoints[i].transform.position;
                 }
 
                 SetDataOnGameStartClientRpc();
